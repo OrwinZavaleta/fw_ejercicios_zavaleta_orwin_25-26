@@ -1,7 +1,6 @@
 # --- NODE.JS & TYPESCRIPT ---
 node_modules/
 jspm_packages/
-dist/
 out/
 build/
 *.tsbuildinfo
