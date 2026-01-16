@@ -1,0 +1,19 @@
+{
+  "name": "pruebas_ts",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build:pug": "pug src --out public",
+  "watch:pug": "pug src --out public --watch --pretty"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "devDependencies": {
+    "pug": "^3.0.3",
+    "pug-cli": "^1.0.0-alpha6"
+  }
+}
