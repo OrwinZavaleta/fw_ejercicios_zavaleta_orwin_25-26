@@ -1,0 +1,34 @@
+<form id="loginForm" class="needs-validation" novalidate>
+    <!-- Correo Electrónico -->
+    <div class="mb-3">
+        <label for="email" class="form-label">Correo Electrónico</label>
+        <input type="email" class="form-control" id="email" placeholder="nombre@ejemplo.com" required>
+        <div class="invalid-feedback">
+            Por favor, ingresa un correo electrónico válido.
+        </div>
+    </div>
+
+    <!-- Contraseña -->
+    <div class="mb-3">
+        <label for="password" class="form-label">Contraseña</label>
+        <input type="password" class="form-control" id="password" required>
+        <div class="invalid-feedback">
+            |Debes ingresar tu contraseña.
+        </div>
+        <!-- Nota informativa sobre recuperación -->
+        <div class="form-text text-muted">
+            |Nota: La contraseña no es recuperable.
+        </div>
+    </div>
+
+    <!-- Recordar Sesión (Check) -->
+    <div class="mb-3 form-check">
+        <input type="checkbox" class="form-check-input" id="rememberMe">
+        <label class="form-check-label" for="rememberMe">Mantener la sesión abierta</label>
+    </div>
+
+    <!-- Botón de Envío -->
+    <div class="d-grid gap-2">
+        <button type="submit" class="btn btn-primary">Iniciar Sesión</button>
+    </div>
+</form>

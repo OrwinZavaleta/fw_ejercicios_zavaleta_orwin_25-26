@@ -1,0 +1,33 @@
+<form id="registroForm" class="needs-validation" novalidate>
+    <!-- Usuario -->
+    <div class="mb-3">
+        <label for="usuario" class="form-label">Nombre de Usuario</label>
+        <input type="text" class="form-control" id="usuario" placeholder="Ej: juanito123" required>
+        <div class="invalid-feedback">Por favor, ingresa un nombre de usuario.</div>
+    </div>
+
+    <!-- Correo -->
+    <div class="mb-3">
+        <label for="correo" class="form-label">Correo Electrónico</label>
+        <input type="email" class="form-control" id="correo" placeholder="correo@ejemplo.com" required>
+        <div class="invalid-feedback">Ingresa un correo electrónico válido.</div>
+    </div>
+
+    <!-- Contraseña -->
+    <div class="mb-3">
+        <label for="password" class="form-label">Contraseña</label>
+        <input type="password" class="form-control" id="password" minlength="6" required>
+        <div class="invalid-feedback">La contraseña debe tener al menos 6 caracteres.</div>
+    </div>
+
+    <!-- Confirmar Contraseña -->
+    <div class="mb-3">
+        <label for="confirmPassword" class="form-label">Confirmar Contraseña</label>
+        <input type="password" class="form-control" id="confirmPassword" required>
+        <div id="passwordError" class="text-danger small d-none">Las contraseñas no coinciden.</div>
+    </div>
+
+    <div class="d-grid">
+        <button type="submit" class="btn btn-primary">Registrarse</button>
+    </div>
+</form>
