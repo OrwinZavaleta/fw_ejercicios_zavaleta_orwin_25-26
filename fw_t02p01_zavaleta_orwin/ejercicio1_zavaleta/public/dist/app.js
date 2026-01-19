@@ -3,8 +3,8 @@ console.log("Orwin Zavaleta");
 const CANTIDAD_PLATOS_ALEATORIAS = 8;
 document.addEventListener("DOMContentLoaded", () => {
     comprobarSesionUsuario();
-    cargarPlatosHome();
-    cargarCategorias();
+    // cargarPlatosHome();
+    // cargarCategorias();
     cargarValidacionDeFormularios();
     cargarEventosLoginOut();
 });
@@ -114,7 +114,24 @@ async function pedirPlatoPorId(id) {
     return plato;
 }
 function realizarMiValidacion(form) {
+    let esValido = true;
+    if (form.id == "loginForm") {
+        //TODO: buscar el correo
+    }
+    else if (form.id == "registroForm") {
+        if (form.password.value === form.confirmPassword.value) {
+            esValido && (esValido = true);
+        }
+        else {
+            esValido && (esValido = false);
+        }
+    }
     return true; // TODO: realizar las validaciones de register y login
 }
-function cargarEventosLoginOut() { }
+function actualizarValidez(element, valido, mensaje) {
+    element.nextElementSibling?.textContent = mensaje;
+}
+function cargarEventosLoginOut() {
+    //TODO: cargar los eventos para el registro y todo
+}
 //# sourceMappingURL=app.js.map

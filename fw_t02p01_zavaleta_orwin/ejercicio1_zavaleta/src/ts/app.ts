@@ -4,8 +4,8 @@ const CANTIDAD_PLATOS_ALEATORIAS: number = 8;
 
 document.addEventListener("DOMContentLoaded", () => {
     comprobarSesionUsuario();
-    cargarPlatosHome();
-    cargarCategorias();
+    // cargarPlatosHome();
+    // cargarCategorias();
     cargarValidacionDeFormularios();
     cargarEventosLoginOut();
 });
@@ -158,7 +158,25 @@ async function pedirPlatoPorId(id: number): Promise<MyMeal> {
 }
 
 function realizarMiValidacion(form: HTMLFormElement): boolean {
+    let esValido: boolean = true;
+    if (form.id == "loginForm") {
+        //TODO: buscar el correo
+    } else if (form.id == "registroForm") {
+        if (form.password.value === form.confirmPassword.value) {
+            esValido &&= true;
+
+        } else {
+            esValido &&= false;
+        }
+    }
     return true; // TODO: realizar las validaciones de register y login
 }
 
-function cargarEventosLoginOut(): void {}
+function actualizarValidez(element:HTMLElement, valido:boolean, mensaje:string) {
+    element.nextElementSibling?.textContent = mensaje;
+
+}
+
+function cargarEventosLoginOut(): void {
+    //TODO: cargar los eventos para el registro y todo
+}
