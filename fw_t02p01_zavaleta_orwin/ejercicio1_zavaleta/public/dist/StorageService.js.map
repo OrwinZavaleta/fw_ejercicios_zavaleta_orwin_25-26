@@ -1,1 +1,1 @@
-{"version":3,"file":"StorageService.js","sourceRoot":"","sources":["../../src/ts/StorageService.ts"],"names":[],"mappings":";AAAA,MAAM,cAAc;IAGhB,4BAA4B;IAC5B;QAHQ,kBAAa,GAAiB,EAAE,CAAC;QACjC,uBAAkB,GAAW,EAAE,CAAC;IAEzB,CAAC;CACnB"}
+{"version":3,"file":"StorageService.js","sourceRoot":"","sources":["../../src/ts/StorageService.ts"],"names":[],"mappings":"AAEA,MAAM,OAAO,cAAc;IAGvB,4BAA4B;IAC5B;QAHQ,kBAAa,GAAiB,EAAE,CAAC;QACjC,uBAAkB,GAAW,EAAE,CAAC;IAEzB,CAAC;CACnB"}

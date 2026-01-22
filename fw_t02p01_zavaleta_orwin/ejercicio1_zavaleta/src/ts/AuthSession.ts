@@ -1,4 +1,6 @@
-class AuthSession {
+import { User } from "./User.js";
+
+export class AuthSession {
     private userId: User["id"];
     private name: string;
     private loginDate: Date;

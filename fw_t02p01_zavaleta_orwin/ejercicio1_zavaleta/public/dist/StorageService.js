@@ -1,5 +1,4 @@
-"use strict";
-class StorageService {
+export class StorageService {
     //TODO: todos los que faltan
     constructor() {
         this.USER_KEY_ITEM = [];

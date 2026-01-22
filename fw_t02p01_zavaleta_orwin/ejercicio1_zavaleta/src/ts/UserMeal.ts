@@ -1,9 +1,12 @@
-enum Estado {
+import { MyMeal } from "./MyMeal.js";
+import { User } from "./User.js";
+
+export enum Estado {
     QUIERO_HACERLA = "QUIERO_HACERLA",
     LA_HE_HECHO = "LA_HE_HECHO",
 }
 
-interface UserMeal {
+export interface UserMeal {
     userId: User["id"];
     mealId: MyMeal["idMeal"];
     saveDate: Date;

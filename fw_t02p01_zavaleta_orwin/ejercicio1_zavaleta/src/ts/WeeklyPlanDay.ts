@@ -1,5 +1,16 @@
-interface WeeklyPlanDay {
-    day: string; /* (lunes, martes, etc.) */
+import { MyMeal } from "./MyMeal.js";
+
+type DayOfWeek =
+    | "lunes"
+    | "martes"
+    | "miércoles"
+    | "jueves"
+    | "viernes"
+    | "sábado"
+    | "domingo";
+
+export interface WeeklyPlanDay {
+    day: DayOfWeek;
     lunchMealId?: MyMeal["idMeal"];
     dinnerMealId?: MyMeal["idMeal"];
 }

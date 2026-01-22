@@ -1,11 +1,15 @@
+import { ApiService } from "./ApiService.js";
+import { Category } from "./Category.js";
+import { MyMeal } from "./MyMeal.js";
+
 console.log("Orwin Zavaleta");
 
 const CANTIDAD_PLATOS_ALEATORIAS: number = 8;
 
 document.addEventListener("DOMContentLoaded", () => {
     comprobarSesionUsuario();
-    // cargarPlatosHome();
-    // cargarCategorias();
+    cargarPlatosHome();
+    cargarCategorias();
     cargarValidacionDeFormularios();
     cargarEventosLoginOut();
 });
@@ -49,6 +53,18 @@ function comprobarSesionUsuario(): void {
         document.querySelector("#menu-auth")?.classList.add("d-none");
         document.querySelector("#menu-guest")?.classList.remove("d-none");
     }
+}
+
+function pedirNAleatorios(cant: number, tamArray: number): number[] {
+    let nRandoms: number[] = [];
+    for (let i = 0; i < tamArray && i < cant; i++) {
+        let random: number = Math.floor(Math.random() * tamArray);
+        while (nRandoms.some((n) => n === random)) {
+            random = Math.floor(Math.random() * tamArray);
+        }
+        nRandoms.push(random);
+    }
+    return nRandoms;
 }
 
 async function cargarPlatosHome(e?: Event): Promise<void> {
@@ -106,13 +122,18 @@ async function pedirPlatosCategoria(categoria: string): Promise<MyMeal[]> {
     const categoriaPlatosSinProcesar: MyMeal[] =
         await api.pedirPlatosPorCategoria(categoria);
 
+    const numeros_aleatorios = pedirNAleatorios(
+        CANTIDAD_PLATOS_ALEATORIAS,
+        categoriaPlatosSinProcesar.length,
+    );
+
     const categoriaPlatos: MyMeal[] = [];
     for (
         let i = 0;
         i < categoriaPlatosSinProcesar.length && i < CANTIDAD_PLATOS_ALEATORIAS;
         i++
     ) {
-        const plato = categoriaPlatosSinProcesar[i];
+        const plato = categoriaPlatosSinProcesar[numeros_aleatorios[i]];
 
         categoriaPlatos.push(await pedirPlatoPorId(plato.idMeal));
     }
@@ -164,7 +185,6 @@ function realizarMiValidacion(form: HTMLFormElement): boolean {
     } else if (form.id == "registroForm") {
         if (form.password.value === form.confirmPassword.value) {
             esValido &&= true;
-
         } else {
             esValido &&= false;
         }
@@ -172,9 +192,12 @@ function realizarMiValidacion(form: HTMLFormElement): boolean {
     return true; // TODO: realizar las validaciones de register y login
 }
 
-function actualizarValidez(element:HTMLElement, valido:boolean, mensaje:string) {
+function actualizarValidez(
+    element: HTMLElement,
+    valido: boolean,
+    mensaje: string,
+) {
     // element.nextElementSibling?.textContent = mensaje;
-
 }
 
 function cargarEventosLoginOut(): void {

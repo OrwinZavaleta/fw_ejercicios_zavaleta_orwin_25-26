@@ -1,10 +1,10 @@
-"use strict";
+import { ApiService } from "./ApiService.js";
 console.log("Orwin Zavaleta");
 const CANTIDAD_PLATOS_ALEATORIAS = 8;
 document.addEventListener("DOMContentLoaded", () => {
     comprobarSesionUsuario();
-    // cargarPlatosHome();
-    // cargarCategorias();
+    cargarPlatosHome();
+    cargarCategorias();
     cargarValidacionDeFormularios();
     cargarEventosLoginOut();
 });
@@ -38,6 +38,17 @@ function comprobarSesionUsuario() {
         document.querySelector("#menu-auth")?.classList.add("d-none");
         document.querySelector("#menu-guest")?.classList.remove("d-none");
     }
+}
+function pedirNAleatorios(cant, tamArray) {
+    let nRandoms = [];
+    for (let i = 0; i < tamArray && i < cant; i++) {
+        let random = Math.floor(Math.random() * tamArray);
+        while (nRandoms.some((n) => n === random)) {
+            random = Math.floor(Math.random() * tamArray);
+        }
+        nRandoms.push(random);
+    }
+    return nRandoms;
 }
 async function cargarPlatosHome(e) {
     const contenedorAleatorios = document.querySelector("#aleatorioshome");
@@ -80,9 +91,10 @@ async function cargarPlatosHome(e) {
 async function pedirPlatosCategoria(categoria) {
     const api = new ApiService();
     const categoriaPlatosSinProcesar = await api.pedirPlatosPorCategoria(categoria);
+    const numeros_aleatorios = pedirNAleatorios(CANTIDAD_PLATOS_ALEATORIAS, categoriaPlatosSinProcesar.length);
     const categoriaPlatos = [];
     for (let i = 0; i < categoriaPlatosSinProcesar.length && i < CANTIDAD_PLATOS_ALEATORIAS; i++) {
-        const plato = categoriaPlatosSinProcesar[i];
+        const plato = categoriaPlatosSinProcesar[numeros_aleatorios[i]];
         categoriaPlatos.push(await pedirPlatoPorId(plato.idMeal));
     }
     return categoriaPlatos;

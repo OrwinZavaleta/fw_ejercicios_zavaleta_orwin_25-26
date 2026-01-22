@@ -1,5 +1,5 @@
-class ViewService {
+export class ViewService {
     constructor() {
-        
+
     }
 }

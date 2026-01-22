@@ -1,5 +1,4 @@
-"use strict";
-class AuthSession {
+export class AuthSession {
     constructor(userId, name, loginDate) {
         this.userId = userId;
         this.name = name;

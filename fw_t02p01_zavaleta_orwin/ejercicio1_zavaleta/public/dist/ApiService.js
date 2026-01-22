@@ -1,5 +1,4 @@
-"use strict";
-class ApiService {
+export class ApiService {
     constructor() {
         this.API_KEY = "1";
         this.API_URL = "https://www.themealdb.com/api/json/v1/" + this.API_KEY;

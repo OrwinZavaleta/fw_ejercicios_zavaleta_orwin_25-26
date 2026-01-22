@@ -1,4 +1,3 @@
-"use strict";
-class Utilities {
+export class Utilities {
 }
 //# sourceMappingURL=Utilities.js.map

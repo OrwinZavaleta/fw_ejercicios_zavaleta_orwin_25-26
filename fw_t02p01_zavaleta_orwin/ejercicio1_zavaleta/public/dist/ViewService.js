@@ -1,5 +1,4 @@
-"use strict";
-class ViewService {
+export class ViewService {
     constructor() {
     }
 }
