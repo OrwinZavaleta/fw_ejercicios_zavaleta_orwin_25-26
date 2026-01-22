@@ -173,7 +173,7 @@ function realizarMiValidacion(form: HTMLFormElement): boolean {
 }
 
 function actualizarValidez(element:HTMLElement, valido:boolean, mensaje:string) {
-    element.nextElementSibling?.textContent = mensaje;
+    // element.nextElementSibling?.textContent = mensaje;
 
 }
 

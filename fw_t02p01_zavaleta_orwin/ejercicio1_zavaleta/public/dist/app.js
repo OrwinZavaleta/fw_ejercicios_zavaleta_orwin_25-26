@@ -129,7 +129,7 @@ function realizarMiValidacion(form) {
     return true; // TODO: realizar las validaciones de register y login
 }
 function actualizarValidez(element, valido, mensaje) {
-    element.nextElementSibling?.textContent = mensaje;
+    // element.nextElementSibling?.textContent = mensaje;
 }
 function cargarEventosLoginOut() {
     //TODO: cargar los eventos para el registro y todo
