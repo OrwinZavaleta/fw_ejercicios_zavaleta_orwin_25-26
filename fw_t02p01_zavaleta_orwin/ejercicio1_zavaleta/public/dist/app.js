@@ -1,4 +1,5 @@
 import { ApiService } from "./ApiService.js";
+import { ViewService } from "./ViewService.js";
 console.log("Orwin Zavaleta");
 const CANTIDAD_PLATOS_ALEATORIAS = 8;
 document.addEventListener("DOMContentLoaded", () => {
@@ -51,9 +52,10 @@ function pedirNAleatorios(cant, tamArray) {
     return nRandoms;
 }
 async function cargarPlatosHome(e) {
+    const view = new ViewService();
     const contenedorAleatorios = document.querySelector("#aleatorioshome");
     if (contenedorAleatorios !== null) {
-        contenedorAleatorios.innerHTML = "";
+        view.insertarTextoFormato(contenedorAleatorios, "");
         const platos = [];
         if (e) {
             const target = e.target;
@@ -72,7 +74,7 @@ async function cargarPlatosHome(e) {
         }
         for (let i = 0; i < platos.length && i < CANTIDAD_PLATOS_ALEATORIAS; i++) {
             const plato = platos[i];
-            contenedorAleatorios.innerHTML += `
+            view.apendizarTextoFormato(contenedorAleatorios, `
                         <div class="col">
                             <div class="card">
                                 <img src="${plato.strMealThumb}" class="card-img-top" alt="..."> // TODO: poner la imagen en mediano
@@ -84,7 +86,7 @@ async function cargarPlatosHome(e) {
                                 </div>
                             </div>
                         </div>
-                        `;
+                        `);
         }
     }
 }
@@ -110,12 +112,13 @@ async function pedirTodosAleatorio() {
 }
 async function cargarCategorias() {
     const api = new ApiService();
+    const view = new ViewService();
     const categorias = await api.pedirTodasCategorias();
     const categoriesSelect = document.querySelector("#categories");
     if (categoriesSelect !== null) {
-        categoriesSelect.innerHTML = `<option value="">Todas las categorías</option>`;
+        view.insertarTextoFormato(categoriesSelect, "<option value=''>Todas las categorías</option>");
         categorias.forEach((categoria) => {
-            categoriesSelect.innerHTML += `<option value="${categoria.strCategory}">${categoria.strCategory}</option>`;
+            view.apendizarTextoFormato(categoriesSelect, `<option value="${categoria.strCategory}">${categoria.strCategory}</option>`);
         });
         categoriesSelect.addEventListener("change", cargarPlatosHome);
     }
@@ -136,12 +139,23 @@ function realizarMiValidacion(form) {
         }
         else {
             esValido && (esValido = false);
+            actualizarValidez(form.pasword, false, "La contraseña no es valida"); // TODO: mejorar
         }
     }
     return true; // TODO: realizar las validaciones de register y login
 }
 function actualizarValidez(element, valido, mensaje) {
-    // element.nextElementSibling?.textContent = mensaje;
+    const view = new ViewService();
+    const hermanoContenedorError = element.nextElementSibling;
+    if (hermanoContenedorError instanceof HTMLElement) {
+        view.insertarTexto(hermanoContenedorError, mensaje);
+    }
+    if (valido) {
+        element.setCustomValidity("");
+    }
+    else {
+        element.setCustomValidity("mensaje");
+    }
 }
 function cargarEventosLoginOut() {
     //TODO: cargar los eventos para el registro y todo

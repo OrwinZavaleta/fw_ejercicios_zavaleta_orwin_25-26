@@ -1,6 +1,7 @@
 import { ApiService } from "./ApiService.js";
 import { Category } from "./Category.js";
 import { MyMeal } from "./MyMeal.js";
+import { ViewService } from "./ViewService.js";
 
 console.log("Orwin Zavaleta");
 
@@ -68,11 +69,13 @@ function pedirNAleatorios(cant: number, tamArray: number): number[] {
 }
 
 async function cargarPlatosHome(e?: Event): Promise<void> {
+    const view = new ViewService();
+
     const contenedorAleatorios: HTMLDivElement | null =
         document.querySelector("#aleatorioshome");
 
     if (contenedorAleatorios !== null) {
-        contenedorAleatorios.innerHTML = "";
+        view.insertarTextoFormato(contenedorAleatorios, "");
 
         const platos: MyMeal[] = [];
         if (e) {
@@ -99,7 +102,9 @@ async function cargarPlatosHome(e?: Event): Promise<void> {
         ) {
             const plato = platos[i];
 
-            contenedorAleatorios.innerHTML += `
+            view.apendizarTextoFormato(
+                contenedorAleatorios,
+                `
                         <div class="col">
                             <div class="card">
                                 <img src="${plato.strMealThumb}" class="card-img-top" alt="..."> // TODO: poner la imagen en mediano
@@ -111,7 +116,8 @@ async function cargarPlatosHome(e?: Event): Promise<void> {
                                 </div>
                             </div>
                         </div>
-                        `;
+                        `,
+            );
         }
     }
 }
@@ -154,6 +160,7 @@ async function pedirTodosAleatorio(): Promise<MyMeal[]> {
 
 async function cargarCategorias(): Promise<void> {
     const api = new ApiService();
+    const view = new ViewService();
 
     const categorias: Category[] = await api.pedirTodasCategorias();
 
@@ -161,9 +168,16 @@ async function cargarCategorias(): Promise<void> {
         document.querySelector("#categories");
 
     if (categoriesSelect !== null) {
-        categoriesSelect.innerHTML = `<option value="">Todas las categorías</option>`;
+        view.insertarTextoFormato(
+            categoriesSelect,
+            "<option value=''>Todas las categorías</option>",
+        );
+
         categorias.forEach((categoria) => {
-            categoriesSelect.innerHTML += `<option value="${categoria.strCategory}">${categoria.strCategory}</option>`;
+            view.apendizarTextoFormato(
+                categoriesSelect,
+                `<option value="${categoria.strCategory}">${categoria.strCategory}</option>`,
+            );
         });
 
         categoriesSelect.addEventListener("change", cargarPlatosHome);
@@ -187,17 +201,28 @@ function realizarMiValidacion(form: HTMLFormElement): boolean {
             esValido &&= true;
         } else {
             esValido &&= false;
+            actualizarValidez(form.pasword, false, "La contraseña no es valida"); // TODO: mejorar
         }
     }
     return true; // TODO: realizar las validaciones de register y login
 }
 
 function actualizarValidez(
-    element: HTMLElement,
+    element: HTMLInputElement,
     valido: boolean,
     mensaje: string,
 ) {
-    // element.nextElementSibling?.textContent = mensaje;
+    const view = new ViewService();
+    const hermanoContenedorError = element.nextElementSibling;
+    if (hermanoContenedorError instanceof HTMLElement) {
+        view.insertarTexto(hermanoContenedorError, mensaje);
+    }
+
+    if (valido) {
+        element.setCustomValidity("");
+    } else {
+        element.setCustomValidity("mensaje");
+    }
 }
 
 function cargarEventosLoginOut(): void {

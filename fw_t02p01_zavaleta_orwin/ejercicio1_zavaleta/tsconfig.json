@@ -1,17 +1,17 @@
 {
+  // Visit https://aka.ms/tsconfig to read more about this file
   "compilerOptions": {
     "target": "ES2020",
-    "module": "ESNext", // Cambiado a ESNext para soportar las últimas funciones de módulos
-    "moduleResolution": "node", // ¡ESTA ES LA CLAVE! Permite encontrar archivos e imports correctamente
+    "module": "ES6",
     "rootDir": "./src/ts",
-    "outDir": "./public/dist",
     "sourceMap": true,
+    "outDir": "./public/dist",
     "esModuleInterop": true,
     "forceConsistentCasingInFileNames": true,
     "strict": true,
-    "skipLibCheck": true,
-    "allowSyntheticDefaultImports": true // Facilita importar librerías que no tienen export default
+    "skipLibCheck": true
+
   },
-  "include": ["src/ts/**/*"], // Asegura que incluya todos los subdirectorios
-  "exclude": ["node_modules"]
+  "include": ["src/ts"],
+  "exclude": ["node_modules"],
 }
