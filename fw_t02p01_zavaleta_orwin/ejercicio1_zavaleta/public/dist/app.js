@@ -1,5 +1,6 @@
 import { ApiService } from "./ApiService.js";
 import { ViewService } from "./ViewService.js";
+import { StorageService } from "./StorageService.js";
 console.log("Orwin Zavaleta");
 const CANTIDAD_PLATOS_ALEATORIAS = 8;
 document.addEventListener("DOMContentLoaded", () => {
@@ -19,14 +20,36 @@ function cargarValidacionDeFormularios() {
                 const miValidacion = realizarMiValidacion(form);
                 if (form.checkValidity() && miValidacion) {
                     if (form.id == "loginForm")
-                        ""; // TODO: hacer el registro y login
+                        iniciarSesion(form);
                     else if (form.id == "registroForm")
-                        "";
+                        crearUsuario(form);
                 }
                 form.classList.add("was-validated");
             }, false);
         });
     })();
+}
+function crearUsuario(form) {
+    const storage = new StorageService();
+    const user = {
+        id: 1,
+        name: form.usuario.value,
+        email: form.correo.value,
+        password: form.password.value,
+    };
+    storage.guardarAgregarUsuario(user);
+    comprobarSesionUsuario();
+}
+function iniciarSesion(form) {
+    const storage = new StorageService();
+    const usuarioActual = storage.buscarUsuarioPorCorreo(form.email.value);
+    if (usuarioActual) {
+        storage.setUsuarioActual(usuarioActual);
+        comprobarSesionUsuario();
+    }
+    else {
+        console.log("usuario no existe");
+    }
 }
 function comprobarSesionUsuario() {
     let sesion = localStorage.getItem("session");
@@ -34,12 +57,16 @@ function comprobarSesionUsuario() {
     if (typeof sesion === "string") {
         document.querySelector("#menu-auth")?.classList.remove("d-none");
         document.querySelector("#menu-guest")?.classList.add("d-none");
+        document.querySelector("#botonFavoritos")?.classList.remove("d-none");
+        comprobarCategoriaFavorita();
     }
     else {
         document.querySelector("#menu-auth")?.classList.add("d-none");
         document.querySelector("#menu-guest")?.classList.remove("d-none");
+        document.querySelector("#botonFavoritos")?.classList.add("d-none");
     }
 }
+function comprobarCategoriaFavorita() { }
 function pedirNAleatorios(cant, tamArray) {
     let nRandoms = [];
     for (let i = 0; i < tamArray && i < cant; i++) {
@@ -158,6 +185,20 @@ function actualizarValidez(element, valido, mensaje) {
     }
 }
 function cargarEventosLoginOut() {
-    //TODO: cargar los eventos para el registro y todo
+    const storage = new StorageService();
+    document.querySelector("#logout")?.addEventListener("click", () => {
+        storage.removeUsuarioActual();
+        comprobarSesionUsuario();
+    });
+    const btnLogin = document.querySelector("#login");
+    btnLogin.addEventListener("click", function () {
+        const tabLogin = new bootstrap.Tab(document.querySelector("#login-tab"));
+        tabLogin.show();
+    });
+    const btnRegister = document.querySelector("#register");
+    btnRegister.addEventListener("click", function () {
+        const tabRegister = new bootstrap.Tab(document.querySelector("#register-tab"));
+        tabRegister.show();
+    });
 }
 //# sourceMappingURL=app.js.map

@@ -2,6 +2,10 @@ import { ApiService } from "./ApiService.js";
 import { Category } from "./Category.js";
 import { MyMeal } from "./MyMeal.js";
 import { ViewService } from "./ViewService.js";
+import { User } from "./User";
+import { StorageService } from "./StorageService.js";
+
+declare const bootstrap: any;
 
 console.log("Orwin Zavaleta");
 
@@ -30,9 +34,8 @@ function cargarValidacionDeFormularios(): void {
                     const miValidacion: boolean = realizarMiValidacion(form);
 
                     if (form.checkValidity() && miValidacion) {
-                        if (form.id == "loginForm")
-                            ""; // TODO: hacer el registro y login
-                        else if (form.id == "registroForm") "";
+                        if (form.id == "loginForm") iniciarSesion(form);
+                        else if (form.id == "registroForm") crearUsuario(form);
                     }
 
                     form.classList.add("was-validated");
@@ -43,6 +46,31 @@ function cargarValidacionDeFormularios(): void {
     })();
 }
 
+function crearUsuario(form: HTMLFormElement) {
+    const storage: StorageService = new StorageService();
+    const user: User = {
+        id: 1,
+        name: form.usuario.value,
+        email: form.correo.value,
+        password: form.password.value,
+    };
+    storage.guardarAgregarUsuario(user);
+    comprobarSesionUsuario();
+}
+
+function iniciarSesion(form: HTMLFormElement) {
+    const storage: StorageService = new StorageService();
+    const usuarioActual: User | null = storage.buscarUsuarioPorCorreo(
+        form.email.value,
+    );
+    if (usuarioActual) {
+        storage.setUsuarioActual(usuarioActual);
+        comprobarSesionUsuario();
+    } else {
+        console.log("usuario no existe");
+    }
+}
+
 function comprobarSesionUsuario(): void {
     let sesion: string | null = localStorage.getItem("session");
     console.log(sesion);
@@ -50,11 +78,16 @@ function comprobarSesionUsuario(): void {
     if (typeof sesion === "string") {
         document.querySelector("#menu-auth")?.classList.remove("d-none");
         document.querySelector("#menu-guest")?.classList.add("d-none");
+        document.querySelector("#botonFavoritos")?.classList.remove("d-none");
+        comprobarCategoriaFavorita();
     } else {
         document.querySelector("#menu-auth")?.classList.add("d-none");
         document.querySelector("#menu-guest")?.classList.remove("d-none");
+        document.querySelector("#botonFavoritos")?.classList.add("d-none");
     }
 }
+
+function comprobarCategoriaFavorita() {}
 
 function pedirNAleatorios(cant: number, tamArray: number): number[] {
     let nRandoms: number[] = [];
@@ -201,7 +234,11 @@ function realizarMiValidacion(form: HTMLFormElement): boolean {
             esValido &&= true;
         } else {
             esValido &&= false;
-            actualizarValidez(form.pasword, false, "La contraseña no es valida"); // TODO: mejorar
+            actualizarValidez(
+                form.pasword,
+                false,
+                "La contraseña no es valida",
+            ); // TODO: mejorar
         }
     }
     return true; // TODO: realizar las validaciones de register y login
@@ -226,5 +263,24 @@ function actualizarValidez(
 }
 
 function cargarEventosLoginOut(): void {
-    //TODO: cargar los eventos para el registro y todo
+    const storage = new StorageService();
+    document.querySelector("#logout")?.addEventListener("click", () => {
+        storage.removeUsuarioActual();
+        comprobarSesionUsuario();
+    });
+
+    const btnLogin = document.querySelector("#login") as HTMLLinkElement;
+    btnLogin.addEventListener("click", function () {
+        const tabLogin = new bootstrap.Tab(
+            document.querySelector("#login-tab"),
+        );
+        tabLogin.show();
+    });
+    const btnRegister = document.querySelector("#register") as HTMLLinkElement;
+    btnRegister.addEventListener("click", function () {
+        const tabRegister = new bootstrap.Tab(
+            document.querySelector("#register-tab"),
+        );
+        tabRegister.show();
+    });
 }
