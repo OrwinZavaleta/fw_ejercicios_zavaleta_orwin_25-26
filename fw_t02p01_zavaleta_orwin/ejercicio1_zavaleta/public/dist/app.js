@@ -158,6 +158,16 @@ async function cargarCategorias() {
         });
         categoriesSelect.addEventListener("change", cargarPlatosHome);
     }
+    document
+        .querySelector("#fijarCategoria")
+        ?.addEventListener("click", fijarCategoria);
+}
+function fijarCategoria() {
+    const storage = new StorageService();
+    const usuarioActual = storage.getUsuarioActual();
+    if (usuarioActual) {
+        usuarioActual.favoriteCategory = document.querySelector("#categories").value;
+    }
 }
 async function pedirPlatoPorId(id) {
     const api = new ApiService();

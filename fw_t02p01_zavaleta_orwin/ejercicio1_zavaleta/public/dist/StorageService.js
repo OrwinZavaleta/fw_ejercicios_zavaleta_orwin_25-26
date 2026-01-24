@@ -15,7 +15,7 @@ export class StorageService {
     getUsuarioActual() {
         const usersinProcesar = localStorage.getItem("session");
         if (usersinProcesar === null)
-            throw new Error("No existe un usuario actual");
+            return null;
         return JSON.parse(usersinProcesar);
     }
     removeUsuarioActual() {

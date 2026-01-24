@@ -17,10 +17,10 @@ export class StorageService {
         localStorage.setItem("session", JSON.stringify(usuario));
     }
 
-    public getUsuarioActual(): User {
+    public getUsuarioActual(): User | null {
         const usersinProcesar: string | null = localStorage.getItem("session");
 
-        if (usersinProcesar === null) throw new Error("No existe un usuario actual");
+        if (usersinProcesar === null) return null;
         return JSON.parse(usersinProcesar);
     }
 

@@ -56,14 +56,14 @@ function crearUsuario(form: HTMLFormElement) {
     };
     storage.guardarAgregarUsuario(user);
     comprobarSesionUsuario();
-    cerrarModalLoginOut()
+    cerrarModalLoginOut();
 }
 
-function cerrarModalLoginOut(){
+function cerrarModalLoginOut() {
     const modal = document.querySelector("#loginOut");
-     if (modal) {
+    if (modal) {
         const modalInstance = bootstrap.Modal.getOrCreateInstance(modal);
-        
+
         modalInstance.hide();
     }
 }
@@ -76,7 +76,7 @@ function iniciarSesion(form: HTMLFormElement) {
     if (usuarioActual) {
         storage.setUsuarioActual(usuarioActual);
         comprobarSesionUsuario();
-        cerrarModalLoginOut()
+        cerrarModalLoginOut();
     } else {
         console.log("usuario no existe");
     }
@@ -225,6 +225,21 @@ async function cargarCategorias(): Promise<void> {
         });
 
         categoriesSelect.addEventListener("change", cargarPlatosHome);
+    }
+
+    document
+        .querySelector("#fijarCategoria")
+        ?.addEventListener("click", fijarCategoria);
+}
+
+function fijarCategoria(): void {
+    const storage = new StorageService();
+    const usuarioActual = storage.getUsuarioActual();
+
+    if (usuarioActual) {
+        usuarioActual.favoriteCategory = (
+            document.querySelector("#categories") as HTMLSelectElement
+        ).value;
     }
 }
 
