@@ -39,6 +39,14 @@ function crearUsuario(form) {
     };
     storage.guardarAgregarUsuario(user);
     comprobarSesionUsuario();
+    cerrarModalLoginOut();
+}
+function cerrarModalLoginOut() {
+    const modal = document.querySelector("#loginOut");
+    if (modal) {
+        const modalInstance = bootstrap.Modal.getOrCreateInstance(modal);
+        modalInstance.hide();
+    }
 }
 function iniciarSesion(form) {
     const storage = new StorageService();
@@ -46,6 +54,7 @@ function iniciarSesion(form) {
     if (usuarioActual) {
         storage.setUsuarioActual(usuarioActual);
         comprobarSesionUsuario();
+        cerrarModalLoginOut();
     }
     else {
         console.log("usuario no existe");
