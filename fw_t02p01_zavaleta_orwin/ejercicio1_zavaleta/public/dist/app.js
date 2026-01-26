@@ -37,6 +37,7 @@ function crearUsuario(form) {
         email: form.correo.value,
         password: form.password.value,
     };
+    form.reset();
     storage.guardarAgregarUsuario(user);
     comprobarSesionUsuario();
     cerrarModalLoginOut();
@@ -51,10 +52,11 @@ function cerrarModalLoginOut() {
 function iniciarSesion(form) {
     const storage = new StorageService();
     const usuarioActual = storage.buscarUsuarioPorCorreo(form.email.value);
-    if (usuarioActual) {
+    if (usuarioActual && usuarioActual.password === form.password.value) {
         storage.setUsuarioActual(usuarioActual);
         comprobarSesionUsuario();
         cerrarModalLoginOut();
+        form.reset();
     }
     else {
         console.log("usuario no existe");
@@ -75,7 +77,14 @@ function comprobarSesionUsuario() {
         document.querySelector("#botonFavoritos")?.classList.add("d-none");
     }
 }
-function comprobarCategoriaFavorita() { }
+function comprobarCategoriaFavorita() {
+    const storage = new StorageService();
+    const usuarioActual = storage.getUsuarioActual();
+    if (usuarioActual?.favoriteCategory !== undefined) {
+        document.querySelector("#categories").value =
+            usuarioActual.favoriteCategory;
+    }
+} // TODO: cargar los platos que correspondan a la categoria
 function pedirNAleatorios(cant, tamArray) {
     let nRandoms = [];
     for (let i = 0; i < tamArray && i < cant; i++) {
@@ -166,7 +175,8 @@ function fijarCategoria() {
     const storage = new StorageService();
     const usuarioActual = storage.getUsuarioActual();
     if (usuarioActual) {
-        usuarioActual.favoriteCategory = document.querySelector("#categories").value;
+        usuarioActual.favoriteCategory = document.querySelector("#categories").value; // TODO: realizar comprobaciones
+        storage.actualizarDatosUsuario(usuarioActual);
     }
 }
 async function pedirPlatoPorId(id) {
@@ -176,8 +186,16 @@ async function pedirPlatoPorId(id) {
 }
 function realizarMiValidacion(form) {
     let esValido = true;
+    const storage = new StorageService();
     if (form.id == "loginForm") {
-        //TODO: buscar el correo
+        const usuarioActual = storage.buscarUsuarioPorCorreo(form.email.value);
+        if (usuarioActual && usuarioActual.password === form.password.value) {
+            esValido && (esValido = true);
+        }
+        else {
+            esValido && (esValido = false);
+            actualizarValidez(form.password, false, "La contraseña o el correo no es valido");
+        }
     }
     else if (form.id == "registroForm") {
         if (form.password.value === form.confirmPassword.value) {
@@ -185,7 +203,7 @@ function realizarMiValidacion(form) {
         }
         else {
             esValido && (esValido = false);
-            actualizarValidez(form.pasword, false, "La contraseña no es valida"); // TODO: mejorar
+            actualizarValidez(form.password, false, "La contraseña no es valida");
         }
     }
     return true; // TODO: realizar las validaciones de register y login

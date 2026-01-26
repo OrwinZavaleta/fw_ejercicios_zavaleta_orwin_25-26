@@ -10,4 +10,13 @@ export class AuthSession {
         this.name = name;
         this.loginDate = loginDate;
     }
+
+    static fromJSON(json: string): AuthSession {
+        const data = JSON.parse(json);
+        return new AuthSession(data.userId, data.name, data.loginDate);
+    }
+
+    public getId():User["id"]{
+        return this.userId;
+    }
 }

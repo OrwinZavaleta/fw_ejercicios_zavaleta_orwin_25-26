@@ -24,4 +24,5 @@ export class ApiService {
         return data.meals[0];
     }
 }
+// TODO: devolver los ingredientes correctamente
 //# sourceMappingURL=ApiService.js.map

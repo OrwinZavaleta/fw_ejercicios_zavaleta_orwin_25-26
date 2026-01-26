@@ -54,6 +54,7 @@ function crearUsuario(form: HTMLFormElement) {
         email: form.correo.value,
         password: form.password.value,
     };
+    form.reset();
     storage.guardarAgregarUsuario(user);
     comprobarSesionUsuario();
     cerrarModalLoginOut();
@@ -73,10 +74,11 @@ function iniciarSesion(form: HTMLFormElement) {
     const usuarioActual: User | null = storage.buscarUsuarioPorCorreo(
         form.email.value,
     );
-    if (usuarioActual) {
+    if (usuarioActual && usuarioActual.password === form.password.value) {
         storage.setUsuarioActual(usuarioActual);
         comprobarSesionUsuario();
         cerrarModalLoginOut();
+        form.reset();
     } else {
         console.log("usuario no existe");
     }
@@ -98,7 +100,15 @@ function comprobarSesionUsuario(): void {
     }
 }
 
-function comprobarCategoriaFavorita() {}
+function comprobarCategoriaFavorita() {
+    const storage = new StorageService();
+    const usuarioActual = storage.getUsuarioActual();
+
+    if (usuarioActual?.favoriteCategory !== undefined) {
+        (document.querySelector("#categories") as HTMLSelectElement).value =
+            usuarioActual.favoriteCategory;
+    }
+} // TODO: cargar los platos que correspondan a la categoria
 
 function pedirNAleatorios(cant: number, tamArray: number): number[] {
     let nRandoms: number[] = [];
@@ -239,7 +249,8 @@ function fijarCategoria(): void {
     if (usuarioActual) {
         usuarioActual.favoriteCategory = (
             document.querySelector("#categories") as HTMLSelectElement
-        ).value;
+        ).value; // TODO: realizar comprobaciones
+        storage.actualizarDatosUsuario(usuarioActual);
     }
 }
 
@@ -253,18 +264,33 @@ async function pedirPlatoPorId(id: number): Promise<MyMeal> {
 
 function realizarMiValidacion(form: HTMLFormElement): boolean {
     let esValido: boolean = true;
+
+    const storage: StorageService = new StorageService();
+
     if (form.id == "loginForm") {
-        //TODO: buscar el correo
+        const usuarioActual: User | null = storage.buscarUsuarioPorCorreo(
+            form.email.value,
+        );
+        if (usuarioActual && usuarioActual.password === form.password.value) {
+            esValido &&= true;
+        } else {
+            esValido &&= false;
+            actualizarValidez(
+                form.password,
+                false,
+                "La contraseña o el correo no es valido",
+            );
+        }
     } else if (form.id == "registroForm") {
         if (form.password.value === form.confirmPassword.value) {
             esValido &&= true;
         } else {
             esValido &&= false;
             actualizarValidez(
-                form.pasword,
+                form.password,
                 false,
                 "La contraseña no es valida",
-            ); // TODO: mejorar
+            );
         }
     }
     return true; // TODO: realizar las validaciones de register y login
