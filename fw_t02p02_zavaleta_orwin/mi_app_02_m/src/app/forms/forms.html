@@ -1,0 +1,52 @@
+<h2>{{titleComp}}</h2>
+<hr>
+<div>
+  <label for="framework">
+    Framework favorito:
+  </label>
+  <input id="framework" name="framework" type="text" [(ngModel)]="favoriteFramework">
+  <div>
+    <label for="nameModule">Módulo:</label>
+    <input id="nameModule" name="nameModule" type="text" [(ngModel)]="module.name">
+  </div>
+
+  <div>
+    <label for="mark">Nota:</label>
+    <input id="mark" name="mark" type="number" [(ngModel)]="module.mark">
+  </div>
+  <p>Tu framework es: {{favoriteFramework}}</p>
+  <p>{{module.name}} - {{module.mark}}</p>
+</div>
+
+<div>
+  <h3>Reactive Forms</h3>
+
+  <form [formGroup]="profileForm" (ngSubmit)="handleSubmit()">
+    <label for="name">Nombre</label>
+    <input id="name" name="name" type="text" formControlName="name" />
+
+    @if (profileForm.controls.name.invalid &&
+    profileForm.controls.name.touched){
+    <span class="danger">Introduce un nombre de al menos 3 caracteres.</span>
+    }
+
+    <br>
+    <label for="email">Email</label>
+    <input id="email" name="email" type="email" formControlName="email" /><br>
+    @if (profileForm.controls.email.invalid &&
+    profileForm.controls.email.touched){
+    <span class="danger">Introduce un correo válido.</span><br>
+    }
+    @if (profileForm.controls.email.errors?.['emailEdu'] &&
+    profileForm.controls.email.touched) {
+    <span class="danger">Introduce un correo @educastillalamancha.es.</span><br>
+    }
+
+    <br />
+    <button type="submit" [disabled]="!profileForm.valid">Submit</button>
+
+  </form>
+  <p>Name: {{ profileForm.value.name }}</p>
+  <p>Email: {{ profileForm.value.email }}</p>
+
+</div>

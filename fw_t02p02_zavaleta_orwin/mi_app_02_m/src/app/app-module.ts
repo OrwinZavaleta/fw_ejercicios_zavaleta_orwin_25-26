@@ -9,6 +9,10 @@ import { Comments } from './comments/comments';
 
 import { NgOptimizedImage } from '@angular/common';
 import { Home } from './home/home';
+import { Forms } from './forms/forms';
+
+import { FormsModule } from '@angular/forms';
+import { ReactiveFormsModule } from '@angular/forms';
 
 @NgModule({
   declarations: [
@@ -16,12 +20,15 @@ import { Home } from './home/home';
     User,
     Child,
     Comments,
-    Home
+    Home,
+    Forms
   ],
   imports: [
     BrowserModule,
     AppRoutingModule,
     NgOptimizedImage,
+    FormsModule,
+    ReactiveFormsModule,
   ],
   providers: [
     provideBrowserGlobalErrorListeners(),
