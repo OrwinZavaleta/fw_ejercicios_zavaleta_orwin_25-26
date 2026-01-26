@@ -2,15 +2,16 @@ import { AuthSession } from "./AuthSession.js";
 import { User } from "./User.js";
 
 export class StorageService {
-    private USER_KEY_ITEM: User["id"][] = [];
+    private USER_KEY_ITEM: string = "users";
+    private AUTH_SESSION_KEY_ITEM: string = "session";
     private USER_MEAL_KEY_ITEM: string = "";
 
     public guardarAgregarUsuario(nuevoUsuario: User) {
-        const users: User[] = JSON.parse(localStorage.getItem("users") ?? "[]");
+        const users: User[] = JSON.parse(localStorage.getItem(this.USER_KEY_ITEM) ?? "[]");
 
         users.push(nuevoUsuario);
 
-        localStorage.setItem("users", JSON.stringify(users));
+        localStorage.setItem(this.USER_KEY_ITEM, JSON.stringify(users));
         this.setUsuarioActual(nuevoUsuario);
     }
 
@@ -20,11 +21,11 @@ export class StorageService {
             usuario.name,
             new Date(),
         );
-        localStorage.setItem("session", JSON.stringify(usuarioAGuardar));
+        localStorage.setItem(this.AUTH_SESSION_KEY_ITEM, JSON.stringify(usuarioAGuardar));
     }
 
     public getUsuarioActual(): User | null {
-        const usersinProcesar: string | null = localStorage.getItem("session");
+        const usersinProcesar: string | null = localStorage.getItem(this.AUTH_SESSION_KEY_ITEM);
 
         if (usersinProcesar === null) return null;
 
@@ -35,11 +36,11 @@ export class StorageService {
     }
 
     public removeUsuarioActual(): void {
-        localStorage.removeItem("session");
+        localStorage.removeItem(this.AUTH_SESSION_KEY_ITEM);
     }
 
     public buscarUsuarioPorCorreo(correo: string) {
-        const users: User[] = JSON.parse(localStorage.getItem("users") ?? "[]");
+        const users: User[] = JSON.parse(localStorage.getItem(this.USER_KEY_ITEM) ?? "[]");
 
         const usuarioEncontrado = users.find((us) => us.email === correo);
 
@@ -49,7 +50,7 @@ export class StorageService {
     }
 
     private buscarUsuarioPorId(id: User["id"]) {
-        const users: User[] = JSON.parse(localStorage.getItem("users") ?? "[]");
+        const users: User[] = JSON.parse(localStorage.getItem(this.USER_KEY_ITEM) ?? "[]");
 
         const usuarioEncontrado = users.find((us) => us.id === id);
 
@@ -59,14 +60,14 @@ export class StorageService {
     }
 
     public actualizarDatosUsuario(usuario: User) {
-        const users: User[] = JSON.parse(localStorage.getItem("users") ?? "[]");
+        const users: User[] = JSON.parse(localStorage.getItem(this.USER_KEY_ITEM) ?? "[]");
 
         const usuarioEncontrado = users.find(
             (us) => us.email === usuario.email,
         );
         if (usuarioEncontrado) {
             usuarioEncontrado.favoriteCategory = usuario.favoriteCategory;
-            localStorage.setItem("users", JSON.stringify(users));
+            localStorage.setItem(this.USER_KEY_ITEM, JSON.stringify(users));
         } else {
             throw new Error("El usuario no existe");
         }

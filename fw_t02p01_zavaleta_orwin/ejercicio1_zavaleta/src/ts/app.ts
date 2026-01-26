@@ -122,7 +122,7 @@ function pedirNAleatorios(cant: number, tamArray: number): number[] {
     return nRandoms;
 }
 
-async function cargarPlatosHome(e?: Event): Promise<void> {
+export async function cargarPlatosHome(e?: Event): Promise<void> {
     const view = new ViewService();
     const storage = new StorageService();
     let favUsuario: undefined | string = undefined;
@@ -134,8 +134,6 @@ async function cargarPlatosHome(e?: Event): Promise<void> {
         document.querySelector("#aleatorioshome");
 
     if (contenedorAleatorios !== null) {
-        view.insertarTextoFormato(contenedorAleatorios, "");
-
         const platos: MyMeal[] = [];
         if (e) {
             const target = e.target as HTMLSelectElement;
@@ -159,30 +157,11 @@ async function cargarPlatosHome(e?: Event): Promise<void> {
             platos.push(...platosPedidos);
         }
 
-        for (
-            let i = 0;
-            i < platos.length && i < CANTIDAD_PLATOS_ALEATORIAS;
-            i++
-        ) {
-            const plato = platos[i];
-
-            view.apendizarTextoFormato(
-                contenedorAleatorios,
-                `
-                        <div class="col">
-                            <div class="card">
-                                <img src="${plato.strMealThumb}" class="card-img-top" alt="..."> // TODO: poner la imagen en mediano
-                                <div class="card-body">
-                                    <h5 class="card-title">${plato.strMeal}</h5>
-                                    <p class="card-text">${plato.strCategory}</p>
-                                    <p class="card-text">${plato.strArea}</p>
-                                    <p class="card-text">${plato.strCategory}</p> // TODO: convertir la llamada para que encaje con la interfaz
-                                </div>
-                            </div>
-                        </div>
-                        `,
-            );
-        }
+        view.pintarPlatos(
+            platos,
+            contenedorAleatorios,
+            CANTIDAD_PLATOS_ALEATORIAS,
+        );
     }
 }
 
@@ -228,55 +207,11 @@ async function cargarCategorias(): Promise<void> {
 
     const categorias: Category[] = await api.pedirTodasCategorias();
 
-    const categoriesSelect: HTMLSelectElement | null =
-        document.querySelector("#categories");
+    const categoriesSelect = document.querySelector(
+        "#categories",
+    ) as HTMLSelectElement;
 
-    if (categoriesSelect !== null) {
-        view.insertarTextoFormato(
-            categoriesSelect,
-            "<option value=''>Todas las categorías</option>",
-        );
-
-        categorias.forEach((categoria) => {
-            view.apendizarTextoFormato(
-                categoriesSelect,
-                `<option value="${categoria.strCategory}">${categoria.strCategory}</option>`,
-            );
-        });
-
-        categoriesSelect.addEventListener("change", cargarPlatosHome);
-    }
-
-    document
-        .querySelector("#fijarCategoria")
-        ?.addEventListener("click", fijarDesfijarCategoria);
-}
-
-function fijarDesfijarCategoria(): void {
-    const storage = new StorageService();
-    const usuarioActual = storage.getUsuarioActual();
-    const boton = document.querySelector("#fijarCategoria");
-
-    if (usuarioActual) {
-        if (boton?.classList.contains("active")) {
-            usuarioActual.favoriteCategory = undefined;
-            boton?.classList.remove("active");
-            storage.actualizarDatosUsuario(usuarioActual);
-        } else {
-            const categoriaAAsignar = (
-                document.querySelector("#categories") as HTMLSelectElement
-            ).value;
-            if (
-                categoriaAAsignar &&
-                categoriaAAsignar !== null &&
-                categoriaAAsignar !== undefined
-            ) {
-                usuarioActual.favoriteCategory = categoriaAAsignar;
-                storage.actualizarDatosUsuario(usuarioActual);
-                boton?.classList.add("active");
-            }
-        }
-    }
+    view.pintarCategorias(categorias, categoriesSelect);
 }
 
 async function pedirPlatoPorId(id: number): Promise<MyMeal> {
@@ -290,6 +225,7 @@ async function pedirPlatoPorId(id: number): Promise<MyMeal> {
 function realizarMiValidacion(form: HTMLFormElement): boolean {
     let esValido: boolean = true;
 
+    const view = new ViewService();
     const storage: StorageService = new StorageService();
 
     if (form.id == "loginForm") {
@@ -300,7 +236,7 @@ function realizarMiValidacion(form: HTMLFormElement): boolean {
             esValido &&= true;
         } else {
             esValido &&= false;
-            actualizarValidez(
+            view.actualizarValidez(
                 form.password,
                 false,
                 "La contraseña o el correo no es valido",
@@ -311,32 +247,14 @@ function realizarMiValidacion(form: HTMLFormElement): boolean {
             esValido &&= true;
         } else {
             esValido &&= false;
-            actualizarValidez(
+            view.actualizarValidez(
                 form.password,
                 false,
                 "La contraseña no es valida",
             );
         }
     }
-    return true; // TODO: realizar las validaciones de register y login
-}
-
-function actualizarValidez(
-    element: HTMLInputElement,
-    valido: boolean,
-    mensaje: string,
-) {
-    const view = new ViewService();
-    const hermanoContenedorError = element.nextElementSibling;
-    if (hermanoContenedorError instanceof HTMLElement) {
-        view.insertarTexto(hermanoContenedorError, mensaje);
-    }
-
-    if (valido) {
-        element.setCustomValidity("");
-    } else {
-        element.setCustomValidity("mensaje");
-    }
+    return esValido;
 }
 
 function cargarEventosLoginOut(): void {
