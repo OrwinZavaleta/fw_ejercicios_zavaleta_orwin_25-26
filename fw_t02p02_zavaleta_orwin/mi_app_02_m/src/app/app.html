@@ -2,32 +2,13 @@
   <div class="content">
     <h1>Hello, {{ title() }}</h1>
   </div>
-  <div>
-    <section>
-      <app-user></app-user>
-    </section>
-    <ul>
-      <li><app-user></app-user></li>
-      <li><app-user></app-user></li>
-    </ul>
-  </div>
-  <div>
-    @if (isServerRunning){
-    <span>Yes, the server is running</span>
-    }
-    @else {
-    <span>No, the server is not running</span>
-    }
-  </div>
-  @for (character of characters; track character.id){
-  <p>{{ character.id }} - {{ character.name }}</p>
-  }
-  @empty {
-  <li>No items found</li>
-  }
-  <div [class]="boxClass" (mouseover)="onMouseOverAction()" (mouseout)="onMouseOutAction()">
-    Mira: {{ message }}
-  </div>
+
+  <nav>
+    <a routerLink="/">Home</a>
+    |
+    <a routerLink="/user">User</a>
+  </nav>
+  <router-outlet></router-outlet>
 
   <router-outlet />
 </main>

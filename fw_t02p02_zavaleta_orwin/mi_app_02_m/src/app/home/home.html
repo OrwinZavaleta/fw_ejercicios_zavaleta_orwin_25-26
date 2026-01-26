@@ -1,0 +1,55 @@
+<h2>{{ titleComp }}</h2>
+  <hr/>
+  <div>
+    <section>
+      <app-user></app-user>
+    </section>
+    <ul>
+      <li><app-user></app-user></li>
+      <li><app-user></app-user></li>
+    </ul>
+  </div>
+  <div>@if (isServerRunning){
+    <span>Yes, the server is running</span>
+    }
+    @else {
+    <span>No, the server is not running</span>
+    }
+  </div>
+  <div>
+    @for (character of characters; track character.id){
+    <p>{{ character.id }} - {{ character.name }}</p>
+    }
+  </div>
+  <div [contentEditable]="isEditable">
+    Puede editar este texto si isEditable es true.
+  </div>
+  <div [class]="boxClass" (mouseover)="onMouseOverAction()" (mouseout)="onMouseOutAction()">
+    Mira: {{ message }}
+  </div>
+  <div>
+    <section>
+      <app-user name="Master"></app-user>
+    </section>
+  </div>
+  <div>
+    <app-child (addItemChildEvent)="addItemParent($event)" />
+    <p>Lista padre:</p>
+    <ul>
+      @for (item of itemsParent; track $index) {
+      <li>{{item}}</li>
+      }
+    </ul>
+  </div>
+
+  <div>
+    @defer (on viewport){
+    <app-comments></app-comments>
+    }@placeholder {
+    <p>Comentarios futuros.</p>
+    }@loading (minimum 2s) {
+    <p>Cargando...</p>
+    }@error {
+    <p>Error en la cargar</p>
+    }
+  </div>
