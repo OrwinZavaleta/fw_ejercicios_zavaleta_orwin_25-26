@@ -12,9 +12,9 @@ console.log("Orwin Zavaleta");
 const CANTIDAD_PLATOS_ALEATORIAS: number = 8;
 
 document.addEventListener("DOMContentLoaded", () => {
+    cargarCategorias();
     comprobarSesionUsuario();
     cargarPlatosHome();
-    cargarCategorias();
     cargarValidacionDeFormularios();
     cargarEventosLoginOut();
 });
@@ -108,7 +108,7 @@ function comprobarCategoriaFavorita() {
         (document.querySelector("#categories") as HTMLSelectElement).value =
             usuarioActual.favoriteCategory;
     }
-} // TODO: cargar los platos que correspondan a la categoria
+}
 
 function pedirNAleatorios(cant: number, tamArray: number): number[] {
     let nRandoms: number[] = [];
@@ -124,6 +124,11 @@ function pedirNAleatorios(cant: number, tamArray: number): number[] {
 
 async function cargarPlatosHome(e?: Event): Promise<void> {
     const view = new ViewService();
+    const storage = new StorageService();
+    let favUsuario: undefined | string = undefined;
+    if (storage.getUsuarioActual()?.favoriteCategory) {
+        favUsuario = storage.getUsuarioActual()?.favoriteCategory;
+    }
 
     const contenedorAleatorios: HTMLDivElement | null =
         document.querySelector("#aleatorioshome");
@@ -145,8 +150,13 @@ async function cargarPlatosHome(e?: Event): Promise<void> {
 
             platos.push(...platosPedidos);
         } else {
-            const todosAleatorios: MyMeal[] = await pedirTodosAleatorio();
-            platos.push(...todosAleatorios);
+            const platosPedidos: MyMeal[] = [];
+            if (favUsuario) {
+                platosPedidos.push(...(await pedirPlatosCategoria(favUsuario)));
+            } else {
+                platosPedidos.push(...(await pedirTodosAleatorio()));
+            }
+            platos.push(...platosPedidos);
         }
 
         for (
@@ -239,18 +249,33 @@ async function cargarCategorias(): Promise<void> {
 
     document
         .querySelector("#fijarCategoria")
-        ?.addEventListener("click", fijarCategoria);
+        ?.addEventListener("click", fijarDesfijarCategoria);
 }
 
-function fijarCategoria(): void {
+function fijarDesfijarCategoria(): void {
     const storage = new StorageService();
     const usuarioActual = storage.getUsuarioActual();
+    const boton = document.querySelector("#fijarCategoria");
 
     if (usuarioActual) {
-        usuarioActual.favoriteCategory = (
-            document.querySelector("#categories") as HTMLSelectElement
-        ).value; // TODO: realizar comprobaciones
-        storage.actualizarDatosUsuario(usuarioActual);
+        if (boton?.classList.contains("active")) {
+            usuarioActual.favoriteCategory = undefined;
+            boton?.classList.remove("active");
+            storage.actualizarDatosUsuario(usuarioActual);
+        } else {
+            const categoriaAAsignar = (
+                document.querySelector("#categories") as HTMLSelectElement
+            ).value;
+            if (
+                categoriaAAsignar &&
+                categoriaAAsignar !== null &&
+                categoriaAAsignar !== undefined
+            ) {
+                usuarioActual.favoriteCategory = categoriaAAsignar;
+                storage.actualizarDatosUsuario(usuarioActual);
+                boton?.classList.add("active");
+            }
+        }
     }
 }
 

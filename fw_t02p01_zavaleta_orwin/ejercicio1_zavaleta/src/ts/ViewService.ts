@@ -13,4 +13,8 @@ export class ViewService {
     public apendizarTextoFormato(element: HTMLElement, mensaje: string) {
         element.innerHTML += mensaje;
     }
+
+    public pintarCategorias(){
+        
+    }
 }

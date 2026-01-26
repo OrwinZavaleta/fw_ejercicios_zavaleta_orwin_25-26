@@ -4,9 +4,9 @@ import { StorageService } from "./StorageService.js";
 console.log("Orwin Zavaleta");
 const CANTIDAD_PLATOS_ALEATORIAS = 8;
 document.addEventListener("DOMContentLoaded", () => {
+    cargarCategorias();
     comprobarSesionUsuario();
     cargarPlatosHome();
-    cargarCategorias();
     cargarValidacionDeFormularios();
     cargarEventosLoginOut();
 });
@@ -84,7 +84,7 @@ function comprobarCategoriaFavorita() {
         document.querySelector("#categories").value =
             usuarioActual.favoriteCategory;
     }
-} // TODO: cargar los platos que correspondan a la categoria
+}
 function pedirNAleatorios(cant, tamArray) {
     let nRandoms = [];
     for (let i = 0; i < tamArray && i < cant; i++) {
@@ -98,6 +98,11 @@ function pedirNAleatorios(cant, tamArray) {
 }
 async function cargarPlatosHome(e) {
     const view = new ViewService();
+    const storage = new StorageService();
+    let favUsuario = undefined;
+    if (storage.getUsuarioActual()?.favoriteCategory) {
+        favUsuario = storage.getUsuarioActual()?.favoriteCategory;
+    }
     const contenedorAleatorios = document.querySelector("#aleatorioshome");
     if (contenedorAleatorios !== null) {
         view.insertarTextoFormato(contenedorAleatorios, "");
@@ -114,8 +119,14 @@ async function cargarPlatosHome(e) {
             platos.push(...platosPedidos);
         }
         else {
-            const todosAleatorios = await pedirTodosAleatorio();
-            platos.push(...todosAleatorios);
+            const platosPedidos = [];
+            if (favUsuario) {
+                platosPedidos.push(...(await pedirPlatosCategoria(favUsuario)));
+            }
+            else {
+                platosPedidos.push(...(await pedirTodosAleatorio()));
+            }
+            platos.push(...platosPedidos);
         }
         for (let i = 0; i < platos.length && i < CANTIDAD_PLATOS_ALEATORIAS; i++) {
             const plato = platos[i];
@@ -169,14 +180,28 @@ async function cargarCategorias() {
     }
     document
         .querySelector("#fijarCategoria")
-        ?.addEventListener("click", fijarCategoria);
+        ?.addEventListener("click", fijarDesfijarCategoria);
 }
-function fijarCategoria() {
+function fijarDesfijarCategoria() {
     const storage = new StorageService();
     const usuarioActual = storage.getUsuarioActual();
+    const boton = document.querySelector("#fijarCategoria");
     if (usuarioActual) {
-        usuarioActual.favoriteCategory = document.querySelector("#categories").value; // TODO: realizar comprobaciones
-        storage.actualizarDatosUsuario(usuarioActual);
+        if (boton?.classList.contains("active")) {
+            usuarioActual.favoriteCategory = undefined;
+            boton?.classList.remove("active");
+            storage.actualizarDatosUsuario(usuarioActual);
+        }
+        else {
+            const categoriaAAsignar = document.querySelector("#categories").value;
+            if (categoriaAAsignar &&
+                categoriaAAsignar !== null &&
+                categoriaAAsignar !== undefined) {
+                usuarioActual.favoriteCategory = categoriaAAsignar;
+                storage.actualizarDatosUsuario(usuarioActual);
+                boton?.classList.add("active");
+            }
+        }
     }
 }
 async function pedirPlatoPorId(id) {

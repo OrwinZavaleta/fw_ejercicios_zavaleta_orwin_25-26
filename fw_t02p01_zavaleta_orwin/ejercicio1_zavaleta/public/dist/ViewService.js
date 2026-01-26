@@ -11,5 +11,7 @@ export class ViewService {
     apendizarTextoFormato(element, mensaje) {
         element.innerHTML += mensaje;
     }
+    pintarCategorias() {
+    }
 }
 //# sourceMappingURL=ViewService.js.map
