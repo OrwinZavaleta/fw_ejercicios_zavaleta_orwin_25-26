@@ -18,7 +18,7 @@ export class ViewService {
         for (let i = 0; i < platos.length && i < CANTIDAD_PLATOS_ALEATORIAS; i++) {
             const plato = platos[i];
             this.apendizarTextoFormato(element, `
-                <div class="col">
+                <a href="detalles.html" class="text-decoration-none text-reset col">
                     <div class="card">
                         <img src="${plato.strMealThumb}" class="card-img-top" alt="..."> // TODO: poner la imagen en mediano
                         <div class="card-body">
@@ -28,7 +28,7 @@ export class ViewService {
                             <p class="card-text">${plato.strCategory}</p> // TODO: convertir la llamada para que encaje con la interfaz
                         </div>
                     </div>
-                </div>
+                </a>
                 `);
         }
     }
@@ -100,6 +100,10 @@ export class ViewService {
         else {
             return null;
         }
+    }
+    pintarVistaDetalle() {
+        document.querySelector("#imagenPlato");
+        document.querySelector("#nombrePlato");
     }
 }
 //# sourceMappingURL=ViewService.js.map
