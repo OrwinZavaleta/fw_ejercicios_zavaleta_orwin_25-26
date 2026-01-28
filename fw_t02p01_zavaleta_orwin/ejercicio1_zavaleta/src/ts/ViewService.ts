@@ -1,4 +1,4 @@
-import { cargarPlatosHome } from "./app.js";
+import { cargarPlatosHome } from "./home.js";
 import { Category } from "./Category.js";
 import { MyMeal } from "./MyMeal";
 import { StorageService } from "./StorageService.js";
@@ -170,5 +170,15 @@ export class ViewService {
     public seleccionarTab(tab: HTMLButtonElement) {
         const tabBoot = new bootstrap.Tab(tab);
         tabBoot.show();
+    }
+
+    public pintarVistaDetalleProducto(platoDetalle: MyMeal) {
+        //TODO
+        const imagenHTML = document.querySelector(
+            "#imagenPlato",
+        ) as HTMLImageElement;
+
+        imagenHTML.src = platoDetalle.strMealThumb;
+        imagenHTML.alt = platoDetalle.strMeal;
     }
 }

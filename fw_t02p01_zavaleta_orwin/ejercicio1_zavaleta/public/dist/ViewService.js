@@ -1,4 +1,4 @@
-import { cargarPlatosHome } from "./app.js";
+import { cargarPlatosHome } from "./home.js";
 import { StorageService } from "./StorageService.js";
 export class ViewService {
     insertarTexto(element, mensaje) {
@@ -114,6 +114,12 @@ export class ViewService {
     seleccionarTab(tab) {
         const tabBoot = new bootstrap.Tab(tab);
         tabBoot.show();
+    }
+    pintarVistaDetalleProducto(platoDetalle) {
+        //TODO
+        const imagenHTML = document.querySelector("#imagenPlato");
+        imagenHTML.src = platoDetalle.strMealThumb;
+        imagenHTML.alt = platoDetalle.strMeal;
     }
 }
 //# sourceMappingURL=ViewService.js.map
