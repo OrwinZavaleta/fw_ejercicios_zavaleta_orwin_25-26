@@ -43,11 +43,9 @@ function crearUsuario(form) {
     cerrarModalLoginOut();
 }
 function cerrarModalLoginOut() {
+    const view = new ViewService();
     const modal = document.querySelector("#loginOut");
-    if (modal) {
-        const modalInstance = bootstrap.Modal.getOrCreateInstance(modal);
-        modalInstance.hide();
-    }
+    view.ocultarModal(modal);
 }
 function iniciarSesion(form) {
     const storage = new StorageService();
@@ -189,19 +187,18 @@ function realizarMiValidacion(form) {
 }
 function cargarEventosLoginOut() {
     const storage = new StorageService();
+    const view = new ViewService();
     document.querySelector("#logout")?.addEventListener("click", () => {
         storage.removeUsuarioActual();
         comprobarSesionUsuario();
     });
     const btnLogin = document.querySelector("#login");
     btnLogin.addEventListener("click", function () {
-        const tabLogin = new bootstrap.Tab(document.querySelector("#login-tab"));
-        tabLogin.show();
+        view.seleccionarTab(document.querySelector("#login-tab"));
     });
     const btnRegister = document.querySelector("#register");
     btnRegister.addEventListener("click", function () {
-        const tabRegister = new bootstrap.Tab(document.querySelector("#register-tab"));
-        tabRegister.show();
+        view.seleccionarTab(document.querySelector("#register-tab"));
     });
 }
 //# sourceMappingURL=app.js.map

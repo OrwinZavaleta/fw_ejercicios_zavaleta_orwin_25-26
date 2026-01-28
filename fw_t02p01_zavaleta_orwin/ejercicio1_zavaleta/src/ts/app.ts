@@ -5,8 +5,6 @@ import { ViewService } from "./ViewService.js";
 import { User } from "./User";
 import { StorageService } from "./StorageService.js";
 
-declare const bootstrap: any;
-
 console.log("Orwin Zavaleta");
 
 const CANTIDAD_PLATOS_ALEATORIAS: number = 8;
@@ -61,12 +59,9 @@ function crearUsuario(form: HTMLFormElement) {
 }
 
 function cerrarModalLoginOut() {
-    const modal = document.querySelector("#loginOut");
-    if (modal) {
-        const modalInstance = bootstrap.Modal.getOrCreateInstance(modal);
-
-        modalInstance.hide();
-    }
+    const view = new ViewService();
+    const modal = document.querySelector("#loginOut") as HTMLDivElement;
+    view.ocultarModal(modal);
 }
 
 function iniciarSesion(form: HTMLFormElement) {
@@ -259,6 +254,7 @@ function realizarMiValidacion(form: HTMLFormElement): boolean {
 
 function cargarEventosLoginOut(): void {
     const storage = new StorageService();
+    const view = new ViewService();
     document.querySelector("#logout")?.addEventListener("click", () => {
         storage.removeUsuarioActual();
         comprobarSesionUsuario();
@@ -266,16 +262,10 @@ function cargarEventosLoginOut(): void {
 
     const btnLogin = document.querySelector("#login") as HTMLLinkElement;
     btnLogin.addEventListener("click", function () {
-        const tabLogin = new bootstrap.Tab(
-            document.querySelector("#login-tab"),
-        );
-        tabLogin.show();
+        view.seleccionarTab(document.querySelector("#login-tab") as HTMLButtonElement);
     });
     const btnRegister = document.querySelector("#register") as HTMLLinkElement;
     btnRegister.addEventListener("click", function () {
-        const tabRegister = new bootstrap.Tab(
-            document.querySelector("#register-tab"),
-        );
-        tabRegister.show();
+        view.seleccionarTab(document.querySelector("#register-tab") as HTMLButtonElement);
     });
 }

@@ -3,6 +3,8 @@ import { Category } from "./Category.js";
 import { MyMeal } from "./MyMeal";
 import { StorageService } from "./StorageService.js";
 
+declare const bootstrap: any;
+
 export class ViewService {
     public insertarTexto(element: HTMLElement, mensaje: string): void {
         element.textContent = mensaje;
@@ -35,7 +37,7 @@ export class ViewService {
             this.apendizarTextoFormato(
                 element,
                 `
-                <a href="detalles.html" class="text-decoration-none text-reset col">
+                <a href="detalles.html?id=${plato.idMeal}" class="text-decoration-none text-reset col">
                     <div class="card">
                         <img src="${plato.strMealThumb}" class="card-img-top" alt="..."> // TODO: poner la imagen en mediano
                         <div class="card-body">
@@ -82,7 +84,7 @@ export class ViewService {
 
         document
             .querySelector("#fijarCategoria")
-            ?.addEventListener("click", ()=>this.fijarDesfijarCategoria()); // Se usa flecha para que no pierda el puntero this y este siga apuntando al objeto ViewService
+            ?.addEventListener("click", () => this.fijarDesfijarCategoria()); // Se usa flecha para que no pierda el puntero this y este siga apuntando al objeto ViewService
     }
 
     private fijarDesfijarCategoria(): void {
@@ -114,7 +116,10 @@ export class ViewService {
         }
     }
 
-    private activarDesactivarBoton(button: HTMLButtonElement, active: boolean):void {
+    private activarDesactivarBoton(
+        button: HTMLButtonElement,
+        active: boolean,
+    ): void {
         if (active) {
             button.classList.add("active");
         } else {
@@ -149,8 +154,21 @@ export class ViewService {
         }
     }
 
-    public pintarVistaDetalle(){
-        document.querySelector("#imagenPlato")
-        document.querySelector("#nombrePlato")
+    public pintarVistaDetalle() {
+        document.querySelector("#imagenPlato");
+        document.querySelector("#nombrePlato");
+    }
+
+    public ocultarModal(modal: HTMLDivElement) {
+        if (modal) {
+            const modalInstance = bootstrap.Modal.getOrCreateInstance(modal);
+
+            modalInstance.hide();
+        }
+    }
+
+    public seleccionarTab(tab: HTMLButtonElement) {
+        const tabBoot = new bootstrap.Tab(tab);
+        tabBoot.show();
     }
 }

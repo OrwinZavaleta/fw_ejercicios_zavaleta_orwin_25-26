@@ -18,7 +18,7 @@ export class ViewService {
         for (let i = 0; i < platos.length && i < CANTIDAD_PLATOS_ALEATORIAS; i++) {
             const plato = platos[i];
             this.apendizarTextoFormato(element, `
-                <a href="detalles.html" class="text-decoration-none text-reset col">
+                <a href="detalles.html?id=${plato.idMeal}" class="text-decoration-none text-reset col">
                     <div class="card">
                         <img src="${plato.strMealThumb}" class="card-img-top" alt="..."> // TODO: poner la imagen en mediano
                         <div class="card-body">
@@ -104,6 +104,16 @@ export class ViewService {
     pintarVistaDetalle() {
         document.querySelector("#imagenPlato");
         document.querySelector("#nombrePlato");
+    }
+    ocultarModal(modal) {
+        if (modal) {
+            const modalInstance = bootstrap.Modal.getOrCreateInstance(modal);
+            modalInstance.hide();
+        }
+    }
+    seleccionarTab(tab) {
+        const tabBoot = new bootstrap.Tab(tab);
+        tabBoot.show();
     }
 }
 //# sourceMappingURL=ViewService.js.map
