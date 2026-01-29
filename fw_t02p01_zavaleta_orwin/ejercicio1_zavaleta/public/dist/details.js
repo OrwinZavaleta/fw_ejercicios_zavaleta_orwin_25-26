@@ -1,9 +1,12 @@
 import { ApiService } from "./ApiService.js";
 import { ViewService } from "./ViewService.js";
+import { StorageService } from "./StorageService.js";
+import { Estado } from "./UserMeal.js";
 console.log("details.ts");
 document.addEventListener("DOMContentLoaded", () => {
     cargarDetallesPlato();
     comprobarSesionUsuarioDetalle();
+    asignarEventos();
 });
 async function cargarDetallesPlato() {
     const id = obtenerId();
@@ -21,11 +24,53 @@ function obtenerId() {
     return miId;
 }
 function comprobarSesionUsuarioDetalle() {
+    const view = new ViewService();
     let sesion = localStorage.getItem("session");
     console.log(sesion);
     if (typeof sesion === "string") {
+        view.activarDesactivarBoton(document.querySelector("#platoFavorito"), platoActualEnFavoritos(Number(obtenerId())));
     }
     else {
+    }
+}
+function asignarEventos() {
+    const view = new ViewService();
+    const storage = new StorageService();
+    document.querySelector("#platoFavorito").addEventListener("click", function () {
+        const userMeal = transformarMyMealAUserMeal(Number(obtenerId()));
+        if (this?.classList.contains("active")) {
+            view.activarDesactivarBoton(this, false);
+            storage.quitarPlatoFavorito(Number(obtenerId()), userMeal.userId);
+        }
+        else {
+            view.activarDesactivarBoton(this, true);
+            storage.guardarPlatoFavorito(userMeal, userMeal.userId);
+        }
+    });
+}
+function transformarMyMealAUserMeal(platoId) {
+    const storage = new StorageService();
+    const userId = storage.getUsuarioActual()?.id;
+    if (!userId)
+        throw new Error("El usuario no existe");
+    return {
+        userId: userId,
+        mealId: platoId,
+        saveDate: new Date(),
+        status: Estado.QUIERO_HACERLA,
+    };
+}
+function platoActualEnFavoritos(idMeal) {
+    const storage = new StorageService();
+    const userId = storage.getUsuarioActual()?.id;
+    if (!userId)
+        throw new Error("El usuario no existe");
+    const platoActualFav = storage.buscarPlatoFavoritoPorId(idMeal, userId);
+    if (platoActualFav) {
+        return true;
+    }
+    else {
+        return false;
     }
 }
 //# sourceMappingURL=details.js.map

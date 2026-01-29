@@ -131,7 +131,7 @@ export class ViewService {
         }
     }
 
-    private activarDesactivarBoton(
+    public activarDesactivarBoton(
         button: HTMLButtonElement,
         active: boolean,
     ): void {

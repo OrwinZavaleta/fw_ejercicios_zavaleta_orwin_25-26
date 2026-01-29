@@ -1,10 +1,14 @@
 import { AuthSession } from "./AuthSession.js";
+import { MyMeal } from "./MyMeal.js";
 import { User } from "./User.js";
+import { UserMeal } from "./UserMeal.js";
 
 export class StorageService {
     private USER_KEY_ITEM: string = "users";
     private AUTH_SESSION_KEY_ITEM: string = "session";
-    private USER_MEAL_KEY_ITEM: string = "";
+    private USER_MEAL_KEY_ITEM: string = "userMeals_";
+    private USER_WEEKLY_KEY_ITEM: string = "weeklyPlans_";
+    private USER_CACHE_KEY_ITEM: string = "userMiniMeal_";
 
     public guardarAgregarUsuario(nuevoUsuario: User) {
         const users: User[] = JSON.parse(
@@ -98,5 +102,65 @@ export class StorageService {
         });
 
         return ultimoId + 1;
+    }
+
+    public getPlatosFavoritos(id: User["id"]): UserMeal[] {
+        const favoritosUserSinProcesar =
+            localStorage.getItem(this.USER_MEAL_KEY_ITEM + id) ?? "[]";
+        const favoritosUserProcesados: UserMeal[] = JSON.parse(
+            favoritosUserSinProcesar,
+        );
+
+        return favoritosUserProcesados;
+    }
+
+    public guardarPlatoFavorito(platoGuardar: UserMeal, id: User["id"]): void {
+        const favoritosUserSinProcesar =
+            localStorage.getItem(this.USER_MEAL_KEY_ITEM + id) ?? "[]";
+        const favoritosUserProcesados: UserMeal[] = JSON.parse(
+            favoritosUserSinProcesar,
+        );
+
+        favoritosUserProcesados.push(platoGuardar);
+
+        localStorage.setItem(
+            this.USER_MEAL_KEY_ITEM + id,
+            JSON.stringify(favoritosUserProcesados),
+        );
+    }
+    public buscarPlatoFavoritoPorId(
+        platoId: MyMeal["idMeal"],
+        id: User["id"],
+    ): UserMeal | undefined {
+        const favoritosUserSinProcesar =
+            localStorage.getItem(this.USER_MEAL_KEY_ITEM + id) ?? "[]";
+        const favoritosUserProcesados: UserMeal[] = JSON.parse(
+            favoritosUserSinProcesar,
+        );
+
+        return favoritosUserProcesados.find(
+            (plato) => plato.mealId === platoId,
+        );
+    }
+
+    public quitarPlatoFavorito(
+        platoId: MyMeal["idMeal"],
+        id: User["id"],
+    ): void {
+        const favoritosUserSinProcesar =
+            localStorage.getItem(this.USER_MEAL_KEY_ITEM + id) ?? "[]";
+        const favoritosUserProcesados: UserMeal[] = JSON.parse(
+            favoritosUserSinProcesar,
+        );
+
+        const indexPlato = favoritosUserProcesados.findIndex(
+            (plato) => plato.mealId === platoId,
+        );
+        favoritosUserProcesados.splice(indexPlato, 1);
+
+        localStorage.setItem(
+            this.USER_MEAL_KEY_ITEM + id,
+            JSON.stringify(favoritosUserProcesados),
+        );
     }
 }

@@ -3,7 +3,9 @@ export class StorageService {
     constructor() {
         this.USER_KEY_ITEM = "users";
         this.AUTH_SESSION_KEY_ITEM = "session";
-        this.USER_MEAL_KEY_ITEM = "";
+        this.USER_MEAL_KEY_ITEM = "userMeals_";
+        this.USER_WEEKLY_KEY_ITEM = "weeklyPlans_";
+        this.USER_CACHE_KEY_ITEM = "userMiniMeal_";
     }
     guardarAgregarUsuario(nuevoUsuario) {
         const users = JSON.parse(localStorage.getItem(this.USER_KEY_ITEM) ?? "[]");
@@ -58,6 +60,29 @@ export class StorageService {
                 ultimoId = us.id;
         });
         return ultimoId + 1;
+    }
+    getPlatosFavoritos(id) {
+        const favoritosUserSinProcesar = localStorage.getItem(this.USER_MEAL_KEY_ITEM + id) ?? "[]";
+        const favoritosUserProcesados = JSON.parse(favoritosUserSinProcesar);
+        return favoritosUserProcesados;
+    }
+    guardarPlatoFavorito(platoGuardar, id) {
+        const favoritosUserSinProcesar = localStorage.getItem(this.USER_MEAL_KEY_ITEM + id) ?? "[]";
+        const favoritosUserProcesados = JSON.parse(favoritosUserSinProcesar);
+        favoritosUserProcesados.push(platoGuardar);
+        localStorage.setItem(this.USER_MEAL_KEY_ITEM + id, JSON.stringify(favoritosUserProcesados));
+    }
+    buscarPlatoFavoritoPorId(platoId, id) {
+        const favoritosUserSinProcesar = localStorage.getItem(this.USER_MEAL_KEY_ITEM + id) ?? "[]";
+        const favoritosUserProcesados = JSON.parse(favoritosUserSinProcesar);
+        return favoritosUserProcesados.find((plato) => plato.mealId === platoId);
+    }
+    quitarPlatoFavorito(platoId, id) {
+        const favoritosUserSinProcesar = localStorage.getItem(this.USER_MEAL_KEY_ITEM + id) ?? "[]";
+        const favoritosUserProcesados = JSON.parse(favoritosUserSinProcesar);
+        const indexPlato = favoritosUserProcesados.findIndex((plato) => plato.mealId === platoId);
+        favoritosUserProcesados.splice(indexPlato, 1);
+        localStorage.setItem(this.USER_MEAL_KEY_ITEM + id, JSON.stringify(favoritosUserProcesados));
     }
 }
 //# sourceMappingURL=StorageService.js.map
