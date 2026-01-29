@@ -27,11 +27,14 @@
 <h1 id="nombrePlato"></h1>
     <h2>Ingredientes </h2><ul class="list-group" id="ingredientes">
 </ul>
-<div class="d-none">
-    <textarea id="opinion" name="opinion"> </textarea><div class="form-check">
+<div class="d-none" id="detallesForm">
+    <h3>Formulario</h3>
+    <label class="form-label fs-4" for="opinion">Su opinion</label>
+    <textarea class="form-control" id="opinion" name="opinion"></textarea>
+    <h4>¿Ha hecho ya la receta?</h4><div class="form-check">
 <input class="form-check-input" type="radio" id="html" name="realizacion" value="quiero" checked>
     <label class="form-check-label" for="quiero">Quiero hacerla</label></div>
-    <h2>Formulario</h2><div class="form-check">
+<div class="form-check">
 <input class="form-check-input" type="radio" id="html" name="realizacion" value="hecho">
     <label class="form-check-label" for="hecho">La he hecho</label></div>
 </div>

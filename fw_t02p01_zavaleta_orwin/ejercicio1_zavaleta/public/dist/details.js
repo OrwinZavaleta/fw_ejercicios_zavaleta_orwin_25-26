@@ -34,19 +34,24 @@ function comprobarSesionUsuarioDetalle() {
     }
 }
 function asignarEventos() {
+    document.querySelector("#platoFavorito").addEventListener("click", handleBotonFavoritos);
+}
+function handleBotonFavoritos(e) {
     const view = new ViewService();
     const storage = new StorageService();
-    document.querySelector("#platoFavorito").addEventListener("click", function () {
-        const userMeal = transformarMyMealAUserMeal(Number(obtenerId()));
-        if (this?.classList.contains("active")) {
-            view.activarDesactivarBoton(this, false);
-            storage.quitarPlatoFavorito(Number(obtenerId()), userMeal.userId);
-        }
-        else {
-            view.activarDesactivarBoton(this, true);
-            storage.guardarPlatoFavorito(userMeal, userMeal.userId);
-        }
-    });
+    const boton = e.target;
+    const formFavorito = document.querySelector("#detallesForm");
+    const userMeal = transformarMyMealAUserMeal(Number(obtenerId()));
+    if (boton?.classList.contains("active")) {
+        view.activarDesactivarBoton(boton, false);
+        storage.quitarPlatoFavorito(Number(obtenerId()), userMeal.userId);
+        formFavorito.classList.add("d-none");
+    }
+    else {
+        view.activarDesactivarBoton(boton, true);
+        storage.guardarPlatoFavorito(userMeal, userMeal.userId);
+        formFavorito.classList.remove("d-none");
+    }
 }
 function transformarMyMealAUserMeal(platoId) {
     const storage = new StorageService();

@@ -47,21 +47,27 @@ function comprobarSesionUsuarioDetalle(): void {
 }
 
 function asignarEventos(): void {
-    const view = new ViewService();
-    const storage = new StorageService();
-
     (
         document.querySelector("#platoFavorito") as HTMLButtonElement
-    ).addEventListener("click", function () {
-        const userMeal = transformarMyMealAUserMeal(Number(obtenerId()));
-        if (this?.classList.contains("active")) {
-            view.activarDesactivarBoton(this, false);
-            storage.quitarPlatoFavorito(Number(obtenerId()), userMeal.userId);
-        } else {
-            view.activarDesactivarBoton(this, true);
-            storage.guardarPlatoFavorito(userMeal, userMeal.userId);
-        }
-    });
+    ).addEventListener("click", handleBotonFavoritos);
+}
+
+function handleBotonFavoritos(e: Event) {
+    const view = new ViewService();
+    const storage = new StorageService();
+    const boton = e.target as HTMLButtonElement;
+    const formFavorito = document.querySelector("#detallesForm") as HTMLDivElement;
+    const userMeal = transformarMyMealAUserMeal(Number(obtenerId()));
+
+    if (boton?.classList.contains("active")) {
+        view.activarDesactivarBoton(boton, false);
+        storage.quitarPlatoFavorito(Number(obtenerId()), userMeal.userId);
+        formFavorito.classList.add("d-none")
+    } else {
+        view.activarDesactivarBoton(boton, true);
+        storage.guardarPlatoFavorito(userMeal, userMeal.userId);
+        formFavorito.classList.remove("d-none")
+    }
 }
 
 function transformarMyMealAUserMeal(platoId: MyMeal["idMeal"]): UserMeal {
