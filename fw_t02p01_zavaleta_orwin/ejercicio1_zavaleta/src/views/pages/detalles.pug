@@ -5,9 +5,25 @@ block content
         .row.pb-3.justify-content-md-between
             <div class="col-md-8">
                 <h1 id="nombrePlato"></h1>
+
+                h2 Ingredientes 
+                <ul class="list-group" id="ingredientes">
+                </ul>
             </div>
-            <div class="col-md-4 text-end align-self-end">
-                img#imagenPlato(src="#", alt="").img-square
+            <div class="col-md-4 text-end">
+                img#imagenPlato(src="#" alt="").img-square
+            </div>
+
+            <div class="d-none">
+                textarea#opinion(name="opinion") 
+            <div class="form-check">
+                <input class="form-check-input" type="radio" id="html" name="realizacion" value="quiero" checked>
+                label(for="quiero").form-check-label Quiero hacerla
+            </div>
+            <div class="form-check">
+                <input class="form-check-input" type="radio" id="html" name="realizacion" value="hecho">
+                label(for="hecho").form-check-label La he hecho
+            </div>
             </div>
 
 block scripts 

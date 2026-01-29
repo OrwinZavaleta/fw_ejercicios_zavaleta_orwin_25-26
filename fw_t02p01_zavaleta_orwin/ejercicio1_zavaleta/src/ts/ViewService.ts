@@ -25,6 +25,8 @@ export class ViewService {
         platos: MyMeal[],
         element: HTMLDivElement,
         CANTIDAD_PLATOS_ALEATORIAS: number,
+        botonCategoria: HTMLButtonElement,
+        buttonState: boolean,
     ): void {
         this.insertarTextoFormato(element, "");
         for (
@@ -39,17 +41,30 @@ export class ViewService {
                 `
                 <a href="detalles.html?id=${plato.idMeal}" class="text-decoration-none text-reset col">
                     <div class="card">
-                        <img src="${plato.strMealThumb}" class="card-img-top" alt="..."> // TODO: poner la imagen en mediano
+                        <img src="${plato.strMealThumb}/small" class="card-img-top" alt="...">
                         <div class="card-body">
                             <h5 class="card-title">${plato.strMeal}</h5>
                             <p class="card-text">${plato.strCategory}</p>
                             <p class="card-text">${plato.strArea}</p>
-                            <p class="card-text">${plato.strCategory}</p> // TODO: convertir la llamada para que encaje con la interfaz
+                            <p class="card-text">${plato.strCategory}</p> 
+                            <p class="card-text">${plato.ingredients.map(
+                                (element, index) => {
+                                    return (
+                                        "Ingrediente " +
+                                        index +
+                                        ": " +
+                                        element.name +
+                                        "<br>"
+                                    );
+                                },
+                            )}</p> 
                         </div>
                     </div>
                 </a>
                 `,
             );
+
+            this.activarDesactivarBoton(botonCategoria, !buttonState);
         }
     }
 
@@ -153,12 +168,6 @@ export class ViewService {
             return null;
         }
     }
-
-    public pintarVistaDetalle() {
-        document.querySelector("#imagenPlato");
-        document.querySelector("#nombrePlato");
-    }
-
     public ocultarModal(modal: HTMLDivElement) {
         if (modal) {
             const modalInstance = bootstrap.Modal.getOrCreateInstance(modal);
@@ -173,12 +182,27 @@ export class ViewService {
     }
 
     public pintarVistaDetalleProducto(platoDetalle: MyMeal) {
-        //TODO
         const imagenHTML = document.querySelector(
             "#imagenPlato",
         ) as HTMLImageElement;
 
-        imagenHTML.src = platoDetalle.strMealThumb;
+        const nombreHTML = document.querySelector(
+            "#nombrePlato",
+        ) as HTMLHeadingElement;
+        const ingredientesHTML = document.querySelector(
+            "#ingredientes",
+        ) as HTMLUListElement;
+
+        imagenHTML.src = platoDetalle.strMealThumb + "/medium";
         imagenHTML.alt = platoDetalle.strMeal;
+
+        this.insertarTexto(nombreHTML, platoDetalle.strMeal);
+
+        platoDetalle.ingredients.forEach((ingrediente) => {
+            this.apendizarTextoFormato(
+                ingredientesHTML,
+                `<li class="list-group-item">${ingrediente.measure} de ${ingrediente.name}</li>`,
+            );
+        });
     }
 }

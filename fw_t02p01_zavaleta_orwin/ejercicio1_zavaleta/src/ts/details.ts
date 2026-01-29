@@ -6,6 +6,7 @@ console.log("details.ts");
 
 document.addEventListener("DOMContentLoaded", () => {
     cargarDetallesPlato();
+    comprobarSesionUsuarioDetalle();
 });
 
 async function cargarDetallesPlato(): Promise<void> {
@@ -26,4 +27,14 @@ function obtenerId(): string {
 
     console.log(miId);
     return miId;
+}
+
+function comprobarSesionUsuarioDetalle(): void {
+    let sesion: string | null = localStorage.getItem("session");
+    console.log(sesion);
+
+    if (typeof sesion === "string") {
+        
+    } else {
+    }
 }

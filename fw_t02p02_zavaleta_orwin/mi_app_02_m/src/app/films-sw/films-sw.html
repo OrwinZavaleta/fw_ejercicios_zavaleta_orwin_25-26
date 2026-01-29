@@ -1,0 +1,53 @@
+<h2>{{titleComp}}</h2>
+<hr />
+@if (loading) {
+<p>Cargando películas de Star Wars...</p>
+}
+
+@if (error) {
+<p class="error">{{ error }}</p>
+}
+
+@if (!loading && !error) {
+<table>
+  <thead>
+    <tr>
+      <th>Episodio</th>
+      <th>Título</th>
+      <th>Director</th>
+      <th>Año</th>
+      <th>Vista</th>
+      <th>Calificación</th>
+      <th>Acciones</th>
+    </tr>
+  </thead>
+  <tbody>
+    @for (film of filmsSW; track film.episodeId;) {
+    <tr>
+      <td>{{ film.episodeId }}</td>
+      <td>{{ film.title }}</td>
+      <td>{{ film.director }}</td>
+      <td>{{ film.year }}</td>
+      <td>
+        <input type="checkbox" #checkbox [checked]="isSelected(film.episodeId)"
+          (change)="onCheckboxChange(film.episodeId, checkbox.checked)">
+      </td>
+      <td>
+        @if (isSelected(film.episodeId)) {
+        <input type="number" min="0" max="10" #rating [value]="getRating(film.episodeId)"
+          (input)="onRatingChange(film.episodeId, rating.value)">
+        }
+      </td>
+      <td>
+        <button type="button" (click)="removeFilmByEpisodeId(film.episodeId)">Borrar</button>
+      </td>
+    </tr>
+    }
+  </tbody>
+</table>
+
+<p><strong>Total de películas:</strong> {{ filmsSW.length }}</p>
+<button type="button" (click)="saveSelectedFilms()">
+  Guardar películas seleccionadas
+</button>
+}

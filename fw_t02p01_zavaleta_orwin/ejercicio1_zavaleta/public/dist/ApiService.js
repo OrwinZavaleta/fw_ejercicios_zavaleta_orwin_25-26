@@ -3,10 +3,29 @@ export class ApiService {
         this.API_KEY = "1";
         this.API_URL = "https://www.themealdb.com/api/json/v1/" + this.API_KEY;
     }
+    convertirApiToInterface(plato) {
+        let i = 1;
+        const ingredientes = [];
+        while (plato["strIngredient" + i]) {
+            ingredientes.push({
+                name: plato["strIngredient" + i],
+                measure: plato["strMeasure" + i],
+            });
+            i++;
+        }
+        return {
+            idMeal: plato.idMeal,
+            strMeal: plato.strMeal,
+            strCategory: plato.strCategory,
+            strArea: plato.strArea,
+            strMealThumb: plato.strMealThumb,
+            ingredients: ingredientes,
+        };
+    }
     async pedirProductoRandom() {
         const response = await fetch(this.API_URL + "/random.php");
         const data = await response.json();
-        return data.meals[0];
+        return this.convertirApiToInterface(data.meals[0]);
     }
     async pedirTodasCategorias() {
         const response = await fetch(this.API_URL + "/categories.php");
@@ -21,8 +40,7 @@ export class ApiService {
     async pedirPlatoPorId(id) {
         const response = await fetch(this.API_URL + `/lookup.php?i=${id}`);
         const data = await response.json();
-        return data.meals[0];
+        return this.convertirApiToInterface(data.meals[0]);
     }
 }
-// TODO: devolver los ingredientes correctamente
 //# sourceMappingURL=ApiService.js.map

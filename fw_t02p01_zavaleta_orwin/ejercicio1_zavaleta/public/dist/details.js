@@ -3,6 +3,7 @@ import { ViewService } from "./ViewService.js";
 console.log("details.ts");
 document.addEventListener("DOMContentLoaded", () => {
     cargarDetallesPlato();
+    comprobarSesionUsuarioDetalle();
 });
 async function cargarDetallesPlato() {
     const id = obtenerId();
@@ -18,5 +19,13 @@ function obtenerId() {
         throw new Error("No hay ningun producto seleccionado");
     console.log(miId);
     return miId;
+}
+function comprobarSesionUsuarioDetalle() {
+    let sesion = localStorage.getItem("session");
+    console.log(sesion);
+    if (typeof sesion === "string") {
+    }
+    else {
+    }
 }
 //# sourceMappingURL=details.js.map

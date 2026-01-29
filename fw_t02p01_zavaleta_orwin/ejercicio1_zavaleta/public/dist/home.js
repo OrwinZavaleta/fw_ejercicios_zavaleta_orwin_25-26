@@ -5,7 +5,7 @@ console.log("home.ts");
 const CANTIDAD_PLATOS_ALEATORIAS = 8;
 document.addEventListener("DOMContentLoaded", () => {
     cargarCategorias();
-    comprobarSesionUsuario();
+    comprobarSesionUsuarioHome();
     cargarPlatosHome();
     cargarValidacionDeFormularios();
     cargarEventosLoginOut();
@@ -32,14 +32,14 @@ function cargarValidacionDeFormularios() {
 function crearUsuario(form) {
     const storage = new StorageService();
     const user = {
-        id: 1,
+        id: storage.obtenerProximoIdUser(),
         name: form.usuario.value,
         email: form.correo.value,
         password: form.password.value,
     };
     form.reset();
     storage.guardarAgregarUsuario(user);
-    comprobarSesionUsuario();
+    comprobarSesionUsuarioHome();
     cerrarModalLoginOut();
 }
 function cerrarModalLoginOut() {
@@ -52,7 +52,7 @@ function iniciarSesion(form) {
     const usuarioActual = storage.buscarUsuarioPorCorreo(form.email.value);
     if (usuarioActual && usuarioActual.password === form.password.value) {
         storage.setUsuarioActual(usuarioActual);
-        comprobarSesionUsuario();
+        comprobarSesionUsuarioHome();
         cerrarModalLoginOut();
         form.reset();
     }
@@ -60,18 +60,14 @@ function iniciarSesion(form) {
         console.log("usuario no existe");
     }
 }
-function comprobarSesionUsuario() {
+function comprobarSesionUsuarioHome() {
     let sesion = localStorage.getItem("session");
     console.log(sesion);
     if (typeof sesion === "string") {
-        document.querySelector("#menu-auth")?.classList.remove("d-none");
-        document.querySelector("#menu-guest")?.classList.add("d-none");
         document.querySelector("#botonFavoritos")?.classList.remove("d-none");
         comprobarCategoriaFavorita();
     }
     else {
-        document.querySelector("#menu-auth")?.classList.add("d-none");
-        document.querySelector("#menu-guest")?.classList.remove("d-none");
         document.querySelector("#botonFavoritos")?.classList.add("d-none");
     }
 }
@@ -98,6 +94,7 @@ export async function cargarPlatosHome(e) {
     const view = new ViewService();
     const storage = new StorageService();
     let favUsuario = undefined;
+    let favSelected = false;
     if (storage.getUsuarioActual()?.favoriteCategory) {
         favUsuario = storage.getUsuarioActual()?.favoriteCategory;
     }
@@ -112,6 +109,7 @@ export async function cargarPlatosHome(e) {
             }
             else {
                 platosPedidos.push(...(await pedirPlatosCategoria(target.value)));
+                favSelected = true;
             }
             platos.push(...platosPedidos);
         }
@@ -125,7 +123,7 @@ export async function cargarPlatosHome(e) {
             }
             platos.push(...platosPedidos);
         }
-        view.pintarPlatos(platos, contenedorAleatorios, CANTIDAD_PLATOS_ALEATORIAS);
+        view.pintarPlatos(platos, contenedorAleatorios, CANTIDAD_PLATOS_ALEATORIAS, document.querySelector("#fijarCategoria"), favSelected);
     }
 }
 async function pedirPlatosCategoria(categoria) {
@@ -190,7 +188,7 @@ function cargarEventosLoginOut() {
     const view = new ViewService();
     document.querySelector("#logout")?.addEventListener("click", () => {
         storage.removeUsuarioActual();
-        comprobarSesionUsuario();
+        comprobarSesionUsuarioHome();
     });
     const btnLogin = document.querySelector("#login");
     btnLogin.addEventListener("click", function () {

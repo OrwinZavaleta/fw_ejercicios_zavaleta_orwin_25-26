@@ -13,23 +13,31 @@ export class ViewService {
     apendizarTextoFormato(element, mensaje) {
         element.innerHTML += mensaje;
     }
-    pintarPlatos(platos, element, CANTIDAD_PLATOS_ALEATORIAS) {
+    pintarPlatos(platos, element, CANTIDAD_PLATOS_ALEATORIAS, botonCategoria, buttonState) {
         this.insertarTextoFormato(element, "");
         for (let i = 0; i < platos.length && i < CANTIDAD_PLATOS_ALEATORIAS; i++) {
             const plato = platos[i];
             this.apendizarTextoFormato(element, `
                 <a href="detalles.html?id=${plato.idMeal}" class="text-decoration-none text-reset col">
                     <div class="card">
-                        <img src="${plato.strMealThumb}" class="card-img-top" alt="..."> // TODO: poner la imagen en mediano
+                        <img src="${plato.strMealThumb}/small" class="card-img-top" alt="...">
                         <div class="card-body">
                             <h5 class="card-title">${plato.strMeal}</h5>
                             <p class="card-text">${plato.strCategory}</p>
                             <p class="card-text">${plato.strArea}</p>
-                            <p class="card-text">${plato.strCategory}</p> // TODO: convertir la llamada para que encaje con la interfaz
+                            <p class="card-text">${plato.strCategory}</p> 
+                            <p class="card-text">${plato.ingredients.map((element, index) => {
+                return ("Ingrediente " +
+                    index +
+                    ": " +
+                    element.name +
+                    "<br>");
+            })}</p> 
                         </div>
                     </div>
                 </a>
                 `);
+            this.activarDesactivarBoton(botonCategoria, !buttonState);
         }
     }
     pintarCategorias(categorias, select) {
@@ -101,10 +109,6 @@ export class ViewService {
             return null;
         }
     }
-    pintarVistaDetalle() {
-        document.querySelector("#imagenPlato");
-        document.querySelector("#nombrePlato");
-    }
     ocultarModal(modal) {
         if (modal) {
             const modalInstance = bootstrap.Modal.getOrCreateInstance(modal);
@@ -116,10 +120,15 @@ export class ViewService {
         tabBoot.show();
     }
     pintarVistaDetalleProducto(platoDetalle) {
-        //TODO
         const imagenHTML = document.querySelector("#imagenPlato");
-        imagenHTML.src = platoDetalle.strMealThumb;
+        const nombreHTML = document.querySelector("#nombrePlato");
+        const ingredientesHTML = document.querySelector("#ingredientes");
+        imagenHTML.src = platoDetalle.strMealThumb + "/medium";
         imagenHTML.alt = platoDetalle.strMeal;
+        this.insertarTexto(nombreHTML, platoDetalle.strMeal);
+        platoDetalle.ingredients.forEach((ingrediente) => {
+            this.apendizarTextoFormato(ingredientesHTML, `<li class="list-group-item">${ingrediente.measure} de ${ingrediente.name}</li>`);
+        });
     }
 }
 //# sourceMappingURL=ViewService.js.map

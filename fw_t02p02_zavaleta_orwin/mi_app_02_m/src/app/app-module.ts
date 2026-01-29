@@ -13,6 +13,8 @@ import { Forms } from './forms/forms';
 
 import { FormsModule } from '@angular/forms';
 import { ReactiveFormsModule } from '@angular/forms';
+import { Cars } from './cars/cars';
+import { FilmsSW } from './films-sw/films-sw';
 
 @NgModule({
   declarations: [
@@ -21,7 +23,9 @@ import { ReactiveFormsModule } from '@angular/forms';
     Child,
     Comments,
     Home,
-    Forms
+    Forms,
+    Cars,
+    FilmsSW
   ],
   imports: [
     BrowserModule,

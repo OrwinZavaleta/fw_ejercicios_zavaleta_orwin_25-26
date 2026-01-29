@@ -11,7 +11,7 @@ const CANTIDAD_PLATOS_ALEATORIAS: number = 8;
 
 document.addEventListener("DOMContentLoaded", () => {
     cargarCategorias();
-    comprobarSesionUsuario();
+    comprobarSesionUsuarioHome();
     cargarPlatosHome();
     cargarValidacionDeFormularios();
     cargarEventosLoginOut();
@@ -47,14 +47,14 @@ function cargarValidacionDeFormularios(): void {
 function crearUsuario(form: HTMLFormElement) {
     const storage: StorageService = new StorageService();
     const user: User = {
-        id: 1,
+        id: storage.obtenerProximoIdUser(),
         name: form.usuario.value,
         email: form.correo.value,
         password: form.password.value,
     };
     form.reset();
     storage.guardarAgregarUsuario(user);
-    comprobarSesionUsuario();
+    comprobarSesionUsuarioHome();
     cerrarModalLoginOut();
 }
 
@@ -71,7 +71,7 @@ function iniciarSesion(form: HTMLFormElement) {
     );
     if (usuarioActual && usuarioActual.password === form.password.value) {
         storage.setUsuarioActual(usuarioActual);
-        comprobarSesionUsuario();
+        comprobarSesionUsuarioHome();
         cerrarModalLoginOut();
         form.reset();
     } else {
@@ -79,18 +79,14 @@ function iniciarSesion(form: HTMLFormElement) {
     }
 }
 
-function comprobarSesionUsuario(): void {
+function comprobarSesionUsuarioHome(): void {
     let sesion: string | null = localStorage.getItem("session");
     console.log(sesion);
 
     if (typeof sesion === "string") {
-        document.querySelector("#menu-auth")?.classList.remove("d-none");
-        document.querySelector("#menu-guest")?.classList.add("d-none");
         document.querySelector("#botonFavoritos")?.classList.remove("d-none");
         comprobarCategoriaFavorita();
     } else {
-        document.querySelector("#menu-auth")?.classList.add("d-none");
-        document.querySelector("#menu-guest")?.classList.remove("d-none");
         document.querySelector("#botonFavoritos")?.classList.add("d-none");
     }
 }
@@ -121,6 +117,7 @@ export async function cargarPlatosHome(e?: Event): Promise<void> {
     const view = new ViewService();
     const storage = new StorageService();
     let favUsuario: undefined | string = undefined;
+    let favSelected = false;
     if (storage.getUsuarioActual()?.favoriteCategory) {
         favUsuario = storage.getUsuarioActual()?.favoriteCategory;
     }
@@ -139,6 +136,7 @@ export async function cargarPlatosHome(e?: Event): Promise<void> {
                 platosPedidos.push(
                     ...(await pedirPlatosCategoria(target.value)),
                 );
+                favSelected = true;
             }
 
             platos.push(...platosPedidos);
@@ -156,6 +154,8 @@ export async function cargarPlatosHome(e?: Event): Promise<void> {
             platos,
             contenedorAleatorios,
             CANTIDAD_PLATOS_ALEATORIAS,
+            document.querySelector("#fijarCategoria") as HTMLButtonElement,
+            favSelected
         );
     }
 }
@@ -257,15 +257,19 @@ function cargarEventosLoginOut(): void {
     const view = new ViewService();
     document.querySelector("#logout")?.addEventListener("click", () => {
         storage.removeUsuarioActual();
-        comprobarSesionUsuario();
+        comprobarSesionUsuarioHome();
     });
 
     const btnLogin = document.querySelector("#login") as HTMLLinkElement;
     btnLogin.addEventListener("click", function () {
-        view.seleccionarTab(document.querySelector("#login-tab") as HTMLButtonElement);
+        view.seleccionarTab(
+            document.querySelector("#login-tab") as HTMLButtonElement,
+        );
     });
     const btnRegister = document.querySelector("#register") as HTMLLinkElement;
     btnRegister.addEventListener("click", function () {
-        view.seleccionarTab(document.querySelector("#register-tab") as HTMLButtonElement);
+        view.seleccionarTab(
+            document.querySelector("#register-tab") as HTMLButtonElement,
+        );
     });
 }

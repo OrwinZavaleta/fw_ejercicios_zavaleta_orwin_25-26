@@ -8,11 +8,31 @@ export class ApiService {
 
     constructor() {}
 
+    private convertirApiToInterface(plato: any): MyMeal {
+        let i = 1;
+        const ingredientes: MyMeal["ingredients"] = [];
+        while (plato["strIngredient" + i]) {
+            ingredientes.push({
+                name: plato["strIngredient" + i],
+                measure: plato["strMeasure" + i],
+            });
+            i++;
+        }
+        return {
+            idMeal: plato.idMeal,
+            strMeal: plato.strMeal,
+            strCategory: plato.strCategory,
+            strArea: plato.strArea,
+            strMealThumb: plato.strMealThumb,
+            ingredients: ingredientes,
+        };
+    }
+
     public async pedirProductoRandom(): Promise<MyMeal> {
         const response: Response = await fetch(this.API_URL + "/random.php");
         const data = await response.json();
 
-        return data.meals[0];
+        return this.convertirApiToInterface(data.meals[0]);
     }
 
     public async pedirTodasCategorias(): Promise<Category[]> {
@@ -21,7 +41,9 @@ export class ApiService {
         );
         const data = await response.json();
 
-        return data.categories.sort((a:Category,b:Category)=>a.strCategory.localeCompare(b.strCategory));
+        return data.categories.sort((a: Category, b: Category) =>
+            a.strCategory.localeCompare(b.strCategory),
+        );
     }
 
     public async pedirPlatosPorCategoria(categoria: string): Promise<MyMeal[]> {
@@ -41,7 +63,6 @@ export class ApiService {
 
         const data = await response.json();
 
-        return data.meals[0];
+        return this.convertirApiToInterface(data.meals[0]);
     }
 }
-// TODO: devolver los ingredientes correctamente

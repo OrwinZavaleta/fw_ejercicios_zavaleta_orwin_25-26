@@ -50,5 +50,14 @@ export class StorageService {
             throw new Error("El usuario no existe");
         }
     }
+    obtenerProximoIdUser() {
+        const users = JSON.parse(localStorage.getItem(this.USER_KEY_ITEM) ?? "[]");
+        let ultimoId = 0;
+        users.forEach((us) => {
+            if (us.id > ultimoId)
+                ultimoId = us.id;
+        });
+        return ultimoId + 1;
+    }
 }
 //# sourceMappingURL=StorageService.js.map

@@ -7,7 +7,9 @@ export class StorageService {
     private USER_MEAL_KEY_ITEM: string = "";
 
     public guardarAgregarUsuario(nuevoUsuario: User) {
-        const users: User[] = JSON.parse(localStorage.getItem(this.USER_KEY_ITEM) ?? "[]");
+        const users: User[] = JSON.parse(
+            localStorage.getItem(this.USER_KEY_ITEM) ?? "[]",
+        );
 
         users.push(nuevoUsuario);
 
@@ -21,11 +23,16 @@ export class StorageService {
             usuario.name,
             new Date(),
         );
-        localStorage.setItem(this.AUTH_SESSION_KEY_ITEM, JSON.stringify(usuarioAGuardar));
+        localStorage.setItem(
+            this.AUTH_SESSION_KEY_ITEM,
+            JSON.stringify(usuarioAGuardar),
+        );
     }
 
     public getUsuarioActual(): User | null {
-        const usersinProcesar: string | null = localStorage.getItem(this.AUTH_SESSION_KEY_ITEM);
+        const usersinProcesar: string | null = localStorage.getItem(
+            this.AUTH_SESSION_KEY_ITEM,
+        );
 
         if (usersinProcesar === null) return null;
 
@@ -40,7 +47,9 @@ export class StorageService {
     }
 
     public buscarUsuarioPorCorreo(correo: string) {
-        const users: User[] = JSON.parse(localStorage.getItem(this.USER_KEY_ITEM) ?? "[]");
+        const users: User[] = JSON.parse(
+            localStorage.getItem(this.USER_KEY_ITEM) ?? "[]",
+        );
 
         const usuarioEncontrado = users.find((us) => us.email === correo);
 
@@ -50,7 +59,9 @@ export class StorageService {
     }
 
     private buscarUsuarioPorId(id: User["id"]) {
-        const users: User[] = JSON.parse(localStorage.getItem(this.USER_KEY_ITEM) ?? "[]");
+        const users: User[] = JSON.parse(
+            localStorage.getItem(this.USER_KEY_ITEM) ?? "[]",
+        );
 
         const usuarioEncontrado = users.find((us) => us.id === id);
 
@@ -60,7 +71,9 @@ export class StorageService {
     }
 
     public actualizarDatosUsuario(usuario: User) {
-        const users: User[] = JSON.parse(localStorage.getItem(this.USER_KEY_ITEM) ?? "[]");
+        const users: User[] = JSON.parse(
+            localStorage.getItem(this.USER_KEY_ITEM) ?? "[]",
+        );
 
         const usuarioEncontrado = users.find(
             (us) => us.email === usuario.email,
@@ -71,5 +84,19 @@ export class StorageService {
         } else {
             throw new Error("El usuario no existe");
         }
+    }
+
+    public obtenerProximoIdUser(): User["id"] {
+        const users: User[] = JSON.parse(
+            localStorage.getItem(this.USER_KEY_ITEM) ?? "[]",
+        );
+
+        let ultimoId = 0;
+
+        users.forEach((us) => {
+            if (us.id > ultimoId) ultimoId = us.id;
+        });
+
+        return ultimoId + 1;
     }
 }
