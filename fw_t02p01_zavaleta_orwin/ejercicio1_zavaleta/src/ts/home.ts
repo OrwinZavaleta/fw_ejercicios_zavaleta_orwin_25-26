@@ -11,13 +11,31 @@ const CANTIDAD_PLATOS_ALEATORIAS: number = 8;
 
 document.addEventListener("DOMContentLoaded", () => {
     cargarCategorias();
-    // comprobarSesionUsuarioHome();
+    comprobarSesionUsuarioHome();
     cargarPlatosHome();
 });
 
+function comprobarSesionUsuarioHome(): void {
+    let sesion: string | null = localStorage.getItem("session");
+    console.log(sesion);
 
+    if (typeof sesion === "string") {
+        document.querySelector("#botonFavoritos")?.classList.remove("d-none");
+        comprobarCategoriaFavorita();
+    } else {
+        document.querySelector("#botonFavoritos")?.classList.add("d-none");
+    }
+}
 
+function comprobarCategoriaFavorita() {
+    const storage = new StorageService();
+    const usuarioActual = storage.getUsuarioActual();
 
+    if (usuarioActual?.favoriteCategory !== undefined) {
+        (document.querySelector("#categories") as HTMLSelectElement).value =
+            usuarioActual.favoriteCategory;
+    }
+}
 
 function pedirNAleatorios(cant: number, tamArray: number): number[] {
     let nRandoms: number[] = [];
@@ -73,7 +91,7 @@ export async function cargarPlatosHome(e?: Event): Promise<void> {
             contenedorAleatorios,
             CANTIDAD_PLATOS_ALEATORIAS,
             document.querySelector("#fijarCategoria") as HTMLButtonElement,
-            favSelected
+            favSelected,
         );
     }
 }

@@ -5,9 +5,28 @@ console.log("home.ts");
 const CANTIDAD_PLATOS_ALEATORIAS = 8;
 document.addEventListener("DOMContentLoaded", () => {
     cargarCategorias();
-    // comprobarSesionUsuarioHome();
+    comprobarSesionUsuarioHome();
     cargarPlatosHome();
 });
+function comprobarSesionUsuarioHome() {
+    let sesion = localStorage.getItem("session");
+    console.log(sesion);
+    if (typeof sesion === "string") {
+        document.querySelector("#botonFavoritos")?.classList.remove("d-none");
+        comprobarCategoriaFavorita();
+    }
+    else {
+        document.querySelector("#botonFavoritos")?.classList.add("d-none");
+    }
+}
+function comprobarCategoriaFavorita() {
+    const storage = new StorageService();
+    const usuarioActual = storage.getUsuarioActual();
+    if (usuarioActual?.favoriteCategory !== undefined) {
+        document.querySelector("#categories").value =
+            usuarioActual.favoriteCategory;
+    }
+}
 function pedirNAleatorios(cant, tamArray) {
     let nRandoms = [];
     for (let i = 0; i < tamArray && i < cant; i++) {

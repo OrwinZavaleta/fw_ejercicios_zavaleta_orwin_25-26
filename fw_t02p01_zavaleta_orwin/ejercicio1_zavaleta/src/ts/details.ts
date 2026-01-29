@@ -56,17 +56,23 @@ function handleBotonFavoritos(e: Event) {
     const view = new ViewService();
     const storage = new StorageService();
     const boton = e.target as HTMLButtonElement;
-    const formFavorito = document.querySelector("#detallesForm") as HTMLDivElement;
-    const userMeal = transformarMyMealAUserMeal(Number(obtenerId()));
+    const formFavorito = document.querySelector(
+        "#detallesForm",
+    ) as HTMLDivElement;
+    try {
+        const userMeal = transformarMyMealAUserMeal(Number(obtenerId()));
 
-    if (boton?.classList.contains("active")) {
-        view.activarDesactivarBoton(boton, false);
-        storage.quitarPlatoFavorito(Number(obtenerId()), userMeal.userId);
-        formFavorito.classList.add("d-none")
-    } else {
-        view.activarDesactivarBoton(boton, true);
-        storage.guardarPlatoFavorito(userMeal, userMeal.userId);
-        formFavorito.classList.remove("d-none")
+        if (boton?.classList.contains("active")) {
+            view.activarDesactivarBoton(boton, false);
+            storage.quitarPlatoFavorito(Number(obtenerId()), userMeal.userId);
+            formFavorito.classList.add("d-none");
+        } else {
+            view.activarDesactivarBoton(boton, true);
+            storage.guardarPlatoFavorito(userMeal, userMeal.userId);
+            formFavorito.classList.remove("d-none");
+        }
+    } catch (error) {
+        console.log(error);
     }
 }
 

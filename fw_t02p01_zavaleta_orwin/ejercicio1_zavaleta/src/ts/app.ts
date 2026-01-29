@@ -28,6 +28,7 @@ function cargarEventosLoginOut(): void {
     const view = new ViewService();
     document.querySelector("#logout")?.addEventListener("click", () => {
         storage.removeUsuarioActual();
+        comprobarSesionUsuario();
     });
 
     const btnLogin = document.querySelector("#login") as HTMLLinkElement;
@@ -61,6 +62,7 @@ function cargarValidacionDeFormularios(): void {
                     if (form.checkValidity() && miValidacion) {
                         if (form.id == "loginForm") iniciarSesion(form);
                         else if (form.id == "registroForm") crearUsuario(form);
+                        comprobarSesionUsuario();
                     }
 
                     form.classList.add("was-validated");
@@ -79,9 +81,9 @@ function crearUsuario(form: HTMLFormElement) {
         email: form.correo.value,
         password: form.password.value,
     };
+    form.classList.remove("was-validated");
     form.reset();
     storage.guardarAgregarUsuario(user);
-    comprobarSesionUsuarioHome();
     cerrarModalLoginOut();
 }
 
@@ -98,8 +100,8 @@ function iniciarSesion(form: HTMLFormElement) {
     );
     if (usuarioActual && usuarioActual.password === form.password.value) {
         storage.setUsuarioActual(usuarioActual);
-        comprobarSesionUsuarioHome();
         cerrarModalLoginOut();
+        form.classList.remove("was-validated");
         form.reset();
     } else {
         console.log("usuario no existe");
@@ -139,30 +141,4 @@ function realizarMiValidacion(form: HTMLFormElement): boolean {
         }
     }
     return esValido;
-}
-
-
-
-// Por prueba
-
-function comprobarSesionUsuarioHome(): void {
-    let sesion: string | null = localStorage.getItem("session");
-    console.log(sesion);
-
-    if (typeof sesion === "string") {
-        document.querySelector("#botonFavoritos")?.classList.remove("d-none");
-        comprobarCategoriaFavorita();
-    } else {
-        document.querySelector("#botonFavoritos")?.classList.add("d-none");
-    }
-}
-
-function comprobarCategoriaFavorita() {
-    const storage = new StorageService();
-    const usuarioActual = storage.getUsuarioActual();
-
-    if (usuarioActual?.favoriteCategory !== undefined) {
-        (document.querySelector("#categories") as HTMLSelectElement).value =
-            usuarioActual.favoriteCategory;
-    }
 }

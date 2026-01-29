@@ -23,6 +23,7 @@ function cargarEventosLoginOut() {
     const view = new ViewService();
     document.querySelector("#logout")?.addEventListener("click", () => {
         storage.removeUsuarioActual();
+        comprobarSesionUsuario();
     });
     const btnLogin = document.querySelector("#login");
     btnLogin.addEventListener("click", function () {
@@ -46,6 +47,7 @@ function cargarValidacionDeFormularios() {
                         iniciarSesion(form);
                     else if (form.id == "registroForm")
                         crearUsuario(form);
+                    comprobarSesionUsuario();
                 }
                 form.classList.add("was-validated");
             }, false);
@@ -60,9 +62,9 @@ function crearUsuario(form) {
         email: form.correo.value,
         password: form.password.value,
     };
+    form.classList.remove("was-validated");
     form.reset();
     storage.guardarAgregarUsuario(user);
-    comprobarSesionUsuarioHome();
     cerrarModalLoginOut();
 }
 function cerrarModalLoginOut() {
@@ -75,8 +77,8 @@ function iniciarSesion(form) {
     const usuarioActual = storage.buscarUsuarioPorCorreo(form.email.value);
     if (usuarioActual && usuarioActual.password === form.password.value) {
         storage.setUsuarioActual(usuarioActual);
-        comprobarSesionUsuarioHome();
         cerrarModalLoginOut();
+        form.classList.remove("was-validated");
         form.reset();
     }
     else {
@@ -107,25 +109,5 @@ function realizarMiValidacion(form) {
         }
     }
     return esValido;
-}
-// Por prueba
-function comprobarSesionUsuarioHome() {
-    let sesion = localStorage.getItem("session");
-    console.log(sesion);
-    if (typeof sesion === "string") {
-        document.querySelector("#botonFavoritos")?.classList.remove("d-none");
-        comprobarCategoriaFavorita();
-    }
-    else {
-        document.querySelector("#botonFavoritos")?.classList.add("d-none");
-    }
-}
-function comprobarCategoriaFavorita() {
-    const storage = new StorageService();
-    const usuarioActual = storage.getUsuarioActual();
-    if (usuarioActual?.favoriteCategory !== undefined) {
-        document.querySelector("#categories").value =
-            usuarioActual.favoriteCategory;
-    }
 }
 //# sourceMappingURL=app.js.map
