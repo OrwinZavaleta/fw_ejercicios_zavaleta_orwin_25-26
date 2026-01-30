@@ -1,0 +1,14 @@
+<section class="login-container">
+  <form #loginForm>
+    <input type="text" placeholder="Username" #username />
+    <input type="password" placeholder="Password" #password />
+    <button type="button" (click)="login(username.value, password.value)">
+      Entrar
+    </button>
+  </form>
+  <p class="hint">Usuarios de prueba:</p>
+  <ul class="hint">
+    <li>gon/gon</li>
+    <li>killua/killua</li>
+  </ul>
+</section>
