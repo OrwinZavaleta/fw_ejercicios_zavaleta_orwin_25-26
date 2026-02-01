@@ -13,13 +13,27 @@ document.addEventListener("DOMContentLoaded", () => {
 function comprobarSesionUsuario(): void {
     let sesion: string | null = localStorage.getItem("session");
     console.log(sesion);
+    const storage = new StorageService();
+    const view = new ViewService();
 
-    if (typeof sesion === "string") {
-        document.querySelector("#menu-auth")?.classList.remove("d-none");
-        document.querySelector("#menu-guest")?.classList.add("d-none");
+    if (storage.getUsuarioActual()) {
+        view.mostrarElement(
+            document.querySelector("#menu-auth") as HTMLDivElement,
+            true,
+        );
+        view.mostrarElement(
+            document.querySelector("#menu-guest") as HTMLDivElement,
+            false,
+        );
     } else {
-        document.querySelector("#menu-auth")?.classList.add("d-none");
-        document.querySelector("#menu-guest")?.classList.remove("d-none");
+        view.mostrarElement(
+            document.querySelector("#menu-auth") as HTMLDivElement,
+            false,
+        );
+        view.mostrarElement(
+            document.querySelector("#menu-guest") as HTMLDivElement,
+            true,
+        );
     }
 }
 
@@ -139,7 +153,7 @@ function realizarMiValidacion(form: HTMLFormElement): boolean {
 
         if (usuarioActual) {
             esValido &&= false;
-            debugger
+            debugger;
             view.actualizarValidez(
                 form.correo,
                 false,

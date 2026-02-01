@@ -25,9 +25,10 @@ function obtenerId() {
 }
 function comprobarSesionUsuarioDetalle() {
     const view = new ViewService();
+    const storage = new StorageService();
     let sesion = localStorage.getItem("session");
     console.log(sesion);
-    if (typeof sesion === "string") {
+    if (storage.getUsuarioActual()) {
         view.activarDesactivarBoton(document.querySelector("#platoFavorito"), platoActualEnFavoritos(Number(obtenerId())));
     }
     else {
@@ -46,12 +47,12 @@ function handleBotonFavoritos(e) {
         if (boton?.classList.contains("active")) {
             view.activarDesactivarBoton(boton, false);
             storage.quitarPlatoFavorito(Number(obtenerId()), userMeal.userId);
-            formFavorito.classList.add("d-none");
+            view.mostrarElement(formFavorito, false);
         }
         else {
             view.activarDesactivarBoton(boton, true);
             storage.guardarPlatoFavorito(userMeal, userMeal.userId);
-            formFavorito.classList.remove("d-none");
+            view.mostrarElement(formFavorito, true);
         }
     }
     catch (error) {

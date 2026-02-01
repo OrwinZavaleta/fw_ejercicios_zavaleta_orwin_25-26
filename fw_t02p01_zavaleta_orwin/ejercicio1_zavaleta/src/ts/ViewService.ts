@@ -193,6 +193,10 @@ export class ViewService {
             "#ingredientes",
         ) as HTMLUListElement;
 
+        const opinionHTML = document.querySelector(
+            "#detallesForm",
+        ) as HTMLDivElement;
+
         imagenHTML.src = platoDetalle.strMealThumb + "/medium";
         imagenHTML.alt = platoDetalle.strMeal;
 
@@ -204,5 +208,19 @@ export class ViewService {
                 `<li class="list-group-item">${ingrediente.measure} de ${ingrediente.name}</li>`,
             );
         });
+
+        const botonFav = document.querySelector(
+            "#platoFavorito",
+        ) as HTMLButtonElement;
+
+        this.mostrarElement(opinionHTML, botonFav?.classList.contains("active"));
+    }
+
+    public mostrarElement(div: HTMLElement, condition: boolean) {
+        if (condition) {
+            div.classList.remove("d-none");
+        } else {
+            div.classList.add("d-none");
+        }
     }
 }

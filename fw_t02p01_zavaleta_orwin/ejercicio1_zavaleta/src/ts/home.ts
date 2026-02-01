@@ -17,13 +17,15 @@ document.addEventListener("DOMContentLoaded", () => {
 
 function comprobarSesionUsuarioHome(): void {
     let sesion: string | null = localStorage.getItem("session");
+    const view = new ViewService();
+    const storage = new StorageService();
     console.log(sesion);
 
-    if (typeof sesion === "string") {
-        document.querySelector("#botonFavoritos")?.classList.remove("d-none");
+    if (storage.getUsuarioActual()) {
+        view.mostrarElement(document.querySelector("#botonFavoritos") as HTMLDivElement, true)
         comprobarCategoriaFavorita();
     } else {
-        document.querySelector("#botonFavoritos")?.classList.add("d-none");
+        view.mostrarElement(document.querySelector("#botonFavoritos") as HTMLDivElement, false)
     }
 }
 

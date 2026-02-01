@@ -123,12 +123,23 @@ export class ViewService {
         const imagenHTML = document.querySelector("#imagenPlato");
         const nombreHTML = document.querySelector("#nombrePlato");
         const ingredientesHTML = document.querySelector("#ingredientes");
+        const opinionHTML = document.querySelector("#detallesForm");
         imagenHTML.src = platoDetalle.strMealThumb + "/medium";
         imagenHTML.alt = platoDetalle.strMeal;
         this.insertarTexto(nombreHTML, platoDetalle.strMeal);
         platoDetalle.ingredients.forEach((ingrediente) => {
             this.apendizarTextoFormato(ingredientesHTML, `<li class="list-group-item">${ingrediente.measure} de ${ingrediente.name}</li>`);
         });
+        const botonFav = document.querySelector("#platoFavorito");
+        this.mostrarElement(opinionHTML, botonFav?.classList.contains("active"));
+    }
+    mostrarElement(div, condition) {
+        if (condition) {
+            div.classList.remove("d-none");
+        }
+        else {
+            div.classList.add("d-none");
+        }
     }
 }
 //# sourceMappingURL=ViewService.js.map

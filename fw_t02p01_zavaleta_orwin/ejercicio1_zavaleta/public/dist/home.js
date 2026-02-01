@@ -10,13 +10,15 @@ document.addEventListener("DOMContentLoaded", () => {
 });
 function comprobarSesionUsuarioHome() {
     let sesion = localStorage.getItem("session");
+    const view = new ViewService();
+    const storage = new StorageService();
     console.log(sesion);
-    if (typeof sesion === "string") {
-        document.querySelector("#botonFavoritos")?.classList.remove("d-none");
+    if (storage.getUsuarioActual()) {
+        view.mostrarElement(document.querySelector("#botonFavoritos"), true);
         comprobarCategoriaFavorita();
     }
     else {
-        document.querySelector("#botonFavoritos")?.classList.add("d-none");
+        view.mostrarElement(document.querySelector("#botonFavoritos"), false);
     }
 }
 function comprobarCategoriaFavorita() {

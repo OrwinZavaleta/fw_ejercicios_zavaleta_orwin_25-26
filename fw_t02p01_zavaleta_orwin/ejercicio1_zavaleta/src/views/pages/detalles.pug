@@ -10,18 +10,27 @@ block content
                 <ul class="list-group" id="ingredientes">
                 </ul>
                 <div class="d-none" id="detallesForm">
-                    h3 Formulario
-                    label(for="opinion").form-label.fs-4 Su opinion
-                    textarea#opinion(name="opinion").form-control
-                    h4 ¿Ha hecho ya la receta?
-                    <div class="form-check">
-                        <input class="form-check-input" type="radio" id="html" name="realizacion" value="quiero" checked>
-                        label(for="quiero").form-check-label Quiero hacerla
-                    </div>
-                    <div class="form-check">
-                        <input class="form-check-input" type="radio" id="html" name="realizacion" value="hecho">
-                        label(for="hecho").form-check-label La he hecho
-                    </div>
+                    <form class="row g-3 needs-validation" novalidate>
+                        h3 Formulario
+                        <div class="col-md-5">
+                            h4 ¿Ha hecho ya la receta?
+                            <div class="form-check">
+                                <input class="form-check-input" type="radio" id="html" name="realizacion" value="quiero" checked>
+                                label(for="quiero").form-check-label Quiero hacerla
+                            </div> 
+                            <div class="form-check">
+                                <input class="form-check-input" type="radio" id="html" name="realizacion" value="hecho">
+                                label(for="hecho").form-check-label La he hecho
+                            </div>
+                        </div>
+                        <div class="col-md-7">
+                            label(for="opinion").form-label.fs-4 Su opinion
+                            textarea#opinion(name="opinion" rows="4").form-control
+                        </div> 
+                        <div class="col-md-6">
+                            button(type="submit").btn.btn-primary Enviar 
+                        </div>
+                    </form>
                 </div>
             </div>
             <div class="col-md-4 text-end">
@@ -29,7 +38,7 @@ block content
                 <button type="submit" class="btn btn-outline-primary px-5 my-3" id="platoFavorito">Favorita</button>
             </div>
 
-            
+
 
 block scripts 
     <script type="module" src="./dist/details.js"></script>

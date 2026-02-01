@@ -9,13 +9,15 @@ document.addEventListener("DOMContentLoaded", () => {
 function comprobarSesionUsuario() {
     let sesion = localStorage.getItem("session");
     console.log(sesion);
-    if (typeof sesion === "string") {
-        document.querySelector("#menu-auth")?.classList.remove("d-none");
-        document.querySelector("#menu-guest")?.classList.add("d-none");
+    const storage = new StorageService();
+    const view = new ViewService();
+    if (storage.getUsuarioActual()) {
+        view.mostrarElement(document.querySelector("#menu-auth"), true);
+        view.mostrarElement(document.querySelector("#menu-guest"), false);
     }
     else {
-        document.querySelector("#menu-auth")?.classList.add("d-none");
-        document.querySelector("#menu-guest")?.classList.remove("d-none");
+        view.mostrarElement(document.querySelector("#menu-auth"), false);
+        view.mostrarElement(document.querySelector("#menu-guest"), true);
     }
 }
 function cargarEventosLoginOut() {
