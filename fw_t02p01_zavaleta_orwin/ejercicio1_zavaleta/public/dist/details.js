@@ -7,6 +7,7 @@ document.addEventListener("DOMContentLoaded", () => {
     cargarDetallesPlato();
     comprobarSesionUsuarioDetalle();
     asignarEventos();
+    cargarValidacionDeFormularios();
 });
 async function cargarDetallesPlato() {
     const id = obtenerId();
@@ -26,12 +27,29 @@ function obtenerId() {
 function comprobarSesionUsuarioDetalle() {
     const view = new ViewService();
     const storage = new StorageService();
+    const botnFav = document.querySelector("#platoFavorito");
+    const opinionFav = document.querySelector("#detallesForm");
     let sesion = localStorage.getItem("session");
     console.log(sesion);
     if (storage.getUsuarioActual()) {
-        view.activarDesactivarBoton(document.querySelector("#platoFavorito"), platoActualEnFavoritos(Number(obtenerId())));
+        view.mostrarElement(botnFav, true);
+        view.activarDesactivarBoton(botnFav, platoActualEnFavoritos(Number(obtenerId())));
+        cargarValoresOpinion();
     }
     else {
+        view.mostrarElement(botnFav, false);
+        view.mostrarElement(opinionFav, false);
+    }
+}
+function cargarValoresOpinion() {
+    const storage = new StorageService();
+    const user = storage.getUsuarioActual()?.id;
+    const view = new ViewService();
+    if (user && platoActualEnFavoritos(Number(obtenerId()))) {
+        const platoActual = storage.buscarPlatoFavoritoPorId(Number(obtenerId()), user);
+        document.querySelector("#hecho").checked =
+            platoActual?.status === Estado.LA_HE_HECHO ? true : false;
+        view.insertarTexto(document.querySelector("#opinion"), platoActual?.notes ?? "");
     }
 }
 function asignarEventos() {
@@ -83,5 +101,34 @@ function platoActualEnFavoritos(idMeal) {
     else {
         return false;
     }
+}
+function cargarValidacionDeFormularios() {
+    // TODO: revisar si hace falta o con la de app.ts basta
+    (() => {
+        const forms = document.querySelectorAll(".needs-validation");
+        Array.from(forms).forEach((form) => {
+            form.addEventListener("submit", (event) => {
+                event.preventDefault();
+                event.stopPropagation();
+                if (form.checkValidity()) {
+                    handleOpinionFormulario(form);
+                    console.log("es valido");
+                }
+                else {
+                    console.log("no valido");
+                    form.classList.add("was-validated");
+                }
+            }, false);
+        });
+    })();
+}
+function handleOpinionFormulario(form) {
+    const storage = new StorageService();
+    const userMeal = transformarMyMealAUserMeal(Number(obtenerId()));
+    userMeal.status = form.estado.value;
+    userMeal.notes = form.opinion.value;
+    userMeal.rating = 0; //TODO
+    storage.actualizarPlatoFavorito(userMeal, userMeal.userId);
+    form.classList.remove("was-validated");
 }
 //# sourceMappingURL=details.js.map

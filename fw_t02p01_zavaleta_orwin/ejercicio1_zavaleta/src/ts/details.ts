@@ -10,6 +10,7 @@ document.addEventListener("DOMContentLoaded", () => {
     cargarDetallesPlato();
     comprobarSesionUsuarioDetalle();
     asignarEventos();
+    cargarValidacionDeFormularios();
 });
 
 async function cargarDetallesPlato(): Promise<void> {
@@ -35,15 +36,45 @@ function obtenerId(): string {
 function comprobarSesionUsuarioDetalle(): void {
     const view = new ViewService();
     const storage = new StorageService();
+    const botnFav = document.querySelector(
+        "#platoFavorito",
+    ) as HTMLButtonElement;
+    const opinionFav = document.querySelector(
+        "#detallesForm",
+    ) as HTMLDivElement;
     let sesion: string | null = localStorage.getItem("session");
     console.log(sesion);
 
     if (storage.getUsuarioActual()) {
+        view.mostrarElement(botnFav, true);
         view.activarDesactivarBoton(
-            document.querySelector("#platoFavorito") as HTMLButtonElement,
+            botnFav,
             platoActualEnFavoritos(Number(obtenerId())),
         );
+        cargarValoresOpinion();
     } else {
+        view.mostrarElement(botnFav, false);
+        view.mostrarElement(opinionFav, false);
+    }
+}
+
+function cargarValoresOpinion() {
+    const storage = new StorageService();
+    const user = storage.getUsuarioActual()?.id;
+    const view = new ViewService();
+
+    if (user && platoActualEnFavoritos(Number(obtenerId()))) {
+        const platoActual = storage.buscarPlatoFavoritoPorId(
+            Number(obtenerId()),
+            user,
+        );
+
+        (document.querySelector("#hecho") as HTMLInputElement).checked =
+            platoActual?.status === Estado.LA_HE_HECHO ? true : false;
+        view.insertarTexto(
+            document.querySelector("#opinion") as HTMLInputElement,
+            platoActual?.notes ?? "",
+        );
     }
 }
 
@@ -99,4 +130,44 @@ function platoActualEnFavoritos(idMeal: MyMeal["idMeal"]): boolean {
     } else {
         return false;
     }
+}
+
+function cargarValidacionDeFormularios() {
+    // TODO: revisar si hace falta o con la de app.ts basta
+    (() => {
+        const forms: NodeListOf<HTMLFormElement> =
+            document.querySelectorAll(".needs-validation");
+
+        Array.from(forms).forEach((form) => {
+            form.addEventListener(
+                "submit",
+                (event) => {
+                    event.preventDefault();
+                    event.stopPropagation();
+
+                    if (form.checkValidity()) {
+                        handleOpinionFormulario(form);
+                        console.log("es valido");
+                    } else {
+                        console.log("no valido");
+
+                        form.classList.add("was-validated");
+                    }
+                },
+                false,
+            );
+        });
+    })();
+}
+
+function handleOpinionFormulario(form: HTMLFormElement) {
+    const storage = new StorageService();
+    const userMeal = transformarMyMealAUserMeal(Number(obtenerId()));
+    userMeal.status = form.estado.value;
+    userMeal.notes = form.opinion.value;
+    userMeal.rating = 0; //TODO
+
+    storage.actualizarPlatoFavorito(userMeal, userMeal.userId);
+
+    form.classList.remove("was-validated");
 }

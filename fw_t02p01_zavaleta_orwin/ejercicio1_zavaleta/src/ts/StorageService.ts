@@ -115,11 +115,7 @@ export class StorageService {
     }
 
     public guardarPlatoFavorito(platoGuardar: UserMeal, id: User["id"]): void {
-        const favoritosUserSinProcesar =
-            localStorage.getItem(this.USER_MEAL_KEY_ITEM + id) ?? "[]";
-        const favoritosUserProcesados: UserMeal[] = JSON.parse(
-            favoritosUserSinProcesar,
-        );
+        const favoritosUserProcesados: UserMeal[] = this.getPlatosFavoritos(id);
 
         favoritosUserProcesados.push(platoGuardar);
 
@@ -132,11 +128,7 @@ export class StorageService {
         platoId: MyMeal["idMeal"],
         id: User["id"],
     ): UserMeal | undefined {
-        const favoritosUserSinProcesar =
-            localStorage.getItem(this.USER_MEAL_KEY_ITEM + id) ?? "[]";
-        const favoritosUserProcesados: UserMeal[] = JSON.parse(
-            favoritosUserSinProcesar,
-        );
+        const favoritosUserProcesados: UserMeal[] = this.getPlatosFavoritos(id);
 
         return favoritosUserProcesados.find(
             (plato) => plato.mealId === platoId,
@@ -147,16 +139,28 @@ export class StorageService {
         platoId: MyMeal["idMeal"],
         id: User["id"],
     ): void {
-        const favoritosUserSinProcesar =
-            localStorage.getItem(this.USER_MEAL_KEY_ITEM + id) ?? "[]";
-        const favoritosUserProcesados: UserMeal[] = JSON.parse(
-            favoritosUserSinProcesar,
-        );
+        const favoritosUserProcesados: UserMeal[] = this.getPlatosFavoritos(id);
 
         const indexPlato = favoritosUserProcesados.findIndex(
             (plato) => plato.mealId === platoId,
         );
         favoritosUserProcesados.splice(indexPlato, 1);
+
+        localStorage.setItem(
+            this.USER_MEAL_KEY_ITEM + id,
+            JSON.stringify(favoritosUserProcesados),
+        );
+    }
+    public actualizarPlatoFavorito(platoActualizar: UserMeal, id: User["id"]) {
+        const favoritosUserProcesados: UserMeal[] = this.getPlatosFavoritos(id);
+
+        const indexPlato = favoritosUserProcesados.findIndex(
+            (plato) => plato.mealId === platoActualizar.mealId,
+        );
+
+        favoritosUserProcesados[indexPlato].status = platoActualizar.status
+        favoritosUserProcesados[indexPlato].notes = platoActualizar.notes
+        favoritosUserProcesados[indexPlato].rating = platoActualizar.rating
 
         localStorage.setItem(
             this.USER_MEAL_KEY_ITEM + id,

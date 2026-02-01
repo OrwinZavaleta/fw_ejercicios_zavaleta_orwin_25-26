@@ -24,28 +24,30 @@
 <main class="flex-grow-1">
 <div class="container py-3">
   <div class="row pb-3 justify-content-md-between"><div class="col-md-8">
+<div id="descripcionPlato" class="mb-3">
 <h1 id="nombrePlato"></h1>
     <h2>Ingredientes </h2><ul class="list-group" id="ingredientes">
 </ul>
+</div>
 <div class="d-none" id="detallesForm">
-<form class="row g-3 needs-validation" novalidate>
+<form class="row g-3 needs-validation" id="guardarOpinion" novalidate>
     <h3>Formulario</h3><div class="col-md-5">
     <h4>¿Ha hecho ya la receta?</h4><div class="form-check">
-<input class="form-check-input" type="radio" id="html" name="realizacion" value="quiero" checked>
-    <label class="form-check-label" for="quiero">Quiero hacerla</label></div> 
+<input class="form-check-input" type="radio" id="quieroHacerla" name="estado" value="QUIERO_HACERLA" checked>
+    <label class="form-check-label" for="QUIERO_HACERLA">Quiero hacerla</label></div> 
 <div class="form-check">
-<input class="form-check-input" type="radio" id="html" name="realizacion" value="hecho">
-    <label class="form-check-label" for="hecho">La he hecho</label></div>
+<input class="form-check-input" type="radio" id="hecho" name="estado" value="LA_HE_HECHO">
+    <label class="form-check-label" for="LA_HE_HECHO">La he hecho</label></div>
 </div>
 <div class="col-md-7">
-    <label class="form-label fs-4" for="opinion">Su opinion</label>
-    <textarea class="form-control" id="opinion" name="opinion" rows="4"></textarea></div> 
+    <label class="form-label fs-4" for="opinion">Su opinión</label>
+    <textarea class="form-control" id="opinion" name="opinion" rows="4" placeHolder="Escribanos su opinión."></textarea></div> 
 <div class="col-md-6">
     <button class="btn btn-primary" type="submit">Enviar </button></div>
 </form>
 </div>
 </div>
-<div class="col-md-4 text-end"><img class="img-square" id="imagenPlato" src="#" alt=""/><button type="submit" class="btn btn-outline-primary px-5 my-3" id="platoFavorito">Favorita</button>
+<div class="col-md-4 text-end"><img class="img-square" id="imagenPlato" src="#" alt="Cargando Imagen..."/><button type="submit" class="btn btn-outline-warning px-5 my-3" id="platoFavorito">Favorita</button>
 </div>
   </div>
 </div></main>

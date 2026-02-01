@@ -67,21 +67,26 @@ export class StorageService {
         return favoritosUserProcesados;
     }
     guardarPlatoFavorito(platoGuardar, id) {
-        const favoritosUserSinProcesar = localStorage.getItem(this.USER_MEAL_KEY_ITEM + id) ?? "[]";
-        const favoritosUserProcesados = JSON.parse(favoritosUserSinProcesar);
+        const favoritosUserProcesados = this.getPlatosFavoritos(id);
         favoritosUserProcesados.push(platoGuardar);
         localStorage.setItem(this.USER_MEAL_KEY_ITEM + id, JSON.stringify(favoritosUserProcesados));
     }
     buscarPlatoFavoritoPorId(platoId, id) {
-        const favoritosUserSinProcesar = localStorage.getItem(this.USER_MEAL_KEY_ITEM + id) ?? "[]";
-        const favoritosUserProcesados = JSON.parse(favoritosUserSinProcesar);
+        const favoritosUserProcesados = this.getPlatosFavoritos(id);
         return favoritosUserProcesados.find((plato) => plato.mealId === platoId);
     }
     quitarPlatoFavorito(platoId, id) {
-        const favoritosUserSinProcesar = localStorage.getItem(this.USER_MEAL_KEY_ITEM + id) ?? "[]";
-        const favoritosUserProcesados = JSON.parse(favoritosUserSinProcesar);
+        const favoritosUserProcesados = this.getPlatosFavoritos(id);
         const indexPlato = favoritosUserProcesados.findIndex((plato) => plato.mealId === platoId);
         favoritosUserProcesados.splice(indexPlato, 1);
+        localStorage.setItem(this.USER_MEAL_KEY_ITEM + id, JSON.stringify(favoritosUserProcesados));
+    }
+    actualizarPlatoFavorito(platoActualizar, id) {
+        const favoritosUserProcesados = this.getPlatosFavoritos(id);
+        const indexPlato = favoritosUserProcesados.findIndex((plato) => plato.mealId === platoActualizar.mealId);
+        favoritosUserProcesados[indexPlato].status = platoActualizar.status;
+        favoritosUserProcesados[indexPlato].notes = platoActualizar.notes;
+        favoritosUserProcesados[indexPlato].rating = platoActualizar.rating;
         localStorage.setItem(this.USER_MEAL_KEY_ITEM + id, JSON.stringify(favoritosUserProcesados));
     }
 }
