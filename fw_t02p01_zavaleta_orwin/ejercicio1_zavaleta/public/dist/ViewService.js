@@ -96,7 +96,7 @@ export class ViewService {
             element.setCustomValidity("");
         }
         else {
-            element.setCustomValidity("mensaje");
+            element.setCustomValidity(mensaje);
         }
     }
     getFavUsuarioActual() {

@@ -63,9 +63,12 @@ function cargarValidacionDeFormularios(): void {
                         if (form.id == "loginForm") iniciarSesion(form);
                         else if (form.id == "registroForm") crearUsuario(form);
                         comprobarSesionUsuario();
-                    }
+                        console.log("es valido");
+                    } else {
+                        console.log("no valido");
 
-                    form.classList.add("was-validated");
+                        form.classList.add("was-validated");
+                    }
                 },
                 false,
             );
@@ -120,6 +123,7 @@ function realizarMiValidacion(form: HTMLFormElement): boolean {
         );
         if (usuarioActual && usuarioActual.password === form.password.value) {
             esValido &&= true;
+            view.actualizarValidez(form.password, true, "");
         } else {
             esValido &&= false;
             view.actualizarValidez(
@@ -129,16 +133,34 @@ function realizarMiValidacion(form: HTMLFormElement): boolean {
             );
         }
     } else if (form.id == "registroForm") {
-        if (form.password.value === form.confirmPassword.value) {
-            esValido &&= true;
-        } else {
+        const usuarioActual: User | null = storage.buscarUsuarioPorCorreo(
+            form.correo.value,
+        );
+
+        if (usuarioActual) {
             esValido &&= false;
+            debugger
             view.actualizarValidez(
-                form.password,
+                form.correo,
                 false,
-                "La contraseña no es valida",
+                "El usuario ingresado ya existe",
             );
+        } else {
+            view.actualizarValidez(form.correo, true, "");
+            if (form.password.value !== form.confirmPassword.value) {
+                esValido &&= false;
+                view.actualizarValidez(
+                    form.password,
+                    false,
+                    "La contraseña no es valida",
+                );
+            } else {
+                esValido &&= true;
+                view.actualizarValidez(form.password, true, "");
+            }
         }
+    } else {
+        esValido &&= false;
     }
     return esValido;
 }

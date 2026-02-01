@@ -48,8 +48,12 @@ function cargarValidacionDeFormularios() {
                     else if (form.id == "registroForm")
                         crearUsuario(form);
                     comprobarSesionUsuario();
+                    console.log("es valido");
                 }
-                form.classList.add("was-validated");
+                else {
+                    console.log("no valido");
+                    form.classList.add("was-validated");
+                }
             }, false);
         });
     })();
@@ -93,6 +97,7 @@ function realizarMiValidacion(form) {
         const usuarioActual = storage.buscarUsuarioPorCorreo(form.email.value);
         if (usuarioActual && usuarioActual.password === form.password.value) {
             esValido && (esValido = true);
+            view.actualizarValidez(form.password, true, "");
         }
         else {
             esValido && (esValido = false);
@@ -100,13 +105,26 @@ function realizarMiValidacion(form) {
         }
     }
     else if (form.id == "registroForm") {
-        if (form.password.value === form.confirmPassword.value) {
-            esValido && (esValido = true);
+        const usuarioActual = storage.buscarUsuarioPorCorreo(form.correo.value);
+        if (usuarioActual) {
+            esValido && (esValido = false);
+            debugger;
+            view.actualizarValidez(form.correo, false, "El usuario ingresado ya existe");
         }
         else {
-            esValido && (esValido = false);
-            view.actualizarValidez(form.password, false, "La contraseña no es valida");
+            view.actualizarValidez(form.correo, true, "");
+            if (form.password.value !== form.confirmPassword.value) {
+                esValido && (esValido = false);
+                view.actualizarValidez(form.password, false, "La contraseña no es valida");
+            }
+            else {
+                esValido && (esValido = true);
+                view.actualizarValidez(form.password, true, "");
+            }
         }
+    }
+    else {
+        esValido && (esValido = false);
     }
     return esValido;
 }

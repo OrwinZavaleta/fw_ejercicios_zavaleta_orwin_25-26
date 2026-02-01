@@ -155,7 +155,7 @@ export class ViewService {
         if (valido) {
             element.setCustomValidity("");
         } else {
-            element.setCustomValidity("mensaje");
+            element.setCustomValidity(mensaje);
         }
     }
 
