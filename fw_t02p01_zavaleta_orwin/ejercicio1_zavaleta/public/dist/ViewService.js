@@ -37,7 +37,7 @@ export class ViewService {
                     </div>
                 </a>
                 `);
-            this.activarDesactivarBoton(botonCategoria, !buttonState);
+            this.activarDesactivarBoton(botonCategoria, buttonState);
         }
     }
     pintarCategorias(categorias, select) {
@@ -48,7 +48,7 @@ export class ViewService {
                 this.apendizarTextoFormato(select, `<option value="${categoria.strCategory}">${categoria.strCategory}</option>`);
             });
         }
-        if (favorito) {
+        if (favorito && favorito !== "") {
             select.value = favorito;
             this.activarDesactivarBoton(document.querySelector("#fijarCategoria"), true);
         }

@@ -72,7 +72,7 @@ export async function cargarPlatosHome(e?: Event): Promise<void> {
                 platosPedidos.push(
                     ...(await pedirPlatosCategoria(target.value)),
                 );
-                favSelected = true;
+                if (favUsuario === target.value) favSelected = true;
             }
 
             platos.push(...platosPedidos);
@@ -80,6 +80,7 @@ export async function cargarPlatosHome(e?: Event): Promise<void> {
             const platosPedidos: MyMeal[] = [];
             if (favUsuario) {
                 platosPedidos.push(...(await pedirPlatosCategoria(favUsuario)));
+                favSelected = true;
             } else {
                 platosPedidos.push(...(await pedirTodosAleatorio()));
             }

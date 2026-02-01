@@ -64,7 +64,7 @@ export class ViewService {
                 `,
             );
 
-            this.activarDesactivarBoton(botonCategoria, !buttonState);
+            this.activarDesactivarBoton(botonCategoria, buttonState);
         }
     }
 
@@ -87,7 +87,7 @@ export class ViewService {
             });
         }
 
-        if (favorito) {
+        if (favorito && favorito !== "") {
             select.value = favorito;
             this.activarDesactivarBoton(
                 document.querySelector("#fijarCategoria") as HTMLButtonElement,
