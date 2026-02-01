@@ -8,8 +8,8 @@ console.log("details.ts");
 
 document.addEventListener("DOMContentLoaded", () => {
     cargarDetallesPlato();
-    comprobarSesionUsuarioDetalle();
     asignarEventos();
+    comprobarSesionUsuarioDetalle();
     cargarValidacionDeFormularios();
 });
 
@@ -75,6 +75,15 @@ function cargarValoresOpinion() {
             document.querySelector("#opinion") as HTMLInputElement,
             platoActual?.notes ?? "",
         );
+
+        const estrellas = document.querySelectorAll(
+            ".bi.bi-star",
+        ) as NodeListOf<HTMLElement>;
+        if (platoActual?.rating) {
+            for (let i = 0; i < platoActual?.rating; i++) {
+                view.estrellaPintada(estrellas[i], true)
+            }
+        }
     }
 }
 
@@ -82,6 +91,35 @@ function asignarEventos(): void {
     (
         document.querySelector("#platoFavorito") as HTMLButtonElement
     ).addEventListener("click", handleBotonFavoritos);
+    cargarEventosRating();
+}
+
+function cargarEventosRating() {
+    const estrellas = document.querySelectorAll(
+        ".bi.bi-star",
+    ) as NodeListOf<HTMLElement>;
+    const view = new ViewService();
+    console.log(estrellas);
+
+    const rating = document.querySelector("#rating") as HTMLInputElement;
+
+    for (let i = 0; i < estrellas.length; i++) {
+        const element = estrellas[i];
+
+        element.addEventListener("click", () => {
+            rating.value = i + 1 + "";
+            let prev: Element | null = element;
+            let next: Element | null = element.nextElementSibling;
+            while (prev !== null) {
+                view.estrellaPintada(prev, true);
+                prev = prev.previousElementSibling;
+            }
+            while (next !== null) {
+                view.estrellaPintada(next, false);
+                next = next.nextElementSibling;
+            }
+        });
+    }
 }
 
 function handleBotonFavoritos(e: Event) {
@@ -165,7 +203,7 @@ function handleOpinionFormulario(form: HTMLFormElement) {
     const userMeal = transformarMyMealAUserMeal(Number(obtenerId()));
     userMeal.status = form.estado.value;
     userMeal.notes = form.opinion.value;
-    userMeal.rating = 0; //TODO
+    userMeal.rating = form.rating.value;
 
     storage.actualizarPlatoFavorito(userMeal, userMeal.userId);
 

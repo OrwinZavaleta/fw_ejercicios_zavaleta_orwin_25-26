@@ -5,8 +5,8 @@ import { Estado } from "./UserMeal.js";
 console.log("details.ts");
 document.addEventListener("DOMContentLoaded", () => {
     cargarDetallesPlato();
-    comprobarSesionUsuarioDetalle();
     asignarEventos();
+    comprobarSesionUsuarioDetalle();
     cargarValidacionDeFormularios();
 });
 async function cargarDetallesPlato() {
@@ -50,10 +50,39 @@ function cargarValoresOpinion() {
         document.querySelector("#hecho").checked =
             platoActual?.status === Estado.LA_HE_HECHO ? true : false;
         view.insertarTexto(document.querySelector("#opinion"), platoActual?.notes ?? "");
+        const estrellas = document.querySelectorAll(".bi.bi-star");
+        if (platoActual?.rating) {
+            for (let i = 0; i < platoActual?.rating; i++) {
+                view.estrellaPintada(estrellas[i], true);
+            }
+        }
     }
 }
 function asignarEventos() {
     document.querySelector("#platoFavorito").addEventListener("click", handleBotonFavoritos);
+    cargarEventosRating();
+}
+function cargarEventosRating() {
+    const estrellas = document.querySelectorAll(".bi.bi-star");
+    const view = new ViewService();
+    console.log(estrellas);
+    const rating = document.querySelector("#rating");
+    for (let i = 0; i < estrellas.length; i++) {
+        const element = estrellas[i];
+        element.addEventListener("click", () => {
+            rating.value = i + 1 + "";
+            let prev = element;
+            let next = element.nextElementSibling;
+            while (prev !== null) {
+                view.estrellaPintada(prev, true);
+                prev = prev.previousElementSibling;
+            }
+            while (next !== null) {
+                view.estrellaPintada(next, false);
+                next = next.nextElementSibling;
+            }
+        });
+    }
 }
 function handleBotonFavoritos(e) {
     const view = new ViewService();
@@ -127,7 +156,7 @@ function handleOpinionFormulario(form) {
     const userMeal = transformarMyMealAUserMeal(Number(obtenerId()));
     userMeal.status = form.estado.value;
     userMeal.notes = form.opinion.value;
-    userMeal.rating = 0; //TODO
+    userMeal.rating = form.rating.value;
     storage.actualizarPlatoFavorito(userMeal, userMeal.userId);
     form.classList.remove("was-validated");
 }

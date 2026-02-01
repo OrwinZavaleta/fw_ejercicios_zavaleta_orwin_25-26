@@ -213,7 +213,10 @@ export class ViewService {
             "#platoFavorito",
         ) as HTMLButtonElement;
 
-        this.mostrarElement(opinionHTML, botonFav?.classList.contains("active"));
+        this.mostrarElement(
+            opinionHTML,
+            botonFav?.classList.contains("active"),
+        );
     }
 
     public mostrarElement(div: HTMLElement, condition: boolean) {
@@ -221,6 +224,16 @@ export class ViewService {
             div.classList.remove("d-none");
         } else {
             div.classList.add("d-none");
+        }
+    }
+
+    public estrellaPintada(es: Element, pintada: boolean) {
+        if (pintada) {
+            es.classList.remove("bi-star");
+            es.classList.add("bi-star-fill");
+        } else {
+            es.classList.add("bi-star");
+            es.classList.remove("bi-star-fill");
         }
     }
 }

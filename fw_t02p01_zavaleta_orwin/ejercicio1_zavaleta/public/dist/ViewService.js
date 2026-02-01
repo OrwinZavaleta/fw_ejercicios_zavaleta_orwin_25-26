@@ -141,5 +141,15 @@ export class ViewService {
             div.classList.add("d-none");
         }
     }
+    estrellaPintada(es, pintada) {
+        if (pintada) {
+            es.classList.remove("bi-star");
+            es.classList.add("bi-star-fill");
+        }
+        else {
+            es.classList.add("bi-star");
+            es.classList.remove("bi-star-fill");
+        }
+    }
 }
 //# sourceMappingURL=ViewService.js.map
