@@ -25,8 +25,8 @@ export class ViewService {
         platos: MyMeal[],
         element: HTMLDivElement,
         CANTIDAD_PLATOS_ALEATORIAS: number,
-        botonCategoria: HTMLButtonElement,
-        buttonState: boolean,
+        botonCategoria?: HTMLButtonElement,
+        buttonState?: boolean,
     ): void {
         this.insertarTextoFormato(element, "");
         for (
@@ -64,7 +64,9 @@ export class ViewService {
                 `,
             );
 
-            this.activarDesactivarBoton(botonCategoria, buttonState);
+            if (botonCategoria && buttonState) {
+                this.activarDesactivarBoton(botonCategoria, buttonState);
+            }
         }
     }
 

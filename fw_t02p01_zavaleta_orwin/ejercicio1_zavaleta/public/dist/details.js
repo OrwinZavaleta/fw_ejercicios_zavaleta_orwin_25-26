@@ -61,6 +61,7 @@ function cargarValoresOpinion() {
 function asignarEventos() {
     document.querySelector("#platoFavorito").addEventListener("click", handleBotonFavoritos);
     cargarEventosRating();
+    document.querySelector("#resetearForm").addEventListener("click", resetearFormOpinion);
 }
 function cargarEventosRating() {
     const estrellas = document.querySelectorAll(".bi.bi-star");
@@ -94,6 +95,7 @@ function handleBotonFavoritos(e) {
         if (boton?.classList.contains("active")) {
             view.activarDesactivarBoton(boton, false);
             storage.quitarPlatoFavorito(Number(obtenerId()), userMeal.userId);
+            resetearFormOpinion();
             view.mostrarElement(formFavorito, false);
         }
         else {
@@ -104,6 +106,16 @@ function handleBotonFavoritos(e) {
     }
     catch (error) {
         console.log(error);
+    }
+}
+function resetearFormOpinion() {
+    const view = new ViewService();
+    const form = document.querySelector("#guardarOpinion");
+    form.reset();
+    form.rating.value = 0;
+    const estrellas = document.querySelectorAll(".bi.bi-star-fill");
+    for (let i = 0; i < estrellas.length; i++) {
+        view.estrellaPintada(estrellas[i], false);
     }
 }
 function transformarMyMealAUserMeal(platoId) {

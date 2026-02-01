@@ -81,7 +81,7 @@ function cargarValoresOpinion() {
         ) as NodeListOf<HTMLElement>;
         if (platoActual?.rating) {
             for (let i = 0; i < platoActual?.rating; i++) {
-                view.estrellaPintada(estrellas[i], true)
+                view.estrellaPintada(estrellas[i], true);
             }
         }
     }
@@ -92,6 +92,9 @@ function asignarEventos(): void {
         document.querySelector("#platoFavorito") as HTMLButtonElement
     ).addEventListener("click", handleBotonFavoritos);
     cargarEventosRating();
+    (
+        document.querySelector("#resetearForm") as HTMLButtonElement
+    ).addEventListener("click", resetearFormOpinion);
 }
 
 function cargarEventosRating() {
@@ -135,6 +138,7 @@ function handleBotonFavoritos(e: Event) {
         if (boton?.classList.contains("active")) {
             view.activarDesactivarBoton(boton, false);
             storage.quitarPlatoFavorito(Number(obtenerId()), userMeal.userId);
+            resetearFormOpinion();
             view.mostrarElement(formFavorito, false);
         } else {
             view.activarDesactivarBoton(boton, true);
@@ -143,6 +147,19 @@ function handleBotonFavoritos(e: Event) {
         }
     } catch (error) {
         console.log(error);
+    }
+}
+
+function resetearFormOpinion() {
+    const view = new ViewService();
+    const form = document.querySelector("#guardarOpinion") as HTMLFormElement;
+    form.reset();
+    form.rating.value = 0;
+    const estrellas = document.querySelectorAll(
+        ".bi.bi-star-fill",
+    ) as NodeListOf<HTMLElement>;
+    for (let i = 0; i < estrellas.length; i++) {
+        view.estrellaPintada(estrellas[i], false);
     }
 }
 

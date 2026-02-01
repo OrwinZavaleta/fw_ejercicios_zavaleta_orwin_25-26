@@ -37,7 +37,9 @@ export class ViewService {
                     </div>
                 </a>
                 `);
-            this.activarDesactivarBoton(botonCategoria, buttonState);
+            if (botonCategoria && buttonState) {
+                this.activarDesactivarBoton(botonCategoria, buttonState);
+            }
         }
     }
     pintarCategorias(categorias, select) {

@@ -3,6 +3,7 @@ import { ViewService } from "./ViewService.js";
 import { StorageService } from "./StorageService.js";
 console.log("home.ts");
 const CANTIDAD_PLATOS_ALEATORIAS = 8;
+const CANTIDAD_PLATOS_FAVORITOS = 4;
 document.addEventListener("DOMContentLoaded", () => {
     cargarCategorias();
     comprobarSesionUsuarioHome();
@@ -16,10 +17,30 @@ function comprobarSesionUsuarioHome() {
     if (storage.getUsuarioActual()) {
         view.mostrarElement(document.querySelector("#botonFavoritos"), true);
         comprobarCategoriaFavorita();
+        cargarFavoritos();
     }
     else {
         view.mostrarElement(document.querySelector("#botonFavoritos"), false);
     }
+}
+async function cargarFavoritos() {
+    const view = new ViewService();
+    const storage = new StorageService();
+    const api = new ApiService();
+    const usuario = storage.getUsuarioActual();
+    const platosFavoritosSinProcesar = [];
+    const platosFavoritos = [];
+    if (usuario) {
+        platosFavoritosSinProcesar.push(...storage.getPlatosFavoritos(usuario.id));
+    }
+    console.log("Aqui");
+    console.log(platosFavoritosSinProcesar);
+    for (let i = platosFavoritosSinProcesar.length - 1; i >= 0 &&
+        i >= platosFavoritosSinProcesar.length - CANTIDAD_PLATOS_FAVORITOS; i--) {
+        console.log(i);
+        platosFavoritos.push(await api.pedirPlatoPorId(platosFavoritosSinProcesar[i].mealId));
+    }
+    view.pintarPlatos(platosFavoritos, document.querySelector("#platosFavoritos"), CANTIDAD_PLATOS_FAVORITOS);
 }
 function comprobarCategoriaFavorita() {
     const storage = new StorageService();

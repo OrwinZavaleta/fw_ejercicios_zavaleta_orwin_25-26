@@ -4,10 +4,12 @@ import { MyMeal } from "./MyMeal.js";
 import { ViewService } from "./ViewService.js";
 import { User } from "./User";
 import { StorageService } from "./StorageService.js";
+import { UserMeal } from "./UserMeal.js";
 
 console.log("home.ts");
 
 const CANTIDAD_PLATOS_ALEATORIAS: number = 8;
+const CANTIDAD_PLATOS_FAVORITOS: number = 4;
 
 document.addEventListener("DOMContentLoaded", () => {
     cargarCategorias();
@@ -22,11 +24,54 @@ function comprobarSesionUsuarioHome(): void {
     console.log(sesion);
 
     if (storage.getUsuarioActual()) {
-        view.mostrarElement(document.querySelector("#botonFavoritos") as HTMLDivElement, true)
+        view.mostrarElement(
+            document.querySelector("#botonFavoritos") as HTMLDivElement,
+            true,
+        );
         comprobarCategoriaFavorita();
+        cargarFavoritos();
     } else {
-        view.mostrarElement(document.querySelector("#botonFavoritos") as HTMLDivElement, false)
+        view.mostrarElement(
+            document.querySelector("#botonFavoritos") as HTMLDivElement,
+            false,
+        );
     }
+}
+
+async function cargarFavoritos() {
+    const view = new ViewService();
+    const storage = new StorageService();
+    const api = new ApiService();
+
+    const usuario = storage.getUsuarioActual();
+    const platosFavoritosSinProcesar: UserMeal[] = [];
+    const platosFavoritos: MyMeal[] = [];
+    if (usuario) {
+        platosFavoritosSinProcesar.push(
+            ...storage.getPlatosFavoritos(usuario.id),
+        );
+    }
+    console.log("Aqui");
+    console.log(platosFavoritosSinProcesar);
+
+    for (
+        let i = platosFavoritosSinProcesar.length - 1;
+        i >= 0 &&
+        i >= platosFavoritosSinProcesar.length - CANTIDAD_PLATOS_FAVORITOS;
+        i--
+    ) {
+        console.log(i);
+        
+        platosFavoritos.push(
+            await api.pedirPlatoPorId(platosFavoritosSinProcesar[i].mealId),
+        );
+    }
+
+    view.pintarPlatos(
+        platosFavoritos,
+        document.querySelector("#platosFavoritos") as HTMLDivElement,
+        CANTIDAD_PLATOS_FAVORITOS,
+    );
 }
 
 function comprobarCategoriaFavorita() {
