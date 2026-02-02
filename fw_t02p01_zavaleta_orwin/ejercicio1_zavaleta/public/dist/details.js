@@ -55,6 +55,8 @@ function cargarValoresOpinion() {
             for (let i = 0; i < platoActual?.rating; i++) {
                 view.estrellaPintada(estrellas[i], true);
             }
+            document.querySelector("#rating").value =
+                platoActual.rating + "";
         }
     }
 }
@@ -188,11 +190,13 @@ function realizarMiValidacion(form) {
 }
 function handleOpinionFormulario(form) {
     const storage = new StorageService();
+    const view = new ViewService();
     const userMeal = transformarMyMealAUserMeal(Number(obtenerId()));
     userMeal.status = form.estado.value;
     userMeal.notes = form.opinion.value;
     userMeal.rating = form.rating.value;
     storage.actualizarPlatoFavorito(userMeal, userMeal.userId);
     form.classList.remove("was-validated");
+    view.mostrarNotificacionEstado(true, "Se guardo correctamente.");
 }
 //# sourceMappingURL=details.js.map

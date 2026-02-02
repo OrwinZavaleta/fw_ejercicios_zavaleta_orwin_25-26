@@ -127,6 +127,7 @@ async function cargarCategorias() {
     const categorias = await api.pedirTodasCategorias();
     const categoriesSelect = document.querySelector("#categories");
     view.pintarCategorias(categorias, categoriesSelect);
+    categoriesSelect.addEventListener("change", cargarPlatosHome);
 }
 async function pedirPlatoPorId(id) {
     const api = new ApiService();

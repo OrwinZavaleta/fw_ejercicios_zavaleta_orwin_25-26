@@ -83,6 +83,8 @@ function cargarValoresOpinion() {
             for (let i = 0; i < platoActual?.rating; i++) {
                 view.estrellaPintada(estrellas[i], true);
             }
+            (document.querySelector("#rating") as HTMLInputElement).value =
+                platoActual.rating + "";
         }
     }
 }
@@ -228,23 +230,24 @@ function realizarMiValidacion(form: HTMLFormElement): boolean {
                 false,
                 "Ha marcado como Hecha, por favor deje una calificación.",
             );
-            form.rating.classList.add("is-invalid")
+            form.rating.classList.add("is-invalid");
             isValid &&= false;
         } else {
             view.actualizarValidez(form.rating, true, "");
             isValid &&= true;
-            form.rating.classList.remove("is-invalid")
+            form.rating.classList.remove("is-invalid");
         }
     } else if (form.estado.value === Estado.QUIERO_HACERLA) {
         view.actualizarValidez(form.rating, true, "");
         isValid &&= true;
-        form.rating.classList.remove("is-invalid")
+        form.rating.classList.remove("is-invalid");
     }
     return isValid;
 }
 
 function handleOpinionFormulario(form: HTMLFormElement) {
     const storage = new StorageService();
+    const view = new ViewService();
     const userMeal = transformarMyMealAUserMeal(Number(obtenerId()));
     userMeal.status = form.estado.value;
     userMeal.notes = form.opinion.value;
@@ -253,4 +256,6 @@ function handleOpinionFormulario(form: HTMLFormElement) {
     storage.actualizarPlatoFavorito(userMeal, userMeal.userId);
 
     form.classList.remove("was-validated");
+
+    view.mostrarNotificacionEstado(true, "Se guardo correctamente.");
 }

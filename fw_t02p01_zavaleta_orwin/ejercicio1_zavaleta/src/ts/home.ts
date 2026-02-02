@@ -2,7 +2,6 @@ import { ApiService } from "./ApiService.js";
 import { Category } from "./Category.js";
 import { MyMeal } from "./MyMeal.js";
 import { ViewService } from "./ViewService.js";
-import { User } from "./User";
 import { StorageService } from "./StorageService.js";
 import { UserMeal } from "./UserMeal.js";
 
@@ -199,6 +198,7 @@ async function cargarCategorias(): Promise<void> {
     ) as HTMLSelectElement;
 
     view.pintarCategorias(categorias, categoriesSelect);
+    categoriesSelect.addEventListener("change", cargarPlatosHome);
 }
 
 async function pedirPlatoPorId(id: number): Promise<MyMeal> {

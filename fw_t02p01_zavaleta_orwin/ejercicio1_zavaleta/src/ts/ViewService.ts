@@ -1,4 +1,3 @@
-import { cargarPlatosHome } from "./home.js";
 import { Category } from "./Category.js";
 import { MyMeal } from "./MyMeal";
 import { StorageService } from "./StorageService.js";
@@ -97,8 +96,6 @@ export class ViewService {
                 true,
             );
         }
-
-        select.addEventListener("change", cargarPlatosHome);
 
         document
             .querySelector("#fijarCategoria")
@@ -240,9 +237,21 @@ export class ViewService {
         }
     }
 
-    public mostrarNotificacionEstado(estado: boolean) {
-        if (estado) {
-        } else {
-        }
+    public mostrarNotificacionEstado(estado: boolean, mensaje: string) {
+        const status = document.querySelector("#pageStatus") as HTMLDivElement;
+        this.mostrarElement(status, true);
+        this.insertarTextoFormato(
+            status,
+            `
+                <div class="alert alert-${estado ? "success" : "danger"} alert-dismissible fade show" role="alert">
+                    ${mensaje}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+            `,
+        );
+
+        setTimeout(() => {
+            this.mostrarElement(status, false);
+        }, 3000);
     }
 }

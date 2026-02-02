@@ -43,7 +43,8 @@ function cargarEventosLoginOut(): void {
     document.querySelector("#logout")?.addEventListener("click", () => {
         storage.removeUsuarioActual();
         comprobarSesionUsuario();
-        window.location.href = "index.html";
+        // window.location.href = window.location.href;
+        window.location.reload()
     });
 
     const btnLogin = document.querySelector("#login") as HTMLLinkElement;
@@ -103,7 +104,8 @@ function crearUsuario(form: HTMLFormElement) {
     form.reset();
     storage.guardarAgregarUsuario(user);
     cerrarModalLoginOut();
-    window.location.href = "index.html";
+    // window.location.href = window.location.href;
+    window.location.reload()
 }
 
 function cerrarModalLoginOut() {
@@ -126,7 +128,8 @@ function iniciarSesion(form: HTMLFormElement) {
         console.log("usuario no existe");
     }
 
-    window.location.href = "index.html";
+    // window.location.href = window.location.href;
+    window.location.reload()
 }
 
 function realizarMiValidacion(form: HTMLFormElement): boolean {

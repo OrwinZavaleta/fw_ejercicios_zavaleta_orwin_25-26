@@ -26,7 +26,8 @@ function cargarEventosLoginOut() {
     document.querySelector("#logout")?.addEventListener("click", () => {
         storage.removeUsuarioActual();
         comprobarSesionUsuario();
-        window.location.href = "index.html";
+        // window.location.href = window.location.href;
+        window.location.reload();
     });
     const btnLogin = document.querySelector("#login");
     btnLogin.addEventListener("click", function () {
@@ -73,7 +74,8 @@ function crearUsuario(form) {
     form.reset();
     storage.guardarAgregarUsuario(user);
     cerrarModalLoginOut();
-    window.location.href = "index.html";
+    // window.location.href = window.location.href;
+    window.location.reload();
 }
 function cerrarModalLoginOut() {
     const view = new ViewService();
@@ -92,7 +94,8 @@ function iniciarSesion(form) {
     else {
         console.log("usuario no existe");
     }
-    window.location.href = "index.html";
+    // window.location.href = window.location.href;
+    window.location.reload();
 }
 function realizarMiValidacion(form) {
     let esValido = true;

@@ -1,4 +1,3 @@
-import { cargarPlatosHome } from "./home.js";
 import { StorageService } from "./StorageService.js";
 //TODO: alert de success o error
 export class ViewService {
@@ -55,7 +54,6 @@ export class ViewService {
             select.value = favorito;
             this.activarDesactivarBoton(document.querySelector("#fijarCategoria"), true);
         }
-        select.addEventListener("change", cargarPlatosHome);
         document
             .querySelector("#fijarCategoria")
             ?.addEventListener("click", () => this.fijarDesfijarCategoria()); // Se usa flecha para que no pierda el puntero this y este siga apuntando al objeto ViewService
@@ -154,11 +152,18 @@ export class ViewService {
             es.classList.remove("bi-star-fill");
         }
     }
-    mostrarNotificacionEstado(estado) {
-        if (estado) {
-        }
-        else {
-        }
+    mostrarNotificacionEstado(estado, mensaje) {
+        const status = document.querySelector("#pageStatus");
+        this.mostrarElement(status, true);
+        this.insertarTextoFormato(status, `
+                <div class="alert alert-${estado ? "success" : "danger"} alert-dismissible fade show" role="alert">
+                    ${mensaje}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+            `);
+        setTimeout(() => {
+            this.mostrarElement(status, false);
+        }, 3000);
     }
 }
 //# sourceMappingURL=ViewService.js.map
