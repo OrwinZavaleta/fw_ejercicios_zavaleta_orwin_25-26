@@ -1,5 +1,6 @@
 import { cargarPlatosHome } from "./home.js";
 import { StorageService } from "./StorageService.js";
+//TODO: alert de success o error
 export class ViewService {
     insertarTexto(element, mensaje) {
         element.textContent = mensaje;
@@ -151,6 +152,12 @@ export class ViewService {
         else {
             es.classList.add("bi-star");
             es.classList.remove("bi-star-fill");
+        }
+    }
+    mostrarNotificacionEstado(estado) {
+        if (estado) {
+        }
+        else {
         }
     }
 }

@@ -28,11 +28,19 @@ function comprobarSesionUsuarioHome(): void {
             document.querySelector("#botonFavoritos") as HTMLDivElement,
             true,
         );
+        view.mostrarElement(
+            document.querySelector("#contenedorFavoritos") as HTMLDivElement,
+            true,
+        );
         comprobarCategoriaFavorita();
         cargarFavoritos();
     } else {
         view.mostrarElement(
             document.querySelector("#botonFavoritos") as HTMLDivElement,
+            false,
+        );
+        view.mostrarElement(
+            document.querySelector("#contenedorFavoritos") as HTMLDivElement,
             false,
         );
     }
@@ -61,7 +69,7 @@ async function cargarFavoritos() {
         i--
     ) {
         console.log(i);
-        
+
         platosFavoritos.push(
             await api.pedirPlatoPorId(platosFavoritosSinProcesar[i].mealId),
         );

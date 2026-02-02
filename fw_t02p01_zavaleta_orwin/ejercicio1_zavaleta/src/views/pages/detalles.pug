@@ -16,7 +16,7 @@ block content
                         h3 Formulario
                         <div class="col-md-5">
                             h4 Calificación
-                            <div class="text-warning fs-3"><!--TODO: obligatorio se se marca como que la he hecho-->
+                            <div class="text-warning fs-3"><!--TODO: obligatorio si se marca como que la he hecho-->
                                 <i class="bi bi-star"></i>
                                 <i class="bi bi-star"></i>
                                 <i class="bi bi-star"></i>
@@ -24,6 +24,10 @@ block content
                                 <i class="bi bi-star"></i>
                             </div>
                             input(type="hidden", name="rating", id="rating", value="0")
+                            <div class="invalid-feedback">
+                                |Ha marcado como Hecha, por favor deje una calificación.
+                            </div>
+                            
                         </div>
                         <div class="col-md-5">
                             h4 ¿Ha hecho ya la receta?
@@ -42,6 +46,8 @@ block content
                         </div> 
                         <div class="col-md-6">
                             button(type="submit").btn.btn-primary Guardar Cambios 
+                        </div>
+                        <div class="col-md-6">
                             button#resetearForm(type="button").btn.btn-primary Cancelar
                         </div>
                     </form>

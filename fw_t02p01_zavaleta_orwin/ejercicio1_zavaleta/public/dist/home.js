@@ -16,11 +16,13 @@ function comprobarSesionUsuarioHome() {
     console.log(sesion);
     if (storage.getUsuarioActual()) {
         view.mostrarElement(document.querySelector("#botonFavoritos"), true);
+        view.mostrarElement(document.querySelector("#contenedorFavoritos"), true);
         comprobarCategoriaFavorita();
         cargarFavoritos();
     }
     else {
         view.mostrarElement(document.querySelector("#botonFavoritos"), false);
+        view.mostrarElement(document.querySelector("#contenedorFavoritos"), false);
     }
 }
 async function cargarFavoritos() {

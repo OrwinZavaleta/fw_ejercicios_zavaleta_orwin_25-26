@@ -4,6 +4,7 @@ import { MyMeal } from "./MyMeal";
 import { StorageService } from "./StorageService.js";
 
 declare const bootstrap: any;
+//TODO: alert de success o error
 
 export class ViewService {
     public insertarTexto(element: HTMLElement, mensaje: string): void {
@@ -236,6 +237,12 @@ export class ViewService {
         } else {
             es.classList.add("bi-star");
             es.classList.remove("bi-star-fill");
+        }
+    }
+
+    public mostrarNotificacionEstado(estado: boolean) {
+        if (estado) {
+        } else {
         }
     }
 }

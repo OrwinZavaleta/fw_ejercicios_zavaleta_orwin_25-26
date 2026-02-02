@@ -200,7 +200,9 @@ function cargarValidacionDeFormularios() {
                     event.preventDefault();
                     event.stopPropagation();
 
-                    if (form.checkValidity()) {
+                    const esValido = realizarMiValidacion(form);
+
+                    if (form.checkValidity() && esValido) {
                         handleOpinionFormulario(form);
                         console.log("es valido");
                     } else {
@@ -213,6 +215,32 @@ function cargarValidacionDeFormularios() {
             );
         });
     })();
+}
+
+function realizarMiValidacion(form: HTMLFormElement): boolean {
+    const view = new ViewService();
+    let isValid = true;
+
+    if (form.estado.value === Estado.LA_HE_HECHO) {
+        if (!form.rating || form.rating.value == 0) {
+            view.actualizarValidez(
+                form.rating,
+                false,
+                "Ha marcado como Hecha, por favor deje una calificación.",
+            );
+            form.rating.classList.add("is-invalid")
+            isValid &&= false;
+        } else {
+            view.actualizarValidez(form.rating, true, "");
+            isValid &&= true;
+            form.rating.classList.remove("is-invalid")
+        }
+    } else if (form.estado.value === Estado.QUIERO_HACERLA) {
+        view.actualizarValidez(form.rating, true, "");
+        isValid &&= true;
+        form.rating.classList.remove("is-invalid")
+    }
+    return isValid;
 }
 
 function handleOpinionFormulario(form: HTMLFormElement) {

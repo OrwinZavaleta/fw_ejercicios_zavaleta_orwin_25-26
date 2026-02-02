@@ -32,14 +32,15 @@
 <div class="d-none" id="detallesForm">
 <form class="row g-3 needs-validation" id="guardarOpinion" novalidate>
     <h3>Formulario</h3><div class="col-md-5">
-    <h4>Calificación</h4><div class="text-warning fs-3"><!--TODO: obligatorio se se marca como que la he hecho-->
+    <h4>Calificación</h4><div class="text-warning fs-3"><!--TODO: obligatorio si se marca como que la he hecho-->
 <i class="bi bi-star"></i>
 <i class="bi bi-star"></i>
 <i class="bi bi-star"></i>
 <i class="bi bi-star"></i>
 <i class="bi bi-star"></i>
 </div>
-    <input type="hidden" name="rating" id="rating" value="0"/></div>
+    <input type="hidden" name="rating" id="rating" value="0"/><div class="invalid-feedback">Ha marcado como Hecha, por favor deje una calificación.</div>
+</div>
 <div class="col-md-5">
     <h4>¿Ha hecho ya la receta?</h4><div class="form-check">
 <input class="form-check-input" type="radio" id="quieroHacerla" name="estado" value="QUIERO_HACERLA" checked>
@@ -52,7 +53,8 @@
     <label class="form-label fs-4" for="opinion">Su opinión</label>
     <textarea class="form-control" id="opinion" name="opinion" rows="4" placeHolder="Escribanos su opinión."></textarea></div> 
 <div class="col-md-6">
-    <button class="btn btn-primary" type="submit">Guardar Cambios </button>
+    <button class="btn btn-primary" type="submit">Guardar Cambios </button></div>
+<div class="col-md-6">
     <button class="btn btn-primary" id="resetearForm" type="button">Cancelar</button></div>
 </form>
 </div>
