@@ -25,14 +25,7 @@ export class ViewService {
                             <h5 class="card-title">${plato.strMeal}</h5>
                             <p class="card-text">${plato.strCategory}</p>
                             <p class="card-text">${plato.strArea}</p>
-                            <p class="card-text">${plato.strCategory}</p> 
-                            <p class="card-text">${plato.ingredients.map((element, index) => {
-                return ("Ingrediente " +
-                    index +
-                    ": " +
-                    element.name +
-                    "<br>");
-            })}</p> 
+                            <p class="card-text">${plato.ingredients.length} ingredientes requeridos </p> 
                         </div>
                     </div>
                 </a>
@@ -125,12 +118,15 @@ export class ViewService {
         const nombreHTML = document.querySelector("#nombrePlato");
         const ingredientesHTML = document.querySelector("#ingredientes");
         const opinionHTML = document.querySelector("#detallesForm");
+        const descripcionHTML = document.querySelector("#descripcion");
         imagenHTML.src = platoDetalle.strMealThumb + "/medium";
         imagenHTML.alt = platoDetalle.strMeal;
         this.insertarTexto(nombreHTML, platoDetalle.strMeal);
         platoDetalle.ingredients.forEach((ingrediente) => {
             this.apendizarTextoFormato(ingredientesHTML, `<li class="list-group-item">${ingrediente.measure} de ${ingrediente.name}</li>`);
         });
+        this.insertarTextoFormato(descripcionHTML, `<p>Categoria: ${platoDetalle.strCategory}</p>
+            <p>País: ${platoDetalle.strArea}</p>`);
         const botonFav = document.querySelector("#platoFavorito");
         this.mostrarElement(opinionHTML, botonFav?.classList.contains("active"));
     }

@@ -1,10 +1,10 @@
 services:
   mi-app-web:
     build: .
-    container_name: app-cliente-orwin
+    container_name: app-comidas-orwin
     restart: unless-stopped
     environment:
-      - VIRTUAL_HOST=cliente.orwinzavaleta.dpdns.org
+      - VIRTUAL_HOST=comidas.orwinzavaleta.dpdns.org
       - VIRTUAL_PORT=80
     networks:
       - apps-net
