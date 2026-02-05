@@ -1,0 +1,22 @@
+<a href="detalles.html?id={{ plato().idMeal }}" class="text-decoration-none text-reset col">
+  <!-- TODO: corregir la ruta con angular -->
+  <div class="card h-100">
+    <div class="card-container">
+      <!-- Contenedor para manejar el aspecto con NgOptimizedImage -->
+      <img
+        [ngSrc]="`${plato().strMealThumb}/small`"
+        class="card-img-top"
+        [alt]="plato().strMeal"
+        fill
+        priority
+      />
+    </div>
+    <div class="card-body">
+      <h5 class="card-title">{{ plato().strMeal }}</h5>
+      <p class="card-text">{{ plato().strCategory }}</p>
+      <p class="card-text">{{ plato().strArea }}</p>
+      <p class="card-text">{{ plato().ingredients.length }} ingredientes requeridos</p>
+      <!-- TODO: usar una pipe para ingredientes unicos -->
+    </div>
+  </div>
+</a>
