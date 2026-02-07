@@ -8,5 +8,5 @@ import { DetailsSave } from '../details-save/details-save';
   styleUrl: './details.css',
 })
 export class Details {
-
+  public isAuthenticated = false; // TODO: más adelante vendrá de un AuthService
 }

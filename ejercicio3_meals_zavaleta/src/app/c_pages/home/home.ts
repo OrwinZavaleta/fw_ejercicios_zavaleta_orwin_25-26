@@ -9,5 +9,5 @@ import { MealsSave } from '../meals-save/meals-save';
   styleUrl: './home.css',
 })
 export class Home {
-  public isAuthenticated = false; // más adelante vendrá de un AuthService
+  public isAuthenticated = false; // TODO: más adelante vendrá de un AuthService
 }

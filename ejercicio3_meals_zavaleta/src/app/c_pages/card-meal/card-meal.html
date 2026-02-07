@@ -1,5 +1,4 @@
-<a href="detalles.html?id={{ plato().idMeal }}" class="text-decoration-none text-reset col">
-  <!-- TODO: corregir la ruta con angular -->
+<a [href]="`details/${plato().idMeal}`" class="text-decoration-none text-reset col">
   <div class="card h-100">
     <div class="card-container">
       <!-- Contenedor para manejar el aspecto con NgOptimizedImage -->
