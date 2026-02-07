@@ -9,13 +9,14 @@
       (change)="onCategoryChange(selectCategoria.value)"
     >
       <option selected value="">Todas las categorías</option>
-      @if (platosAleatorios.isLoading()) {
-        <option value="">Cargando Categorias...</option>
-      } @else if (platosAleatorios.error()) {
-        <option value="">Error al cargar las categorias.</option>
-      } @else {
-        @for (cate of categorias.value(); track cate.idCategory) {
-          <option [value]="cate.strCategory">{{ cate.strCategory }}</option>
+
+      @for (cate of categorias(); track cate.idCategory) {
+        <option [value]="cate.strCategory">{{ cate.strCategory }}</option>
+      } @empty {
+        @if(categoriasLoading()){
+          <option value="">Cargando Categorias</option>
+        }@else {
+          <option value="">Error al cargar las categorias</option>
         }
       }
     </select>
@@ -25,6 +26,7 @@
       type="submit"
       (click)="onFavoriteClick(selectCategoria.value)"
       class="btn btn-outline-primary px-4"
+      [class.active]="categoriaSeleccionadaFavorita()"
       id="fijarCategoria"
     >
       Favorita

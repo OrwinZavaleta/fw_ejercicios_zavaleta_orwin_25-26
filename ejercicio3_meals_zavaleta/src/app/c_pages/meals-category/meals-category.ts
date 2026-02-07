@@ -2,6 +2,8 @@ import { Component, inject, resource, signal } from '@angular/core';
 import { ApiService } from '../../services/api-service';
 import { MyMeal } from '../../model/my-meal';
 import { CardMeal } from '../card-meal/card-meal';
+import { Category } from '../../model/category';
+import { StorageService } from '../../services/storage-service';
 
 @Component({
   selector: 'app-meals-category',
@@ -10,49 +12,70 @@ import { CardMeal } from '../card-meal/card-meal';
   styleUrl: './meals-category.css',
 })
 export class MealsCategory {
-  CANTIDAD_PLATOS_ALEATORIAS: number = 8;
   protected api = inject(ApiService);
-  private categoriaSeleccionada = signal<string>('');
+  protected storage = inject(StorageService);
+
+  public categorias = signal<Category[]>([]);
+  public categoriasLoading = signal<boolean>(false);
+
+  public categoriaSeleccionada = signal<string>('');
+  public categoriaSeleccionadaFavorita = signal<boolean>(false);
+
+  constructor() {
+    // TODO: con sesion, cargar el favorito del user y boton como activo
+    this.cargarCategorias();
+  }
 
   public platosAleatorios = resource({
-    params: () => this.categoriaSeleccionada(), // TODO: revisarlo y repasarlo
+    params: () => this.categoriaSeleccionada(),
 
     loader: async ({ params: categoria }) => {
-      if (!categoria) {
-        return await this.pedirTodosAleatorio();
+      if (!categoria || categoria === '') {
+        return await this.api.pedirNPlatosRamdon();
       }
 
-      const listaPlatos = await this.api.pedirPlatosPorCategoria(categoria);
+      const platosCompletos: MyMeal[] = [];
 
-      const promesasDetalles = listaPlatos.map(p => this.api.pedirPlatoPorId(p.idMeal));
+      const listaPlatos = await this.api.pedirNporCategoria(categoria);
 
-      return await Promise.all(promesasDetalles);
+      for (let i = 0; i < listaPlatos.length; i++) {
+        platosCompletos.push(await this.api.pedirPlatoPorId(listaPlatos[i].idMeal));
+      }
+      return platosCompletos;
+    },
+  });
+
+  private async cargarCategorias() {
+    this.categoriasLoading.set(true);
+    try {
+      this.categorias.set(await this.api.pedirTodasCategorias());
+    } catch (error) {
+      console.error('Fallo al cargar las categorias.');
+    } finally {
+      this.categoriasLoading.set(false);
     }
-  });
-  categorias = resource({
-    loader: () => this.api.pedirTodasCategorias(),
-  });
+  }
 
   onFavoriteClick(categoriaSelect: string) {
-    console.log('se ha hecho click ' + categoriaSelect); // TODO: guardar el favorito
+    console.log('se ha hecho click fav ' + categoriaSelect);
+    const usuarioActual = this.storage.getUsuarioActual();
+
+    if (usuarioActual && usuarioActual.favoriteCategory === categoriaSelect) { // TODO: comprobarlo cuando tenga las sesiones
+      this.categoriaSeleccionadaFavorita.set(false);
+      this.storage.actualizarFavoritoUsuarioActual();
+    } else if (!usuarioActual) {
+      this.categoriaSeleccionadaFavorita.set(false);
+    } else {
+      this.categoriaSeleccionadaFavorita.set(true);
+      this.storage.actualizarFavoritoUsuarioActual(categoriaSelect);
+    }
   }
 
   onCategoryChange(categoriaSelect: string) {
-    console.log('se ha seleccionado  ' + categoriaSelect); // TODO: actualizar los aleatorios
-    // this.platosAleatorios = resource({
-    //   loader: () => {
-    //     const platosCate = this.api.pedirPlatosPorCategoria(categoriaSelect);
-    //     return platosCate.map((platoCat) => this.api.pedirPlatoPorId(platoCat.idMeal));
-    //   },
-    // });
+    console.log('se ha seleccionado  ' + categoriaSelect);
     this.categoriaSeleccionada.set(categoriaSelect);
-  }
-
-  async pedirTodosAleatorio(): Promise<MyMeal[]> {
-    const todosAleatorios: MyMeal[] = [];
-    for (let i = 0; i < this.CANTIDAD_PLATOS_ALEATORIAS; i++) {
-      todosAleatorios.push(await this.api.pedirProductoRandom());
+    if (this.storage.getUsuarioActual()?.favoriteCategory === categoriaSelect) {
+      this.categoriaSeleccionadaFavorita.set(true);
     }
-    return todosAleatorios;
   }
 }
