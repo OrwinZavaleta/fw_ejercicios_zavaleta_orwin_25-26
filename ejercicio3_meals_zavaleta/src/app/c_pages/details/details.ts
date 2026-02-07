@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, input } from '@angular/core';
 import { DetailsMeal } from '../details-meal/details-meal';
 import { DetailsSave } from '../details-save/details-save';
 @Component({
@@ -8,5 +8,6 @@ import { DetailsSave } from '../details-save/details-save';
   styleUrl: './details.css',
 })
 export class Details {
+  readonly id = input<string>();
   public isAuthenticated = false; // TODO: más adelante vendrá de un AuthService
 }
