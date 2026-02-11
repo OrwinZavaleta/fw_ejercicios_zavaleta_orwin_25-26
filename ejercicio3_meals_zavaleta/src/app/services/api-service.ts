@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { MyMeal } from '../model/my-meal';
 import { Category } from '../model/category';
 import { Util } from '../model/util';
-
+// TODO: controllar los posibles errores de la api
 @Injectable({
   providedIn: 'root',
 })

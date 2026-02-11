@@ -1,20 +1,30 @@
 <div class="container d-flex justify-content-center align-items-center vh-100">
-  <div class="card shadow-sm" style="max-width: 420px; width: 100%;">
-
+  <div class="card shadow-sm" style="max-width: 420px; width: 100%">
     <div class="card-body">
-
       <!-- Tabs -->
       <ul class="nav nav-tabs nav-fill mb-4" role="tablist">
         <li class="nav-item" role="presentation">
-          <button class="nav-link active" id="login-tab" data-bs-toggle="tab" data-bs-target="#login" type="button"
-            role="tab">
+          <button
+            class="nav-link active"
+            id="login-tab"
+            data-bs-toggle="tab"
+            data-bs-target="#login"
+            type="button"
+            role="tab"
+          >
             Login
           </button>
         </li>
 
         <li class="nav-item" role="presentation">
-          <button class="nav-link" id="register-tab" data-bs-toggle="tab" data-bs-target="#register" type="button"
-            role="tab">
+          <button
+            class="nav-link"
+            id="register-tab"
+            data-bs-toggle="tab"
+            data-bs-target="#register"
+            type="button"
+            role="tab"
+          >
             Registro
           </button>
         </li>
@@ -22,38 +32,165 @@
 
       <!-- Tab content -->
       <div class="tab-content">
-
         <!-- LOGIN -->
         <div class="tab-pane fade show active" id="login" role="tabpanel">
-
-          <form>
+          <form [formGroup]="loginForm" (ngSubmit)="onLogin()" novalidate>
             <div class="mb-3">
               <label for="email" class="form-label">Correo electrónico</label>
-              <input type="email" id="email" name="email" class="form-control"
-                placeholder="usuario@educastillalamancha.es">
+              <input
+                type="email"
+                id="emailLogin"
+                formControlName="emailLogin"
+                name="emailLogin"
+                class="form-control"
+                placeholder="usuario@educastillalamancha.es"
+                [class]="getValidationClass(emailLogin, submittedLogin)"
+              />
+              @if (emailLogin?.errors) {
+                <div class="invalid-feedback">El correo es obligatorio</div>
+              }
             </div>
 
             <div class="mb-4">
               <label for="password" class="form-label">Contraseña</label>
-              <input type="password" id="password" name="password" class="form-control" placeholder="********">
+              <input
+                type="password"
+                id="passwordLogin"
+                formControlName="passwordLogin"
+                name="passwordLogin"
+                class="form-control"
+                [class]="getValidationClass(passwordLogin, submittedLogin)"
+                placeholder="********"
+              />
             </div>
+            @if (passwordLogin?.errors) {
+              <div class="invalid-feedback">La contraseña es obligatoria</div>
+            }
+
+            <!-- Agregar el error de que no existe un usuario con esas credenciales -->
 
             <div class="d-grid">
-              <button type="submit" class="btn btn-primary">
-                Entrar
-              </button>
+              <button type="submit" class="btn btn-primary">Entrar</button>
             </div>
           </form>
         </div>
 
         <!-- REGISTER -->
         <div class="tab-pane fade text-center" id="register" role="tabpanel">
+          <!-- Mensaje de éxito que oculta el formulario de registro-->
+          @if (registroExitoso) {
+            <div class="alert alert-success text-center" role="alert">
+              <h5 class="alert-heading">¡Usuario creado correctamente!</h5>
+              <p class="mb-3">Tu cuenta ha sido registrada con éxito.</p>
+              <button type="button" class="btn btn-success" (click)="irAHome()">Ir al Home</button>
+            </div>
+          }
 
-          <p class="text-muted mt-4">
-            En breve.
-          </p>
+          <!-- Formulario de registro -->
+          @if (!registroExitoso) {
+            @if (errorRegistro) {
+              <div class="alert alert-danger" role="alert">
+                {{ errorRegistro }}
+              </div>
+            }
+
+            <form [formGroup]="registerForm" (ngSubmit)="onRegister()" novalidate>
+              <!-- Nombre completo -->
+              <div class="mb-3">
+                <label for="nombreCompleto" class="form-label">Nombre completo</label>
+                <input
+                  type="text"
+                  id="nombreCompleto"
+                  formControlName="nombreCompleto"
+                  class="form-control"
+                  [class]="getValidationClass(nombreCompleto, submitted)"
+                  placeholder="Nombre y apellidos"
+                />
+
+                @if (nombreCompleto?.errors) {
+                  <div class="invalid-feedback">
+                    El nombre es obligatorio y debe tener al menos 3 caracteres
+                  </div>
+                }
+                <div class="valid-feedback">¡Correcto!</div>
+              </div>
+
+              <!-- Email -->
+              <div class="mb-3">
+                <label for="registerEmail" class="form-label">Correo electrónico</label>
+                <input
+                  type="email"
+                  id="registerEmail"
+                  formControlName="email"
+                  class="form-control"
+                  [class]="getValidationClass(email, submitted)"
+                  placeholder="usuario@educastillalamancha.es"
+                />
+
+                @if (email?.errors) {
+                  <div class="invalid-feedback">
+                    @if (email?.errors?.['emailDuplicado']) {
+                      <div>Este correo ya está registrado</div>
+                    } @else {
+                      <div>Debe ser un correo válido del dominio @educastillalamancha.es</div>
+                    }
+                  </div>
+                }
+                <div class="valid-feedback">¡Correcto!</div>
+              </div>
+
+              <!-- Password -->
+              <div class="mb-3">
+                <label for="registerPassword" class="form-label">Contraseña</label>
+                <input
+                  type="password"
+                  id="registerPassword"
+                  formControlName="password"
+                  class="form-control"
+                  [class]="getValidationClass(password, submitted)"
+                  placeholder="********"
+                />
+
+                @if (password?.errors) {
+                  <div class="invalid-feedback">
+                    La contraseña es obligatoria y debe tener al menos 3 caracteres
+                  </div>
+                }
+                <div class="valid-feedback">¡Correcto!</div>
+              </div>
+
+              <!-- Confirmar Password -->
+              <div class="mb-3">
+                <label for="confirmPassword" class="form-label">Confirmar contraseña</label>
+                <input
+                  type="password"
+                  id="confirmPassword"
+                  formControlName="confirmPassword"
+                  class="form-control"
+                  [class]="getValidationClassConfirmPassword()"
+                  placeholder="********"
+                />
+
+                @if (confirmPassword?.errors || registerForm.errors?.['passwordsNoCoinciden']) {
+                  <div class="invalid-feedback">
+                    @if (registerForm.errors?.['passwordsNoCoinciden']) {
+                      <div>Las contraseñas no coinciden</div>
+                    } @else {
+                      <div>Debes confirmar la contraseña de al menos 3 caracteres</div>
+                    }
+                  </div>
+                }
+
+                <div class="valid-feedback">¡Las contraseñas coinciden!</div>
+              </div>
+
+              <!-- Botón submit -->
+              <div class="d-grid">
+                <button type="submit" class="btn btn-primary">Registrarse</button>
+              </div>
+            </form>
+          }
         </div>
-
       </div>
     </div>
   </div>

@@ -1,6 +1,7 @@
-import { Component } from '@angular/core';
+import { Component, computed, inject } from '@angular/core';
 import { MealsCategory } from '../meals-category/meals-category';
 import { MealsSave } from '../meals-save/meals-save';
+import { AuthService } from '../../services/auth-service';
 
 @Component({
   selector: 'app-home',
@@ -9,5 +10,7 @@ import { MealsSave } from '../meals-save/meals-save';
   styleUrl: './home.css',
 })
 export class Home {
-  public isAuthenticated = false; // TODO: más adelante vendrá de un AuthService
+  protected authService = inject(AuthService);
+
+  public isAuthenticated = computed(this.authService.isAuthenticated);
 }

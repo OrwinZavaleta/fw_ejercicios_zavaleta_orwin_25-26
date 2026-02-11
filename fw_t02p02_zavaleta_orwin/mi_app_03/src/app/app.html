@@ -5,8 +5,12 @@
     </header>
   </a>
   <section class="content">
-
     <router-outlet></router-outlet>
   </section>
+  <section class="aux" [ngStyle]="auxStyle">
+    <button class="btn-test" (click)="incrementClicks()">Click me</button>
+    <button class="btn-test" (click)="incrementClicks(2)">Click me +2</button>
 
+    <p class="click-counter">Clicks: {{ clicks }}</p>
+  </section>
 </main>

@@ -14,13 +14,18 @@ export class StorageService {
   private USER_WEEKLY_KEY_ITEM: string = 'weeklyPlans_';
   private USER_CACHE_KEY_ITEM: string = 'userMiniMeal_';
 
-  public guardarAgregarUsuario(nuevoUsuario: User) {
-    const users: User[] = JSON.parse(localStorage.getItem(this.USER_KEY_ITEM) ?? '[]');
+  public guardarAgregarUsuario(nuevoUsuario: User):boolean {
+    try {
+      const users: User[] = JSON.parse(localStorage.getItem(this.USER_KEY_ITEM) ?? '[]');
 
-    users.push(nuevoUsuario);
+      users.push(nuevoUsuario);
 
-    localStorage.setItem(this.USER_KEY_ITEM, JSON.stringify(users));
-    this.setUsuarioActual(nuevoUsuario);
+      localStorage.setItem(this.USER_KEY_ITEM, JSON.stringify(users));
+      this.setUsuarioActual(nuevoUsuario);
+      return true;
+    } catch (error) {
+      return false;
+    }
   }
 
   public setUsuarioActual(usuario: User): void {
@@ -60,6 +65,12 @@ export class StorageService {
     if (usuarioEncontrado === undefined) return null;
 
     return usuarioEncontrado;
+  }
+
+  public existeUsuarioPorId(id: User['id']) {
+    const user = this.buscarUsuarioPorId(id);
+
+    return user ? true : false;
   }
 
   public actualizarFavoritoUsuarioActual(categoriaFavorita: string | undefined = undefined) {

@@ -13,25 +13,27 @@
       @for (cate of categorias(); track cate.idCategory) {
         <option [value]="cate.strCategory">{{ cate.strCategory }}</option>
       } @empty {
-        @if(categoriasLoading()){
+        @if (categoriasLoading()) {
           <option value="">Cargando Categorias</option>
-        }@else {
+        } @else {
           <option value="">Error al cargar las categorias</option>
         }
       }
     </select>
   </div>
-  <div class="col-md-4 text-end align-self-end" id="botonFavoritos">
-    <button
-      type="submit"
-      (click)="onFavoriteClick(selectCategoria.value)"
-      class="btn btn-outline-primary px-4"
-      [class.active]="categoriaSeleccionadaFavorita()"
-      id="fijarCategoria"
-    >
-      Favorita
-    </button>
-  </div>
+  @if (isAuthorized()) {
+    <div class="col-md-4 text-end align-self-end" id="botonFavoritos">
+      <button
+        type="submit"
+        (click)="onFavoriteClick(selectCategoria.value)"
+        class="btn btn-outline-primary px-4"
+        [class.active]="categoriaSeleccionadaFavorita()"
+        id="fijarCategoria"
+      >
+        Favorita
+      </button>
+    </div>
+  }
 </div>
 
 @if (platosAleatorios.isLoading()) {
