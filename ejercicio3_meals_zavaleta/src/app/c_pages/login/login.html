@@ -46,7 +46,7 @@
                 placeholder="usuario@educastillalamancha.es"
                 [class]="getValidationClass(emailLogin, submittedLogin)"
               />
-              @if (emailLogin?.errors) {
+              @if (emailLogin?.errors && !emailLogin?.hasError('authFail')) {
                 <div class="invalid-feedback">El correo es obligatorio</div>
               }
             </div>
@@ -62,10 +62,14 @@
                 [class]="getValidationClass(passwordLogin, submittedLogin)"
                 placeholder="********"
               />
+              @if (passwordLogin?.errors) {
+                @if (passwordLogin?.hasError('authFail')) {
+                  <div class="invalid-feedback">{{ errorLogin }}</div>
+                } @else {
+                  <div class="invalid-feedback">La contraseña es obligatoria</div>
+                }
+              }
             </div>
-            @if (passwordLogin?.errors) {
-              <div class="invalid-feedback">La contraseña es obligatoria</div>
-            }
 
             <!-- Agregar el error de que no existe un usuario con esas credenciales -->
 

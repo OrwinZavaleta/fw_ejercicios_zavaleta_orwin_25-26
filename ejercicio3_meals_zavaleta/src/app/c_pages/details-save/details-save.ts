@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, signal } from '@angular/core';
 
 @Component({
   selector: 'app-details-save',
@@ -7,5 +7,7 @@ import { Component } from '@angular/core';
   styleUrl: './details-save.css',
 })
 export class DetailsSave {
+  public platoFavorito = signal(false);
+
 
 }

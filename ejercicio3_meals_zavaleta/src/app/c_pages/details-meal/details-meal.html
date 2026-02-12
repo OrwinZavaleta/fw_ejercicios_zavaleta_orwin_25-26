@@ -13,7 +13,7 @@
       <ul class="list-group" id="ingredientes">
         @for (
           ingrediente of platoSeleccionado()?.ingredients;
-          track platoSeleccionado()?.ingredients
+          track ingrediente
         ) {
           <li class="list-group-item">{{ ingrediente.measure }} de {{ ingrediente.name }}</li>
         }
@@ -34,8 +34,10 @@
       }
     </div>
 
-    <button type="submit" class="btn btn-outline-warning px-5 my-3" id="platoFavorito">
-      Favorita
-    </button>
+    @if (isAuthenticated()) {
+      <button type="submit" (click)="handleFavClick()" class="btn btn-outline-warning px-5 my-3" id="platoFavorito">
+        Favorita
+      </button>
+    }
   </div>
 </div>

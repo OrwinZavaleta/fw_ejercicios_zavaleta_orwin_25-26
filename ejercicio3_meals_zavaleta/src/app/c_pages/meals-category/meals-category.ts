@@ -48,8 +48,16 @@ export class MealsCategory {
   }
 
   ngOnInit() {
-    // TODO: con sesion, cargar el favorito del user y boton como activo
     this.cargarCategorias();
+    this.cargarCategoriaFavorita();
+  }
+
+  cargarCategoriaFavorita() {
+    const usuario = this.storage.getUsuarioActual();
+    if (usuario && usuario?.favoriteCategory) {
+      this.categoriaSeleccionada.set(usuario.favoriteCategory);
+
+    }
   }
 
   private async cargarCategorias() {
@@ -62,28 +70,36 @@ export class MealsCategory {
       this.categoriasLoading.set(false);
     }
   }
-
   onFavoriteClick(categoriaSelect: string) {
     console.log('se ha hecho click fav ' + categoriaSelect);
+
     const usuarioActual = this.storage.getUsuarioActual();
 
-    if (usuarioActual && usuarioActual.favoriteCategory === categoriaSelect) {
-      // TODO: comprobarlo cuando tenga las sesiones
-      this.categoriaSeleccionadaFavorita.set(false);
-      this.storage.actualizarFavoritoUsuarioActual();
-    } else if (!usuarioActual) {
-      this.categoriaSeleccionadaFavorita.set(false);
-    } else {
-      this.categoriaSeleccionadaFavorita.set(true);
-      this.storage.actualizarFavoritoUsuarioActual(categoriaSelect);
+    if (this.isAuthorized() && categoriaSelect !== '') {
+      console.log(usuarioActual);
+      console.log(categoriaSelect);
+      if (usuarioActual && usuarioActual.favoriteCategory === categoriaSelect) {
+        this.categoriaSeleccionadaFavorita.set(false);
+        this.storage.actualizarFavoritoUsuarioActual();
+      } else if (!usuarioActual) {
+        this.categoriaSeleccionadaFavorita.set(false);
+      } else {
+        this.categoriaSeleccionadaFavorita.set(true);
+        this.storage.actualizarFavoritoUsuarioActual(categoriaSelect);
+      }
     }
   }
 
   onCategoryChange(categoriaSelect: string) {
     console.log('se ha seleccionado  ' + categoriaSelect);
     this.categoriaSeleccionada.set(categoriaSelect);
+
+    console.log(this.storage.getUsuarioActual()?.favoriteCategory);
+
     if (this.storage.getUsuarioActual()?.favoriteCategory === categoriaSelect) {
       this.categoriaSeleccionadaFavorita.set(true);
+    } else {
+      this.categoriaSeleccionadaFavorita.set(false);
     }
   }
 }

@@ -16,7 +16,7 @@ recuperar la sesión almacenada
 export class AuthService {
   private storage = inject(StorageService);
 
-  private currentUser = signal<User | null>(this.storage.getUsuarioActual());
+  private currentUser = signal<User | null>(this.storage.getUsuarioActual()); // TODO: hacerlo publico y que todos lo llamen a el
 
   public isAuthenticated = computed(() => !!this.currentUser()); //TODO: verificar si esto realmente funciona asi
 

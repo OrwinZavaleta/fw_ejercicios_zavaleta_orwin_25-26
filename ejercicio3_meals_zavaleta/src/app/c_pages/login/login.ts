@@ -31,10 +31,10 @@ export class Login {
 
   public loginForm: FormGroup;
   public submittedLogin = false;
+  public errorLogin = '';
 
   constructor() {
     this.registerForm = this.fb.group(
-      // TODO: hacer el login correctamente
       {
         nombreCompleto: ['', [Validators.required, Validators.minLength(3)]],
         email: [
@@ -51,16 +51,10 @@ export class Login {
       },
       { validators: this.passwordsCoinciden.bind(this) },
     );
+
+    // TODO: hacer que salga no valido cuando la contraseña tampoco coincide.
     this.loginForm = this.fb.group({
-      emailLogin: [
-        '',
-        [
-          Validators.required,
-          Validators.email,
-          this.emailDominioEduValidator,
-          // this.emailUnicoValidator.bind(this),
-        ],
-      ],
+      emailLogin: ['', [Validators.required, Validators.email, this.emailDominioEduValidator]],
       passwordLogin: ['', [Validators.required, Validators.minLength(3)]],
     });
   }
@@ -132,11 +126,24 @@ export class Login {
     }
   }
   public onLogin() {
+    //Para limpiarlos para que no los considere como invalidos si no los ha tocado
+    if (this.emailLogin?.hasError('authFail')) {
+      this.emailLogin.setErrors(null);
+    }
+    if (this.passwordLogin?.hasError('authFail')) {
+      this.passwordLogin.setErrors(null);
+    }
     this.submittedLogin = true;
     if (this.loginForm.valid) {
       const user = this.storage.buscarUsuarioPorCorreo(this.loginForm.value.emailLogin);
-      if (!user) {
-        throw 'Usuario no existe'; // TODO: mostrarlo en el formulario
+      if (!user || (user && user.password !== this.loginForm.value.passwordLogin)) {
+        this.errorLogin = 'El correo o la contraseña es incorrecta';
+        this.passwordLogin?.setErrors({ authFail: true });
+        this.emailLogin?.setErrors({ authFail: true });
+
+        this.passwordLogin?.reset();
+        console.error('Usuario no existe');
+        return;
       }
       const success = this.authService.login(user);
 

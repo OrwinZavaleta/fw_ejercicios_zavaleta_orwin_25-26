@@ -1,7 +1,8 @@
-import { Component, inject, input, resource, signal } from '@angular/core';
+import { Component, computed, inject, input, output, resource, signal } from '@angular/core';
 import { ApiService } from '../../services/api-service';
 import { NgOptimizedImage } from '@angular/common';
 import { MyMeal } from '../../model/my-meal';
+import { AuthService } from '../../services/auth-service';
 
 @Component({
   selector: 'app-details-meal',
@@ -12,6 +13,11 @@ import { MyMeal } from '../../model/my-meal';
 export class DetailsMeal {
   private readonly api = inject(ApiService);
   readonly id = input.required<number>();
+  public favClicked = output<boolean>();
+
+  protected authService = inject(AuthService);
+
+  public isAuthenticated = computed(this.authService.isAuthenticated);
 
   // protected platoSeleccionado = resource({
   //   params: () => this.id(),
@@ -26,5 +32,9 @@ export class DetailsMeal {
 
   async cargarPlatoSeleccionado() {
     this.platoSeleccionado.set(await this.api.pedirPlatoPorId(this.id()));
+  }
+
+  handleFavClick() {
+    this.favClicked.emit(false); // TODO: enviar el valor invertido del boton
   }
 }

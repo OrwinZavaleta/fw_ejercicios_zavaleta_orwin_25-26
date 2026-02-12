@@ -14,7 +14,7 @@ export class StorageService {
   private USER_WEEKLY_KEY_ITEM: string = 'weeklyPlans_';
   private USER_CACHE_KEY_ITEM: string = 'userMiniMeal_';
 
-  public guardarAgregarUsuario(nuevoUsuario: User):boolean {
+  public guardarAgregarUsuario(nuevoUsuario: User): boolean {
     try {
       const users: User[] = JSON.parse(localStorage.getItem(this.USER_KEY_ITEM) ?? '[]');
 
@@ -76,9 +76,14 @@ export class StorageService {
   public actualizarFavoritoUsuarioActual(categoriaFavorita: string | undefined = undefined) {
     const users: User[] = JSON.parse(localStorage.getItem(this.USER_KEY_ITEM) ?? '[]');
 
-    const usuarioEncontrado = this.getUsuarioActual();
-    if (usuarioEncontrado) {
-      usuarioEncontrado.favoriteCategory = categoriaFavorita;
+    const usuarioActual = this.getUsuarioActual();
+
+    if (usuarioActual) {
+      const usuarioEncontrado = users.find((us) => us.id === usuarioActual.id);
+      if (usuarioEncontrado) {
+        usuarioEncontrado.favoriteCategory = categoriaFavorita;
+      }
+
       localStorage.setItem(this.USER_KEY_ITEM, JSON.stringify(users));
     } else {
       throw new Error('El usuario no existe');

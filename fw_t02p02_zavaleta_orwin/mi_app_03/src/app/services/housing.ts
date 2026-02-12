@@ -136,10 +136,11 @@ export class Housing {
       email: email,
       housingLocationId: housingLocationId,
       consultaDate: new Date(),
+      id: 0
     };
 
     // Guardar en localStorage
-    this.localStorageService.saveApplication(apply);
+    this.localStorageService.saveV2Application(apply);
 
     console.log('Consulta guardada:', apply);
     alert('Appy sent successfully!');

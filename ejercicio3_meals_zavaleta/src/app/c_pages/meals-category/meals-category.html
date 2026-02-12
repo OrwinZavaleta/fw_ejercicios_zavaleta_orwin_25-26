@@ -11,7 +11,11 @@
       <option selected value="">Todas las categorías</option>
 
       @for (cate of categorias(); track cate.idCategory) {
-        <option [value]="cate.strCategory">{{ cate.strCategory }}</option>
+        @if (categoriaSeleccionada() === cate.strCategory) {
+          <option [value]="cate.strCategory" selected>{{ cate.strCategory }}</option>
+        } @else {
+          <option [value]="cate.strCategory">{{ cate.strCategory }}</option>
+        }
       } @empty {
         @if (categoriasLoading()) {
           <option value="">Cargando Categorias</option>

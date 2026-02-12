@@ -14,7 +14,7 @@ export const routes: Routes = [
     children: [
       { path: '', component: Home },
       { path: 'details/:id', component: Details },
-      { path: 'plan-week', component: PlanWeek },
+      { path: 'plan-week', component: PlanWeek }, // TODO: esta es la que necesita guard
     ],
   },
   //Sin layot

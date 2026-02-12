@@ -1,0 +1,17 @@
+<section class="resultados">
+  <ul>
+    @for (day of weekDays; track day) {
+      <li>
+        Citas del {{ day }}:
+        {{ applyService.getAppointmentsByDay(day).length }}
+      </li>
+    }
+  </ul>
+  <br />
+  <p>
+    <strong
+      >Citas sin asignar:
+      {{ applyService.getUnassignedAppointments().length }}
+    </strong>
+  </p>
+</section>

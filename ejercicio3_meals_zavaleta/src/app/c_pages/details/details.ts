@@ -1,6 +1,7 @@
-import { Component, input } from '@angular/core';
+import { Component, input, inject, computed } from '@angular/core';
 import { DetailsMeal } from '../details-meal/details-meal';
 import { DetailsSave } from '../details-save/details-save';
+import { AuthService } from '../../services/auth-service';
 @Component({
   selector: 'app-details',
   imports: [DetailsMeal, DetailsSave],
@@ -9,5 +10,7 @@ import { DetailsSave } from '../details-save/details-save';
 })
 export class Details {
   readonly id = input.required<number>();
-  public isAuthenticated = false; // TODO: más adelante vendrá de un AuthService
+  protected authService = inject(AuthService);
+
+  public isAuthenticated = computed(this.authService.isAuthenticated);
 }

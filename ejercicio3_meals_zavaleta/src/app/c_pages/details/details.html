@@ -1,5 +1,5 @@
 <app-details-meal [id]="id()"></app-details-meal>
 
-@if (isAuthenticated) {
+@if (isAuthenticated()) {
   <app-details-save [id]="id()"></app-details-save>
 }
