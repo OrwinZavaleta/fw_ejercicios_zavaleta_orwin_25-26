@@ -160,7 +160,9 @@
                 class="form-control"
                 name="passwordRegister"
                 formControlName="password"
-                [class.is-invalid]="esCampoValidoRegisterClass('password')"
+                [class.is-invalid]="
+                  esCampoValidoRegisterClass('password')
+                "
                 id="passwordRegister"
               />
               <div class="invalid-feedback">
@@ -183,7 +185,10 @@
                 class="form-control"
                 name="passwordConfirmRegister"
                 formControlName="passwordConfirm"
-                [class.is-invalid]="esCampoValidoRegisterClass('passwordConfirm')"
+                [class.is-invalid]="
+                  esCampoValidoRegisterClass('passwordConfirm') ||
+                  registerForm.hasError('passwordMissmatch')
+                "
                 id="passwordConfirmRegister"
               />
               <div class="invalid-feedback">
@@ -194,6 +199,8 @@
                   {{ registerInputs('passwordConfirm')?.errors?.['minlength']?.requiredLength }} y
                   tiene
                   {{ registerInputs('passwordConfirm')?.errors?.['minlength']?.actualLength }}
+                } @else if (registerForm.hasError('passwordMissmatch')) {
+                  Las contraseñas no coinciden.
                 } @else {
                   Contraseña no valido
                 }
@@ -211,11 +218,11 @@
   </div>
 </div>
 
-<pre>
+<!-- <pre>
   {{ registerForm.value | json }}
 </pre>
 <pre>
   {{ registerForm.valid }}
-</pre>
+</pre> -->
 <!-- Para depurar -->
-<pre>{{ registerForm.errors | json }}</pre>
+<!-- <pre>{{ registerForm.errors | json }}</pre> -->

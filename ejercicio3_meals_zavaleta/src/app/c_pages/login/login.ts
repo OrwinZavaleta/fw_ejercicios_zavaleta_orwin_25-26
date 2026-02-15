@@ -18,13 +18,17 @@ import { JsonPipe } from '@angular/common';
 
 @Component({
   selector: 'app-login',
-  imports: [ReactiveFormsModule, JsonPipe],
+  imports: [ReactiveFormsModule],
   templateUrl: './login.html',
   styleUrl: './login.css',
 })
 export class Login {
   protected loginForm: FormGroup;
   protected registerForm: FormGroup;
+
+  private authService = inject(AuthService);
+  private storage = inject(StorageService);
+  private router = inject(Router);
 
   public PASSWORD_LENGTH = 6;
 
@@ -46,8 +50,9 @@ export class Login {
       { validators: this.validatePasswordCoindice },
     );
   }
-
-  /* Devuelven un input de los formularios */
+  // ======================================
+  // Devuelven un input de los formularios
+  // ======================================
   loginInputs(campo: string) {
     return this.loginForm.get(campo);
   }
@@ -56,18 +61,57 @@ export class Login {
     return this.registerForm.get(campo);
   }
 
-  /* Manejadores del envio de formulario */
+  // ======================================
+  // Manejadores del envio de formulario
+  // ======================================
   handleSubmitLogin() {
+    // TODO: notificar los errores en los que aparece un return;
     if (!this.loginForm.valid) return;
+
+    console.log(this.authService.isAuthenticated());
+    if (this.authService.isAuthenticated()) return;
+
+    const user = this.storage.buscarUsuarioPorCorreo(this.loginInputs('email')?.value);
+
+    if (!user) return;
+
+    if (user.password !== this.loginInputs('password')?.value) return;
+
+    const logged = this.authService.login(user);
+
+    if (!logged) return;
+
     console.log('Se ha logeado');
+
+    this.router.navigateByUrl('/');
   }
 
   handleSubmitRegister() {
     if (!this.registerForm.valid) return;
+
+    console.log(this.authService.isAuthenticated());
+    if (this.authService.isAuthenticated()) return;
+
+    const user = this.storage.buscarUsuarioPorCorreo(this.loginInputs('email')?.value);
+    if (user) return;
+
+    const registered = this.authService.register({
+      id: this.storage.obtenerProximoIdUser(),
+      name: this.registerInputs('name')?.value,
+      email: this.registerInputs('email')?.value,
+      password: this.registerInputs('password')?.value,
+    });
+
+    if (!registered) return;
+
     console.log('Se ha registrado');
+
+    this.router.navigateByUrl('/');
   }
 
-  /* Retornar si el campo es valido o no*/
+  // ======================================
+  // Retornar si el campo es valido o no
+  // ======================================
   esCampoValidoLoginClass(campo: string) {
     // if (
     //   this.loginInputs(campo)?.invalid &&
@@ -95,10 +139,13 @@ export class Login {
     return inputs(campo)?.invalid && (inputs(campo)?.touched || inputs(campo)?.dirty);
   }
 
-  /* Validadores personalizados */
+  // ======================================
+  // Validadores personalizados
+  // ======================================
   private validatePasswordCoindice: ValidatorFn = (
     group: AbstractControl,
   ): ValidationErrors | null => {
+    // Debe tener el AbstractControl y el ValidationErrors y usarlos.
     const password = group.get('password');
     const passwordConfirm = group.get('passwordConfirm');
 
@@ -107,6 +154,4 @@ export class Login {
     }
     return { passwordMissmatch: true };
   };
-
-  /* Validadores personalizados asincronos */
 }
