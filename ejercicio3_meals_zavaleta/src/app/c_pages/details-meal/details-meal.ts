@@ -34,7 +34,7 @@ export class DetailsMeal {
     this.platoSeleccionado.set(await this.api.pedirPlatoPorId(this.id()));
   }
 
-  handleFavClick() {
-    this.favClicked.emit(false); // TODO: enviar el valor invertido del boton
+  handleFavClick(button: HTMLButtonElement) {
+    this.favClicked.emit(button.classList.contains('active'));
   }
 }

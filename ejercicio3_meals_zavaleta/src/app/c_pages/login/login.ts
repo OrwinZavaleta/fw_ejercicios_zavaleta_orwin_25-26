@@ -6,192 +6,107 @@ import {
   FormGroup,
   ValidationErrors,
   Validators,
+  ValidatorFn,
 } from '@angular/forms';
 import { StorageService } from '../../services/storage-service';
 import { User } from '../../model/user';
 import { Router } from '@angular/router';
 import { AuthService } from '../../services/auth-service';
 
+// TODO: retirarlo cuando haya terminado con las pruebas
+import { JsonPipe } from '@angular/common';
+
 @Component({
   selector: 'app-login',
-  imports: [ReactiveFormsModule],
+  imports: [ReactiveFormsModule, JsonPipe],
   templateUrl: './login.html',
   styleUrl: './login.css',
 })
 export class Login {
+  protected loginForm: FormGroup;
+  protected registerForm: FormGroup;
+
+  public PASSWORD_LENGTH = 6;
+
   private fb = inject(FormBuilder);
-  private storage = inject(StorageService);
-  private authService = inject(AuthService);
-  private router = inject(Router);
-
-  public registerForm: FormGroup;
-  public registroExitoso = false;
-  public submitted = false;
-  public errorRegistro = '';
-
-  public loginForm: FormGroup;
-  public submittedLogin = false;
-  public errorLogin = '';
 
   constructor() {
+    this.loginForm = this.fb.group({
+      email: ['', [Validators.required, Validators.email, Validators.minLength(3)]],
+      password: ['', [Validators.required, Validators.minLength(this.PASSWORD_LENGTH)]],
+    });
+
     this.registerForm = this.fb.group(
       {
-        nombreCompleto: ['', [Validators.required, Validators.minLength(3)]],
-        email: [
-          '',
-          [
-            Validators.required,
-            Validators.email,
-            this.emailDominioEduValidator,
-            this.emailUnicoValidator.bind(this),
-          ],
-        ],
-        password: ['', [Validators.required, Validators.minLength(3)]],
-        confirmPassword: ['', [Validators.required, Validators.minLength(3)]],
+        name: ['', [Validators.required, Validators.minLength(3)]],
+        email: ['', [Validators.required, Validators.email, Validators.minLength(3)]],
+        password: ['', [Validators.required, Validators.minLength(this.PASSWORD_LENGTH)]],
+        passwordConfirm: ['', [Validators.required, Validators.minLength(this.PASSWORD_LENGTH)]],
       },
-      { validators: this.passwordsCoinciden.bind(this) },
+      { validators: this.validatePasswordCoindice },
     );
-
-    // TODO: hacer que salga no valido cuando la contraseña tampoco coincide.
-    this.loginForm = this.fb.group({
-      emailLogin: ['', [Validators.required, Validators.email, this.emailDominioEduValidator]],
-      passwordLogin: ['', [Validators.required, Validators.minLength(3)]],
-    });
   }
 
-  //Usa this internamente y para que no pierda el contexto usamos bind
-  //Otra solución es usar una función flecha
-  public emailUnicoValidator(control: AbstractControl): ValidationErrors | null {
-    if (!control.value) return null;
-    const emailExiste = this.storage.existeUsuarioPorId(control.value);
-    return emailExiste ? { emailDuplicado: true } : null;
+  /* Devuelven un input de los formularios */
+  loginInputs(campo: string) {
+    return this.loginForm.get(campo);
   }
 
-  //No usa this internamente, no necesitamos bind.
-  //Se recomienda usar bind por si hubiera cambios: this.emailDominioEduValidator.bind(this)
-  public emailDominioEduValidator(control: AbstractControl): ValidationErrors | null {
-    const email = control.value;
-    if (!email) return null;
-    const dominioValido = email.endsWith('@educastillalamancha.es');
-    return dominioValido ? null : { dominioInvalido: true };
+  registerInputs(campo: string) {
+    return this.registerForm.get(campo);
   }
 
-  public passwordsCoinciden(group: AbstractControl): ValidationErrors | null {
-    const password = group.get('password')?.value;
-    const confirmPassword = group.get('confirmPassword')?.value;
-    return password === confirmPassword ? null : { passwordsNoCoinciden: true };
+  /* Manejadores del envio de formulario */
+  handleSubmitLogin() {
+    if (!this.loginForm.valid) return;
+    console.log('Se ha logeado');
   }
 
-  public get nombreCompleto() {
-    return this.registerForm.get('nombreCompleto');
-  }
-  public get email() {
-    return this.registerForm.get('email');
-  }
-  public get password() {
-    return this.registerForm.get('password');
-  }
-  public get confirmPassword() {
-    return this.registerForm.get('confirmPassword');
+  handleSubmitRegister() {
+    if (!this.registerForm.valid) return;
+    console.log('Se ha registrado');
   }
 
-  public get emailLogin() {
-    return this.loginForm.get('emailLogin');
+  /* Retornar si el campo es valido o no*/
+  esCampoValidoLoginClass(campo: string) {
+    // if (
+    //   this.loginInputs(campo)?.invalid &&
+    //   (this.loginInputs(campo)?.touched || this.loginInputs(campo)?.dirty)
+    // ) {
+    //   return 'is-invalid';
+    // } else {
+    //   return '';
+    // }
+    return this.esCampoValidoLayout(campo, (c) => this.loginInputs(c));
   }
-  public get passwordLogin() {
-    return this.loginForm.get('passwordLogin');
+  esCampoValidoRegisterClass(campo: string) {
+    return this.esCampoValidoLayout(campo, (c) => this.registerInputs(c));
   }
-  public onRegister() {
-    this.submitted = true;
-    this.errorRegistro = '';
 
-    if (this.registerForm.valid) {
-      const nuevoUsuario: User = {
-        id: this.storage.obtenerProximoIdUser(),
-        name: this.registerForm.value.nombreCompleto,
-        email: this.registerForm.value.email,
-        password: this.registerForm.value.password,
-      };
+  private esCampoValidoLayout(
+    campo: string,
+    inputs: (campoInput: string) => AbstractControl | null,
+  ) {
+    // if (inputs(campo)?.invalid && (inputs(campo)?.touched || inputs(campo)?.dirty)) {
+    //   return true;
+    // } else {
+    //   return false;
+    // }
+    return inputs(campo)?.invalid && (inputs(campo)?.touched || inputs(campo)?.dirty);
+  }
 
-      const success = this.authService.register(nuevoUsuario);
+  /* Validadores personalizados */
+  private validatePasswordCoindice: ValidatorFn = (
+    group: AbstractControl,
+  ): ValidationErrors | null => {
+    const password = group.get('password');
+    const passwordConfirm = group.get('passwordConfirm');
 
-      if (success) {
-        this.registroExitoso = true;
-        this.registerForm.reset();
-        this.submitted = false;
-      } else {
-        //alert('Error al registrar el usuario');
-        this.errorRegistro = 'Error al registrar el usuario. Por favor, inténtalo de nuevo.';
-      }
+    if (password?.value === passwordConfirm?.value) {
+      return null;
     }
-  }
-  public onLogin() {
-    //Para limpiarlos para que no los considere como invalidos si no los ha tocado
-    if (this.emailLogin?.hasError('authFail')) {
-      this.emailLogin.setErrors(null);
-    }
-    if (this.passwordLogin?.hasError('authFail')) {
-      this.passwordLogin.setErrors(null);
-    }
-    this.submittedLogin = true;
-    if (this.loginForm.valid) {
-      const user = this.storage.buscarUsuarioPorCorreo(this.loginForm.value.emailLogin);
-      if (!user || (user && user.password !== this.loginForm.value.passwordLogin)) {
-        this.errorLogin = 'El correo o la contraseña es incorrecta';
-        this.passwordLogin?.setErrors({ authFail: true });
-        this.emailLogin?.setErrors({ authFail: true });
+    return { passwordMissmatch: true };
+  };
 
-        this.passwordLogin?.reset();
-        console.error('Usuario no existe');
-        return;
-      }
-      const success = this.authService.login(user);
-
-      if (success) {
-        this.loginForm.reset();
-        this.submittedLogin = false;
-        this.irAHome();
-      }
-    }
-  }
-
-  public irAHome() {
-    this.registroExitoso = false;
-    this.errorRegistro = '';
-    this.router.navigate(['/']);
-  }
-
-  public getValidationClass(control: AbstractControl | null, isFormSubmitted: boolean): string {
-    //NO mostrar validación hasta que el usuario envíe
-    if (!isFormSubmitted) {
-      return '';
-    }
-    //Mi los controles de forma individual.
-    if (!control) {
-      return '';
-    }
-
-    return control.valid ? 'is-valid' : 'is-invalid';
-  }
-  public getValidationClassConfirmPassword(): string {
-    if (!this.submitted) {
-      return '';
-    }
-
-    if (!this.confirmPassword) {
-      return '';
-    }
-
-    // Primero verifico si el control tiene errores propios
-    if (this.confirmPassword.errors) {
-      return 'is-invalid';
-    }
-
-    // Luego verifico si el formulario tiene errores propios
-    if (this.registerForm.errors?.['passwordsNoCoinciden']) {
-      return 'is-invalid';
-    }
-
-    return 'is-valid';
-  }
+  /* Validadores personalizados asincronos */
 }

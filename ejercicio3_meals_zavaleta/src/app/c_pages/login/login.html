@@ -34,168 +34,188 @@
       <div class="tab-content">
         <!-- LOGIN -->
         <div class="tab-pane fade show active" id="login" role="tabpanel">
-          <form [formGroup]="loginForm" (ngSubmit)="onLogin()" novalidate>
-            <div class="mb-3">
-              <label for="email" class="form-label">Correo electrónico</label>
+          <form
+            class="row g-3 needs-validation"
+            (ngSubmit)="handleSubmitLogin()"
+            [formGroup]="loginForm"
+            novalidate
+          >
+            <!-- Email -->
+            <div class="col-md-12">
+              <label for="emailLogin" class="form-label">Email: </label>
               <input
-                type="email"
-                id="emailLogin"
-                formControlName="emailLogin"
-                name="emailLogin"
+                type="text"
                 class="form-control"
-                placeholder="usuario@educastillalamancha.es"
-                [class]="getValidationClass(emailLogin, submittedLogin)"
+                name="emailLogin"
+                formControlName="email"
+                [class.is-invalid]="esCampoValidoLoginClass('email')"
+                id="emailLogin"
               />
-              @if (emailLogin?.errors && !emailLogin?.hasError('authFail')) {
-                <div class="invalid-feedback">El correo es obligatorio</div>
-              }
+              <div class="invalid-feedback">
+                @if (loginInputs('email')?.hasError('required')) {
+                  El campo es requerido
+                } @else if (loginInputs('email')?.hasError('email')) {
+                  El valor introducido no es un email
+                } @else if (loginInputs('email')?.hasError('minlength')) {
+                  Debe tener una longitud minima de
+                  {{ loginInputs('email')?.errors?.['minlength']?.requiredLength }} y tiene
+                  {{ loginInputs('email')?.errors?.['minlength']?.actualLength }}
+                } @else {
+                  Email no valido
+                }
+              </div>
             </div>
-
-            <div class="mb-4">
-              <label for="password" class="form-label">Contraseña</label>
+            <!-- Password -->
+            <div class="col-md-12">
+              <label for="passwordLogin" class="form-label">Password: </label>
               <input
                 type="password"
-                id="passwordLogin"
-                formControlName="passwordLogin"
-                name="passwordLogin"
                 class="form-control"
-                [class]="getValidationClass(passwordLogin, submittedLogin)"
-                placeholder="********"
+                name="passwordLogin"
+                formControlName="password"
+                [class.is-invalid]="esCampoValidoLoginClass('password')"
+                id="passwordLogin"
               />
-              @if (passwordLogin?.errors) {
-                @if (passwordLogin?.hasError('authFail')) {
-                  <div class="invalid-feedback">{{ errorLogin }}</div>
+              <div class="invalid-feedback">
+                @if (loginInputs('password')?.hasError('required')) {
+                  El campo es requerido
+                } @else if (loginInputs('password')?.hasError('minlength')) {
+                  Debe tener una longitud minima de
+                  {{ loginInputs('password')?.errors?.['minlength']?.requiredLength }} y tiene
+                  {{ loginInputs('password')?.errors?.['minlength']?.actualLength }}
                 } @else {
-                  <div class="invalid-feedback">La contraseña es obligatoria</div>
+                  Contraseña no valido
                 }
-              }
+              </div>
             </div>
-
-            <!-- Agregar el error de que no existe un usuario con esas credenciales -->
-
-            <div class="d-grid">
-              <button type="submit" class="btn btn-primary">Entrar</button>
+            <div class="col-12">
+              <button class="btn btn-primary w-100" [disabled]="loginForm.invalid" type="submit">
+                Submit form
+              </button>
             </div>
           </form>
         </div>
 
         <!-- REGISTER -->
         <div class="tab-pane fade text-center" id="register" role="tabpanel">
-          <!-- Mensaje de éxito que oculta el formulario de registro-->
-          @if (registroExitoso) {
-            <div class="alert alert-success text-center" role="alert">
-              <h5 class="alert-heading">¡Usuario creado correctamente!</h5>
-              <p class="mb-3">Tu cuenta ha sido registrada con éxito.</p>
-              <button type="button" class="btn btn-success" (click)="irAHome()">Ir al Home</button>
+          <form
+            class="row g-3 needs-validation"
+            (ngSubmit)="handleSubmitRegister()"
+            [formGroup]="registerForm"
+            novalidate
+          >
+            <!-- Name -->
+            <div class="col-md-12">
+              <label for="nameRegister" class="form-label">Nombre Completo: </label>
+              <input
+                type="text"
+                class="form-control"
+                name="nameRegister"
+                formControlName="name"
+                [class.is-invalid]="esCampoValidoRegisterClass('name')"
+                id="nameRegister"
+              />
+              <div class="invalid-feedback">
+                @if (registerInputs('name')?.hasError('required')) {
+                  El campo es requerido
+                } @else if (registerInputs('name')?.hasError('minlength')) {
+                  Debe tener una longitud minima de
+                  {{ registerInputs('name')?.errors?.['minlength']?.requiredLength }} y tiene
+                  {{ registerInputs('name')?.errors?.['minlength']?.actualLength }}
+                } @else {
+                  El nombre no es valido
+                }
+              </div>
             </div>
-          }
-
-          <!-- Formulario de registro -->
-          @if (!registroExitoso) {
-            @if (errorRegistro) {
-              <div class="alert alert-danger" role="alert">
-                {{ errorRegistro }}
-              </div>
-            }
-
-            <form [formGroup]="registerForm" (ngSubmit)="onRegister()" novalidate>
-              <!-- Nombre completo -->
-              <div class="mb-3">
-                <label for="nombreCompleto" class="form-label">Nombre completo</label>
-                <input
-                  type="text"
-                  id="nombreCompleto"
-                  formControlName="nombreCompleto"
-                  class="form-control"
-                  [class]="getValidationClass(nombreCompleto, submitted)"
-                  placeholder="Nombre y apellidos"
-                />
-
-                @if (nombreCompleto?.errors) {
-                  <div class="invalid-feedback">
-                    El nombre es obligatorio y debe tener al menos 3 caracteres
-                  </div>
+            <!-- Email -->
+            <div class="col-md-12">
+              <label for="emailRegister" class="form-label">Email: </label>
+              <input
+                type="text"
+                class="form-control"
+                name="emailRegister"
+                formControlName="email"
+                [class.is-invalid]="esCampoValidoRegisterClass('email')"
+                id="emailRegister"
+              />
+              <div class="invalid-feedback">
+                @if (registerInputs('email')?.hasError('required')) {
+                  El campo es requerido
+                } @else if (registerInputs('email')?.hasError('email')) {
+                  El valor introducido no es un email
+                } @else if (registerInputs('email')?.hasError('minlength')) {
+                  Debe tener una longitud minima de
+                  {{ registerInputs('email')?.errors?.['minlength']?.requiredLength }} y tiene
+                  {{ registerInputs('email')?.errors?.['minlength']?.actualLength }}
+                } @else {
+                  Email no valido
                 }
-                <div class="valid-feedback">¡Correcto!</div>
               </div>
-
-              <!-- Email -->
-              <div class="mb-3">
-                <label for="registerEmail" class="form-label">Correo electrónico</label>
-                <input
-                  type="email"
-                  id="registerEmail"
-                  formControlName="email"
-                  class="form-control"
-                  [class]="getValidationClass(email, submitted)"
-                  placeholder="usuario@educastillalamancha.es"
-                />
-
-                @if (email?.errors) {
-                  <div class="invalid-feedback">
-                    @if (email?.errors?.['emailDuplicado']) {
-                      <div>Este correo ya está registrado</div>
-                    } @else {
-                      <div>Debe ser un correo válido del dominio @educastillalamancha.es</div>
-                    }
-                  </div>
+            </div>
+            <!-- Password -->
+            <div class="col-md-12">
+              <label for="passwordRegister" class="form-label">Password: </label>
+              <input
+                type="password"
+                class="form-control"
+                name="passwordRegister"
+                formControlName="password"
+                [class.is-invalid]="esCampoValidoRegisterClass('password')"
+                id="passwordRegister"
+              />
+              <div class="invalid-feedback">
+                @if (registerInputs('password')?.hasError('required')) {
+                  El campo es requerido
+                } @else if (registerInputs('password')?.hasError('minlength')) {
+                  Debe tener una longitud minima de
+                  {{ registerInputs('password')?.errors?.['minlength']?.requiredLength }} y tiene
+                  {{ registerInputs('password')?.errors?.['minlength']?.actualLength }}
+                } @else {
+                  Contraseña no valido
                 }
-                <div class="valid-feedback">¡Correcto!</div>
               </div>
-
-              <!-- Password -->
-              <div class="mb-3">
-                <label for="registerPassword" class="form-label">Contraseña</label>
-                <input
-                  type="password"
-                  id="registerPassword"
-                  formControlName="password"
-                  class="form-control"
-                  [class]="getValidationClass(password, submitted)"
-                  placeholder="********"
-                />
-
-                @if (password?.errors) {
-                  <div class="invalid-feedback">
-                    La contraseña es obligatoria y debe tener al menos 3 caracteres
-                  </div>
+            </div>
+            <!-- Confirm Password -->
+            <div class="col-md-12">
+              <label for="passwordConfirmRegister" class="form-label">Password: </label>
+              <input
+                type="password"
+                class="form-control"
+                name="passwordConfirmRegister"
+                formControlName="passwordConfirm"
+                [class.is-invalid]="esCampoValidoRegisterClass('passwordConfirm')"
+                id="passwordConfirmRegister"
+              />
+              <div class="invalid-feedback">
+                @if (registerInputs('passwordConfirm')?.hasError('required')) {
+                  El campo es requerido
+                } @else if (registerInputs('passwordConfirm')?.hasError('minlength')) {
+                  Debe tener una longitud minima de
+                  {{ registerInputs('passwordConfirm')?.errors?.['minlength']?.requiredLength }} y
+                  tiene
+                  {{ registerInputs('passwordConfirm')?.errors?.['minlength']?.actualLength }}
+                } @else {
+                  Contraseña no valido
                 }
-                <div class="valid-feedback">¡Correcto!</div>
               </div>
-
-              <!-- Confirmar Password -->
-              <div class="mb-3">
-                <label for="confirmPassword" class="form-label">Confirmar contraseña</label>
-                <input
-                  type="password"
-                  id="confirmPassword"
-                  formControlName="confirmPassword"
-                  class="form-control"
-                  [class]="getValidationClassConfirmPassword()"
-                  placeholder="********"
-                />
-
-                @if (confirmPassword?.errors || registerForm.errors?.['passwordsNoCoinciden']) {
-                  <div class="invalid-feedback">
-                    @if (registerForm.errors?.['passwordsNoCoinciden']) {
-                      <div>Las contraseñas no coinciden</div>
-                    } @else {
-                      <div>Debes confirmar la contraseña de al menos 3 caracteres</div>
-                    }
-                  </div>
-                }
-
-                <div class="valid-feedback">¡Las contraseñas coinciden!</div>
-              </div>
-
-              <!-- Botón submit -->
-              <div class="d-grid">
-                <button type="submit" class="btn btn-primary">Registrarse</button>
-              </div>
-            </form>
-          }
+            </div>
+            <div class="col-12">
+              <button class="btn btn-primary w-100" [disabled]="registerForm.invalid" type="submit">
+                Submit form
+              </button>
+            </div>
+          </form>
         </div>
       </div>
     </div>
   </div>
 </div>
+
+<pre>
+  {{ registerForm.value | json }}
+</pre>
+<pre>
+  {{ registerForm.valid }}
+</pre>
+<!-- Para depurar -->
+<pre>{{ registerForm.errors | json }}</pre>

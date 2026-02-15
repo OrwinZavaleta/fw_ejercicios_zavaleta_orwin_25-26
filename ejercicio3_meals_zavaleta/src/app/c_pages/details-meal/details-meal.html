@@ -35,7 +35,7 @@
     </div>
 
     @if (isAuthenticated()) {
-      <button type="submit" (click)="handleFavClick()" class="btn btn-outline-warning px-5 my-3" id="platoFavorito">
+      <button type="submit" (click)="handleFavClick(buttonFav)" #buttonFav class="btn btn-outline-warning px-5 my-3" id="platoFavorito">
         Favorita
       </button>
     }

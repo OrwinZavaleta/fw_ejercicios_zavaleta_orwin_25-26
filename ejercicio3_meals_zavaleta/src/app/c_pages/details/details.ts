@@ -9,8 +9,12 @@ import { AuthService } from '../../services/auth-service';
   styleUrl: './details.css',
 })
 export class Details {
-  readonly id = input.required<number>();
+  readonly id = input.required<number>(); // TODO: revisar como hacerlo sin esa directiva en el app.config.ts
   protected authService = inject(AuthService);
 
   public isAuthenticated = computed(this.authService.isAuthenticated);
+
+  handleFavClick() {
+    console.log('llego el clidk'); // TODO: revisar porque no funciona
+  }
 }
