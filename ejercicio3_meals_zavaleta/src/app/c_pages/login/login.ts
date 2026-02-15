@@ -9,12 +9,8 @@ import {
   ValidatorFn,
 } from '@angular/forms';
 import { StorageService } from '../../services/storage-service';
-import { User } from '../../model/user';
 import { Router } from '@angular/router';
 import { AuthService } from '../../services/auth-service';
-
-// TODO: retirarlo cuando haya terminado con las pruebas
-import { JsonPipe } from '@angular/common';
 
 @Component({
   selector: 'app-login',
