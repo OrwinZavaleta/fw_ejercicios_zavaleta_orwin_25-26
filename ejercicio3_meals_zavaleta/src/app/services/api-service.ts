@@ -15,6 +15,10 @@ export class ApiService {
     let i = 1;
     const ingredientes: MyMeal['ingredients'] = [];
     while (plato['strIngredient' + i]) {
+      if (ingredientes.some((e) => e.name === plato['strIngredient' + i])) {
+        i++;
+        continue;
+      }
       ingredientes.push({
         name: plato['strIngredient' + i],
         measure: plato['strMeasure' + i],
