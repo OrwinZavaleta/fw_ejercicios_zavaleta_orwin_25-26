@@ -4,7 +4,7 @@ import { NgOptimizedImage } from '@angular/common';
 import { MyMeal } from '../../model/my-meal';
 import { AuthService } from '../../services/auth-service';
 import { StorageService } from '../../services/storage-service';
-import { transformarMyMealAUserMeal } from '../../model/user-meal';
+import { Util } from '../../model/util';
 
 @Component({
   selector: 'app-details-meal',
@@ -69,7 +69,7 @@ export class DetailsMeal {
       this.storage.quitarPlatoFavorito(plato.idMeal);
       this.favButton.set(false);
     } else {
-      this.storage.guardarPlatoFavorito(transformarMyMealAUserMeal(plato.idMeal, idUser));
+      this.storage.guardarPlatoFavorito(Util.transformarMyMealAUserMeal(plato.idMeal, idUser));
       this.favButton.set(true);
     }
   }

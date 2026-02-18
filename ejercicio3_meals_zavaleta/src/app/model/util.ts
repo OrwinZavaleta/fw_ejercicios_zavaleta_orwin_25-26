@@ -1,3 +1,7 @@
+import { MyMeal } from './my-meal';
+import { User } from './user';
+import { UserMeal, Estado } from './user-meal';
+
 export class Util {
   static getISOWeek(date: Date): string {
     // Creamos una copia para no modificar la fecha original
@@ -27,12 +31,21 @@ export class Util {
   static pedirNAleatorios(cant: number, tamArray: number): number[] {
     let nRandoms: number[] = [];
     for (let i = 0; i < tamArray && i < cant; i++) {
-        let random: number = Math.floor(Math.random() * tamArray);
-        while (nRandoms.some((n) => n === random)) {
-            random = Math.floor(Math.random() * tamArray);
-        }
-        nRandoms.push(random);
+      let random: number = Math.floor(Math.random() * tamArray);
+      while (nRandoms.some((n) => n === random)) {
+        random = Math.floor(Math.random() * tamArray);
+      }
+      nRandoms.push(random);
     }
     return nRandoms;
-}
+  }
+
+  static transformarMyMealAUserMeal(platoId: MyMeal['idMeal'], userId: User['id']): UserMeal {
+    return {
+      userId: userId,
+      mealId: platoId,
+      saveDate: new Date(),
+      status: Estado.QUIERO_HACERLA,
+    };
+  }
 }

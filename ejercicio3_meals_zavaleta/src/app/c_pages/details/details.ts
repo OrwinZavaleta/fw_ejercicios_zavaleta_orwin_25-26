@@ -16,7 +16,7 @@ export class Details {
   public isFavorite = signal<boolean>(false);
 
   handleFavClick($event: boolean) {
-    console.log('llego el clidk'); // TODO: revisar porque no funciona
+    console.log('llego el clidk');
     console.log('Ha llegado un: ' + $event);
 
     this.isFavorite.set($event);

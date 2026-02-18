@@ -1,20 +1,14 @@
 @if (!platoFavorito()) {
   <div id="detallesForm">
-    <form class="row g-3 needs-validation" id="guardarOpinion" novalidate>
+    <form
+      class="row g-3 needs-validation"
+      id="guardarOpinion"
+      #opinionForm
+      (ngSubmit)="handleSubmit()"
+      novalidate
+    >
       <h3>Formulario</h3>
-      <div class="col-md-5">
-        <h4>Calificación</h4>
-        <div class="text-warning fs-3">
-          <!--TODO: obligatorio si se marca como que la he hecho-->
-          <i class="bi bi-star me-2"></i>
-          <i class="bi bi-star me-2"></i>
-          <i class="bi bi-star me-2"></i>
-          <i class="bi bi-star me-2"></i>
-          <i class="bi bi-star me-2"></i>
-        </div>
-        <input type="hidden" name="rating" id="rating" value="0" />
-        <div class="invalid-feedback">Ha marcado como Hecha, por favor deje una calificación.</div>
-      </div>
+
       <div class="col-md-5">
         <h4>¿Ha hecho ya la receta?</h4>
         <div class="form-check">
@@ -23,7 +17,9 @@
             type="radio"
             id="quieroHacerla"
             name="estado"
+            [(ngModel)]="estado"
             value="QUIERO_HACERLA"
+            (change)="handleChangeEstado()"
             checked
           />
           <label for="QUIERO_HACERLA" class="form-check-label">Quiero hacerla</label>
@@ -34,21 +30,45 @@
             type="radio"
             id="hecho"
             name="estado"
+            [(ngModel)]="estado"
             value="LA_HE_HECHO"
+            (change)="handleChangeEstado()"
           />
           <label for="LA_HE_HECHO" class="form-check-label">La he hecho</label>
         </div>
       </div>
+      @if (estado === 'LA_HE_HECHO') {
+        <div class="col-md-5">
+          <h4>Calificación</h4>
+          <div class="text-warning fs-3" [class.is-invalid]="!calificacion() && submited()">
+            @for (j of [1, 2, 3, 4, 5]; track j) {
+              <i
+                class="bi me-2"
+                (click)="handleCalificacion(j)"
+                [class.bi-star]="j > (calificacion() ?? 0)"
+                [class.bi-star-fill]="j <= (calificacion() ?? 0)"
+              ></i>
+            }
+          </div>
+          <div class="invalid-feedback">
+            Ha marcado como Hecha, por favor deje una calificación.
+          </div>
+        </div>
+      } @else {
+        <div class="col-md-7"></div>
+      }
       <div class="col-md-7">
         <label for="opinion" class="form-label fs-4">Su opinión</label>
         <textarea
           name="opinion"
           id="opinion"
+          [(ngModel)]="opinion"
           class="form-control"
           rows="4"
           placeHolder="Escribanos su opinión."
         ></textarea>
       </div>
+      <!-- TODO: Poner la fecha en la que esta guardada -->
       <div class="col-md-6">
         <button type="submit" class="btn btn-primary">Guardar Cambios</button>
       </div>
