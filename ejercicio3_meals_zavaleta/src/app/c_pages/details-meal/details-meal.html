@@ -11,10 +11,7 @@
 
       <h2>Ingredientes</h2>
       <ul class="list-group" id="ingredientes">
-        @for (
-          ingrediente of platoSeleccionado().ingredients;
-          track ingrediente
-        ) {
+        @for (ingrediente of platoSeleccionado().ingredients; track ingrediente) {
           <li class="list-group-item">{{ ingrediente.measure }} de {{ ingrediente.name }}</li>
         }
       </ul>
@@ -33,10 +30,21 @@
         />
       }
     </div>
-
+    <!-- TODO: notificar de los errores de sesion y otros -->
     @if (isAuthenticated()) {
-      <button type="submit" (click)="handleFavClick(buttonFav)" #buttonFav class="btn btn-outline-warning px-5 my-3" [class.active]="favButton()" id="platoFavorito">
-        Favorita
+      <button
+        type="submit"
+        (click)="handleFavClick(buttonFav)"
+        #buttonFav
+        class="btn btn-outline-warning px-5 my-3"
+        [class.active]="favButton()"
+        id="platoFavorito"
+      >
+        @if (favButton()) {
+          Des-Guardar
+        } @else {
+          Guardar
+        }
       </button>
     }
   </div>

@@ -21,7 +21,7 @@ export class StorageService {
       users.push(nuevoUsuario);
 
       localStorage.setItem(this.USER_KEY_ITEM, JSON.stringify(users));
-      this.setUsuarioActual(nuevoUsuario);
+      // this.setUsuarioActual(nuevoUsuario);
       return true;
     } catch (error) {
       return false;

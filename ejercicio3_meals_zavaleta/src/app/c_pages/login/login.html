@@ -98,120 +98,132 @@
 
         <!-- REGISTER -->
         <div class="tab-pane fade text-center" id="register" role="tabpanel">
-          <form
-            class="row g-3 needs-validation"
-            (ngSubmit)="handleSubmitRegister()"
-            [formGroup]="registerForm"
-            novalidate
-          >
-            <!-- Name -->
-            <div class="col-md-12">
-              <label for="nameRegister" class="form-label">Nombre Completo: </label>
-              <input
-                type="text"
-                class="form-control"
-                name="nameRegister"
-                formControlName="name"
-                [class.is-invalid]="esCampoValidoRegisterClass('name')"
-                id="nameRegister"
-              />
-              <div class="invalid-feedback">
-                @if (registerInputs('name')?.hasError('required')) {
-                  El campo es requerido
-                } @else if (registerInputs('name')?.hasError('minlength')) {
-                  Debe tener una longitud minima de
-                  {{ registerInputs('name')?.errors?.['minlength']?.requiredLength }} y tiene
-                  {{ registerInputs('name')?.errors?.['minlength']?.actualLength }}
-                } @else {
-                  El nombre no es valido
-                }
+          @if (registered()) {
+            <div class="card text-bg-success mb-3">
+              <div class="card-body">
+                <p class="card-text">
+                 Se ha registrado correctamente, por favor proceda a iniciar sesión.
+                </p>
               </div>
             </div>
-            <!-- Email -->
-            <div class="col-md-12">
-              <label for="emailRegister" class="form-label">Email: </label>
-              <input
-                type="text"
-                class="form-control"
-                name="emailRegister"
-                formControlName="email"
-                [class.is-invalid]="esCampoValidoRegisterClass('email')"
-                id="emailRegister"
-              />
-              <div class="invalid-feedback">
-                @if (registerInputs('email')?.hasError('required')) {
-                  El campo es requerido
-                } @else if (registerInputs('email')?.hasError('email')) {
-                  El valor introducido no es un email
-                } @else if (registerInputs('email')?.hasError('minlength')) {
-                  Debe tener una longitud minima de
-                  {{ registerInputs('email')?.errors?.['minlength']?.requiredLength }} y tiene
-                  {{ registerInputs('email')?.errors?.['minlength']?.actualLength }}
-                } @else {
-                  Email no valido
-                }
+          } @else {
+            <form
+              class="row g-3 needs-validation"
+              (ngSubmit)="handleSubmitRegister()"
+              [formGroup]="registerForm"
+              novalidate
+            >
+              <!-- Name -->
+              <div class="col-md-12">
+                <label for="nameRegister" class="form-label">Nombre Completo: </label>
+                <input
+                  type="text"
+                  class="form-control"
+                  name="nameRegister"
+                  formControlName="name"
+                  [class.is-invalid]="esCampoValidoRegisterClass('name')"
+                  id="nameRegister"
+                />
+                <div class="invalid-feedback">
+                  @if (registerInputs('name')?.hasError('required')) {
+                    El campo es requerido
+                  } @else if (registerInputs('name')?.hasError('minlength')) {
+                    Debe tener una longitud minima de
+                    {{ registerInputs('name')?.errors?.['minlength']?.requiredLength }} y tiene
+                    {{ registerInputs('name')?.errors?.['minlength']?.actualLength }}
+                  } @else {
+                    El nombre no es valido
+                  }
+                </div>
               </div>
-            </div>
-            <!-- Password -->
-            <div class="col-md-12">
-              <label for="passwordRegister" class="form-label">Password: </label>
-              <input
-                type="password"
-                class="form-control"
-                name="passwordRegister"
-                formControlName="password"
-                [class.is-invalid]="
-                  esCampoValidoRegisterClass('password')
-                "
-                id="passwordRegister"
-              />
-              <div class="invalid-feedback">
-                @if (registerInputs('password')?.hasError('required')) {
-                  El campo es requerido
-                } @else if (registerInputs('password')?.hasError('minlength')) {
-                  Debe tener una longitud minima de
-                  {{ registerInputs('password')?.errors?.['minlength']?.requiredLength }} y tiene
-                  {{ registerInputs('password')?.errors?.['minlength']?.actualLength }}
-                } @else {
-                  Contraseña no valido
-                }
+              <!-- Email -->
+              <div class="col-md-12">
+                <label for="emailRegister" class="form-label">Email: </label>
+                <input
+                  type="text"
+                  class="form-control"
+                  name="emailRegister"
+                  formControlName="email"
+                  [class.is-invalid]="esCampoValidoRegisterClass('email')"
+                  id="emailRegister"
+                />
+                <div class="invalid-feedback">
+                  @if (registerInputs('email')?.hasError('required')) {
+                    El campo es requerido
+                  } @else if (registerInputs('email')?.hasError('email')) {
+                    El valor introducido no es un email
+                  } @else if (registerInputs('email')?.hasError('minlength')) {
+                    Debe tener una longitud minima de
+                    {{ registerInputs('email')?.errors?.['minlength']?.requiredLength }} y tiene
+                    {{ registerInputs('email')?.errors?.['minlength']?.actualLength }}
+                  } @else {
+                    Email no valido
+                  }
+                </div>
               </div>
-            </div>
-            <!-- Confirm Password -->
-            <div class="col-md-12">
-              <label for="passwordConfirmRegister" class="form-label">Password: </label>
-              <input
-                type="password"
-                class="form-control"
-                name="passwordConfirmRegister"
-                formControlName="passwordConfirm"
-                [class.is-invalid]="
-                  esCampoValidoRegisterClass('passwordConfirm') ||
-                  registerForm.hasError('passwordMissmatch')
-                "
-                id="passwordConfirmRegister"
-              />
-              <div class="invalid-feedback">
-                @if (registerInputs('passwordConfirm')?.hasError('required')) {
-                  El campo es requerido
-                } @else if (registerInputs('passwordConfirm')?.hasError('minlength')) {
-                  Debe tener una longitud minima de
-                  {{ registerInputs('passwordConfirm')?.errors?.['minlength']?.requiredLength }} y
-                  tiene
-                  {{ registerInputs('passwordConfirm')?.errors?.['minlength']?.actualLength }}
-                } @else if (registerForm.hasError('passwordMissmatch')) {
-                  Las contraseñas no coinciden.
-                } @else {
-                  Contraseña no valido
-                }
+              <!-- Password -->
+              <div class="col-md-12">
+                <label for="passwordRegister" class="form-label">Password: </label>
+                <input
+                  type="password"
+                  class="form-control"
+                  name="passwordRegister"
+                  formControlName="password"
+                  [class.is-invalid]="esCampoValidoRegisterClass('password')"
+                  id="passwordRegister"
+                />
+                <div class="invalid-feedback">
+                  @if (registerInputs('password')?.hasError('required')) {
+                    El campo es requerido
+                  } @else if (registerInputs('password')?.hasError('minlength')) {
+                    Debe tener una longitud minima de
+                    {{ registerInputs('password')?.errors?.['minlength']?.requiredLength }} y tiene
+                    {{ registerInputs('password')?.errors?.['minlength']?.actualLength }}
+                  } @else {
+                    Contraseña no valido
+                  }
+                </div>
               </div>
-            </div>
-            <div class="col-12">
-              <button class="btn btn-primary w-100" [disabled]="registerForm.invalid" type="submit">
-                Submit form
-              </button>
-            </div>
-          </form>
+              <!-- Confirm Password -->
+              <div class="col-md-12">
+                <label for="passwordConfirmRegister" class="form-label">Password: </label>
+                <input
+                  type="password"
+                  class="form-control"
+                  name="passwordConfirmRegister"
+                  formControlName="passwordConfirm"
+                  [class.is-invalid]="
+                    esCampoValidoRegisterClass('passwordConfirm') ||
+                    registerForm.hasError('passwordMissmatch')
+                  "
+                  id="passwordConfirmRegister"
+                />
+                <div class="invalid-feedback">
+                  @if (registerInputs('passwordConfirm')?.hasError('required')) {
+                    El campo es requerido
+                  } @else if (registerInputs('passwordConfirm')?.hasError('minlength')) {
+                    Debe tener una longitud minima de
+                    {{ registerInputs('passwordConfirm')?.errors?.['minlength']?.requiredLength }} y
+                    tiene
+                    {{ registerInputs('passwordConfirm')?.errors?.['minlength']?.actualLength }}
+                  } @else if (registerForm.hasError('passwordMissmatch')) {
+                    Las contraseñas no coinciden.
+                  } @else {
+                    Contraseña no valido
+                  }
+                </div>
+              </div>
+              <div class="col-12">
+                <button
+                  class="btn btn-primary w-100"
+                  [disabled]="registerForm.invalid"
+                  type="submit"
+                >
+                  Submit form
+                </button>
+              </div>
+            </form>
+          }
         </div>
       </div>
     </div>

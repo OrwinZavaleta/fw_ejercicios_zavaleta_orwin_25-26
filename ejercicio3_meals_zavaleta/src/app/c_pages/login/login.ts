@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, signal } from '@angular/core';
 import {
   AbstractControl,
   ReactiveFormsModule,
@@ -21,6 +21,8 @@ import { AuthService } from '../../services/auth-service';
 export class Login {
   protected loginForm: FormGroup;
   protected registerForm: FormGroup;
+
+  public registered = signal<boolean>(false);
 
   private authService = inject(AuthService);
   private storage = inject(StorageService);
@@ -91,18 +93,20 @@ export class Login {
     const user = this.storage.buscarUsuarioPorCorreo(this.loginInputs('email')?.value);
     if (user) return;
 
-    const registered = this.authService.register({
+    const registeredS = this.authService.register({
       id: this.storage.obtenerProximoIdUser(),
       name: this.registerInputs('name')?.value,
       email: this.registerInputs('email')?.value,
       password: this.registerInputs('password')?.value,
     });
 
-    if (!registered) return;
+    if (!registeredS) return;
 
     console.log('Se ha registrado');
 
-    this.router.navigateByUrl('/');
+    // this.router.navigateByUrl('/');
+
+    this.registered.set(true);
   }
 
   // ======================================
