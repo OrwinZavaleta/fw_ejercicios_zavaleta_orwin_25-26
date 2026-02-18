@@ -1,4 +1,4 @@
-import { Component, input, inject, computed } from '@angular/core';
+import { Component, input, inject, computed, signal } from '@angular/core';
 import { DetailsMeal } from '../details-meal/details-meal';
 import { DetailsSave } from '../details-save/details-save';
 import { AuthService } from '../../services/auth-service';
@@ -13,8 +13,12 @@ export class Details {
   protected authService = inject(AuthService);
 
   public isAuthenticated = computed(this.authService.isAuthenticated);
+  public isFavorite = signal<boolean>(false);
 
-  handleFavClick() {
+  handleFavClick($event: boolean) {
     console.log('llego el clidk'); // TODO: revisar porque no funciona
+    console.log('Ha llegado un: ' + $event);
+
+    this.isFavorite.set($event);
   }
 }

@@ -3,6 +3,8 @@ import { ApiService } from '../../services/api-service';
 import { NgOptimizedImage } from '@angular/common';
 import { MyMeal } from '../../model/my-meal';
 import { AuthService } from '../../services/auth-service';
+import { StorageService } from '../../services/storage-service';
+import { transformarMyMealAUserMeal } from '../../model/user-meal';
 
 @Component({
   selector: 'app-details-meal',
@@ -12,8 +14,10 @@ import { AuthService } from '../../services/auth-service';
 })
 export class DetailsMeal {
   private readonly api = inject(ApiService);
+  private readonly storage = inject(StorageService);
   readonly id = input.required<number>();
   public favClicked = output<boolean>();
+  public favButton = signal<boolean>(false);
 
   protected authService = inject(AuthService);
 
@@ -24,10 +28,29 @@ export class DetailsMeal {
   //   loader: async ({ params: id }) => await this.api.pedirPlatoPorId(id),
   // });
 
-  public platoSeleccionado = signal<MyMeal | null>(null);
+  // Solo es un plato de prueba
+  public platoSeleccionado = signal<MyMeal>({
+    idMeal: -12,
+    strMeal: 'Plato de prueba',
+    strCategory: 'Desconocido',
+    strArea: 'Desconocido',
+    strMealThumb: 'Desconocido.com',
+    ingredients: [],
+  });
 
   ngOnInit() {
+    this.cargarSiFavoritos();
     this.cargarPlatoSeleccionado();
+  }
+
+  cargarSiFavoritos() {
+    if (!!this.storage.buscarPlatoFavoritoPorId(this.id())) {
+      this.favButton.set(true);
+      this.favClicked.emit(true);
+    } else {
+      this.favButton.set(false);
+      this.favClicked.emit(false);
+    }
   }
 
   async cargarPlatoSeleccionado() {
@@ -35,6 +58,19 @@ export class DetailsMeal {
   }
 
   handleFavClick(button: HTMLButtonElement) {
-    this.favClicked.emit(button.classList.contains('active'));
+    this.favClicked.emit(!button.classList.contains('active'));
+
+    const plato = this.platoSeleccionado();
+
+    const idUser = this.storage.getUsuarioActual()?.id;
+    if (!idUser) throw 'No sesion activa.';
+
+    if (this.storage.buscarPlatoFavoritoPorId(plato.idMeal)) {
+      this.storage.quitarPlatoFavorito(plato.idMeal);
+      this.favButton.set(false);
+    } else {
+      this.storage.guardarPlatoFavorito(transformarMyMealAUserMeal(plato.idMeal, idUser));
+      this.favButton.set(true);
+    }
   }
 }

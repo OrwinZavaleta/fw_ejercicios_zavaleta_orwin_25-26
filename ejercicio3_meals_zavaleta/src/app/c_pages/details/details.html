@@ -1,5 +1,5 @@
-<app-details-meal [id]="id()"></app-details-meal>
+<app-details-meal [id]="id()" (favClicked)="handleFavClick($event)"></app-details-meal>
 
-@if (isAuthenticated()) {
-  <app-details-save [id]="id()" (favClicked)="handleFavClick()"></app-details-save>
+@if (isAuthenticated() && isFavorite()) {
+  <app-details-save [id]="id()"></app-details-save>
 }

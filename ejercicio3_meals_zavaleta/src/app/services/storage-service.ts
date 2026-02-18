@@ -102,36 +102,49 @@ export class StorageService {
     return ultimoId + 1;
   }
 
-  public getPlatosFavoritos(id: User['id']): UserMeal[] {
-    const favoritosUserSinProcesar = localStorage.getItem(this.USER_MEAL_KEY_ITEM + id) ?? '[]';
+  public getPlatosFavoritos(): UserMeal[] {
+    const idUser = this.getUsuarioActual()?.id;
+    if (!idUser) throw 'No hay sesión activa.';
+
+    const favoritosUserSinProcesar = localStorage.getItem(this.USER_MEAL_KEY_ITEM + idUser) ?? '[]';
     const favoritosUserProcesados: UserMeal[] = JSON.parse(favoritosUserSinProcesar);
 
     return favoritosUserProcesados;
   }
 
-  public guardarPlatoFavorito(platoGuardar: UserMeal, id: User['id']): void {
-    const favoritosUserProcesados: UserMeal[] = this.getPlatosFavoritos(id);
+  public guardarPlatoFavorito(platoGuardar: UserMeal): void {
+    const idUser = this.getUsuarioActual()?.id;
+    if (!idUser) throw 'No hay sesión activa.';
+
+    const favoritosUserProcesados: UserMeal[] = this.getPlatosFavoritos();
 
     favoritosUserProcesados.push(platoGuardar);
 
-    localStorage.setItem(this.USER_MEAL_KEY_ITEM + id, JSON.stringify(favoritosUserProcesados));
+    localStorage.setItem(this.USER_MEAL_KEY_ITEM + idUser, JSON.stringify(favoritosUserProcesados));
   }
-  public buscarPlatoFavoritoPorId(platoId: MyMeal['idMeal'], id: User['id']): UserMeal | undefined {
-    const favoritosUserProcesados: UserMeal[] = this.getPlatosFavoritos(id);
+  public buscarPlatoFavoritoPorId(platoId: MyMeal['idMeal']): UserMeal | undefined {
+    const favoritosUserProcesados: UserMeal[] = this.getPlatosFavoritos();
 
     return favoritosUserProcesados.find((plato) => plato.mealId === platoId);
   }
 
-  public quitarPlatoFavorito(platoId: MyMeal['idMeal'], id: User['id']): void {
-    const favoritosUserProcesados: UserMeal[] = this.getPlatosFavoritos(id);
+  public quitarPlatoFavorito(platoId: MyMeal['idMeal']): void {
+    const idUser = this.getUsuarioActual()?.id;
+    if (!idUser) throw 'No hay sesión activa.';
+
+    const favoritosUserProcesados: UserMeal[] = this.getPlatosFavoritos();
 
     const indexPlato = favoritosUserProcesados.findIndex((plato) => plato.mealId === platoId);
     favoritosUserProcesados.splice(indexPlato, 1);
 
-    localStorage.setItem(this.USER_MEAL_KEY_ITEM + id, JSON.stringify(favoritosUserProcesados));
+    localStorage.setItem(this.USER_MEAL_KEY_ITEM + idUser, JSON.stringify(favoritosUserProcesados));
   }
-  public actualizarPlatoFavorito(platoActualizar: UserMeal, id: User['id']) {
-    const favoritosUserProcesados: UserMeal[] = this.getPlatosFavoritos(id);
+
+  public actualizarPlatoFavorito(platoActualizar: UserMeal) {
+    const idUser = this.getUsuarioActual()?.id;
+    if (!idUser) throw 'No hay sesión activa.';
+
+    const favoritosUserProcesados: UserMeal[] = this.getPlatosFavoritos();
 
     const indexPlato = favoritosUserProcesados.findIndex(
       (plato) => plato.mealId === platoActualizar.mealId,
@@ -141,6 +154,6 @@ export class StorageService {
     favoritosUserProcesados[indexPlato].notes = platoActualizar.notes;
     favoritosUserProcesados[indexPlato].rating = platoActualizar.rating;
 
-    localStorage.setItem(this.USER_MEAL_KEY_ITEM + id, JSON.stringify(favoritosUserProcesados));
+    localStorage.setItem(this.USER_MEAL_KEY_ITEM + idUser, JSON.stringify(favoritosUserProcesados));
   }
 }

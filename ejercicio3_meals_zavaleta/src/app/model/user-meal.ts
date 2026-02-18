@@ -13,3 +13,15 @@ export interface UserMeal {
   notes?: string;
   rating?: number;
 }
+
+export function transformarMyMealAUserMeal(
+  platoId: MyMeal['idMeal'],
+  userId: User['id'],
+): UserMeal {
+  return {
+    userId: userId,
+    mealId: platoId,
+    saveDate: new Date(),
+    status: Estado.QUIERO_HACERLA,
+  };
+}
