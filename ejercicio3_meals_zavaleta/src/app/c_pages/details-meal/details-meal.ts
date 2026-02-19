@@ -19,6 +19,8 @@ export class DetailsMeal {
   public favClicked = output<boolean>();
   public favButton = signal<boolean>(false);
 
+  public estadoApp = signal<{ tipo: string; mensaje: string } | null>(null);
+
   protected authService = inject(AuthService);
 
   public isAuthenticated = computed(this.authService.isAuthenticated);
@@ -31,10 +33,10 @@ export class DetailsMeal {
   // Solo es un plato de prueba
   public platoSeleccionado = signal<MyMeal>({
     idMeal: -12,
-    strMeal: 'Plato de prueba',
-    strCategory: 'Desconocido',
-    strArea: 'Desconocido',
-    strMealThumb: 'Desconocido.com',
+    strMeal: '',
+    strCategory: '',
+    strArea: '',
+    strMealThumb: '',
     ingredients: [],
   });
 
@@ -63,7 +65,10 @@ export class DetailsMeal {
     const plato = this.platoSeleccionado();
 
     const idUser = this.authService.currentUser()?.id;
-    if (!idUser) throw 'No sesion activa.';
+    if (!idUser) {
+      this.mensajeEstadoApp('error', 'No sesion activa.');
+      return;
+    }
 
     if (this.storage.buscarPlatoFavoritoPorId(plato.idMeal)) {
       this.storage.quitarPlatoFavorito(plato.idMeal);
@@ -72,5 +77,13 @@ export class DetailsMeal {
       this.storage.guardarPlatoFavorito(Util.transformarMyMealAUserMeal(plato.idMeal, idUser));
       this.favButton.set(true);
     }
+  }
+
+  mensajeEstadoApp(tipo: string, mensaje: string) {
+    this.estadoApp.set({ tipo: tipo, mensaje: mensaje });
+
+    setTimeout(() => {
+      this.estadoApp.set(null);
+    }, 5000);
   }
 }

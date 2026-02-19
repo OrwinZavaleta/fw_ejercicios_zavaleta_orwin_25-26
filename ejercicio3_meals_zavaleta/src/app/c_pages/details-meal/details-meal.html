@@ -1,6 +1,19 @@
 <!-- <p>details-meal works !</p>
 <p>{{ id() }}</p> -->
 <div class="row pb-3 justify-content-md-between">
+  @if (estadoApp()) {
+    <div class="col-md-12">
+      <div
+        class="alert alert-dismissible fade show"
+        role="alert"
+        [class.alert-success]="estadoApp()?.tipo == 'success'"
+        [class.alert-danger]="estadoApp()?.tipo == 'error'"
+      >
+        {{ estadoApp()?.mensaje }}
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+      </div>
+    </div>
+  }
   <div class="col-md-8">
     <div id="descripcionPlato" class="mb-3">
       <h1 id="nombrePlato">{{ platoSeleccionado().strMeal }}</h1>
@@ -19,11 +32,11 @@
   </div>
   <div class="col-md-4 text-end">
     <div class="card-container">
-      @if (platoSeleccionado().strMealThumb; as imagen) {
+      @if (platoSeleccionado().strMealThumb != '') {
         <img
           id="imagenPlato"
-          [ngSrc]="imagen"
-          alt="Cargando Imagen..."
+          [ngSrc]="platoSeleccionado().strMealThumb || 'placeholder.png'"
+          [alt]="'Imagen de ' + platoSeleccionado().strMeal"
           class="rounded-4"
           fill
           priority

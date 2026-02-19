@@ -13,12 +13,15 @@ import { AuthService } from '../../services/auth-service';
   templateUrl: './details-save.html',
   styleUrl: './details-save.css',
 })
-export class DetailsSave { // TODO: indicarle al usuario que se ha guardado
+export class DetailsSave {
+  // TODO: indicarle al usuario que se ha guardado
   private storage = inject(StorageService);
-  private authService = inject(AuthService)
+  private authService = inject(AuthService);
   id = input.required<number>();
   public saveDate = signal<Date | null>(null);
   public submited = signal<boolean>(false);
+
+  public estadoGuardado = signal<{ tipo: string; mensaje: string } | null>(null);
 
   public platoFavorito = signal(false);
 
@@ -50,6 +53,10 @@ export class DetailsSave { // TODO: indicarle al usuario que se ha guardado
   handleSubmit() {
     this.submited.set(true);
     if (this.estado === Estado.LA_HE_HECHO && !this.calificacion()) {
+      this.mensajeEstadoGuardado(
+        'error',
+        'El formulario no es valido, por favor recargue la página.',
+      );
       return;
     }
     console.log(
@@ -62,7 +69,11 @@ export class DetailsSave { // TODO: indicarle al usuario que se ha guardado
     );
 
     const idUser = this.authService.currentUser()?.id;
-    if (!idUser) throw 'No sesion activa.';
+
+    if (!idUser) {
+      this.mensajeEstadoGuardado('error', 'No ha iniciado sesión.');
+      return;
+    }
 
     const plato = Util.transformarMyMealAUserMeal(this.id(), idUser);
     plato.status = this.estado;
@@ -70,5 +81,15 @@ export class DetailsSave { // TODO: indicarle al usuario que se ha guardado
     plato.notes = this.opinion.trim() === '' ? undefined : this.opinion.trim();
 
     this.storage.actualizarPlatoFavorito(plato);
+
+    this.mensajeEstadoGuardado('success', 'Se ha guardado correctamente.');
+  }
+
+  mensajeEstadoGuardado(tipo: string, mensaje: string) {
+    this.estadoGuardado.set({ tipo: tipo, mensaje: mensaje });
+
+    setTimeout(() => {
+      this.estadoGuardado.set(null);
+    }, 5000);
   }
 }

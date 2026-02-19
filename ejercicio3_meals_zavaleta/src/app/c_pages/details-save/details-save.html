@@ -71,6 +71,25 @@
       <div class="col-md-12">
         <p><strong>Fecha de guardado:</strong> {{ saveDate() | date: 'mediumDate' }}</p>
       </div>
+      @if (estadoGuardado()) {
+        <div class="col-md-7">
+          <div
+            class="alert alert-dismissible fade show"
+            role="alert"
+            [class.alert-success]="estadoGuardado()?.tipo == 'success'"
+            [class.alert-danger]="estadoGuardado()?.tipo == 'error'"
+          >
+            {{ estadoGuardado()?.mensaje }}
+            <button
+              type="button"
+              class="btn-close"
+              data-bs-dismiss="alert"
+              aria-label="Close"
+            ></button>
+          </div>
+        </div>
+        <div class="col-md-5"></div>
+      }
       <div class="col-md-6">
         <button type="submit" class="btn btn-primary">Guardar Cambios</button>
       </div>
