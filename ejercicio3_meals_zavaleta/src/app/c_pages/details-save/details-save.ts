@@ -10,7 +10,7 @@ import { Util } from '../../model/util';
   templateUrl: './details-save.html',
   styleUrl: './details-save.css',
 })
-export class DetailsSave { // TODO: cargar la informacion al momento de entrar
+export class DetailsSave {
   private storage = inject(StorageService);
   id = input.required<number>();
   public submited = signal<boolean>(false);
@@ -20,6 +20,15 @@ export class DetailsSave { // TODO: cargar la informacion al momento de entrar
   public calificacion = signal<number | null>(null);
   public estado: Estado = Estado.QUIERO_HACERLA;
   public opinion: string = '';
+
+  ngOnInit() {
+    const favorito = this.storage.buscarPlatoFavoritoPorId(this.id());
+    if (!favorito) return;
+
+    if (favorito.notes) this.opinion = favorito.notes;
+    if (favorito.status) this.estado = favorito.status;
+    if (favorito.rating) this.calificacion.set(favorito.rating);
+  }
 
   handleCalificacion(j: number) {
     console.log('click en el: ' + j);

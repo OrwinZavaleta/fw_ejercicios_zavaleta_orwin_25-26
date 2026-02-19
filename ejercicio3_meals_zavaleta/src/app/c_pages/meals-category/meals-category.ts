@@ -13,7 +13,6 @@ import { AuthService } from '../../services/auth-service';
   styleUrl: './meals-category.css',
 })
 export class MealsCategory {
-  //TODO: agregar el guardar a favoritos aqui
   protected api = inject(ApiService);
   protected storage = inject(StorageService);
   protected authService = inject(AuthService);
