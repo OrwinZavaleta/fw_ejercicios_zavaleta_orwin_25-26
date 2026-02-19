@@ -62,7 +62,7 @@ export class DetailsMeal {
 
     const plato = this.platoSeleccionado();
 
-    const idUser = this.storage.getUsuarioActual()?.id;
+    const idUser = this.authService.currentUser()?.id;
     if (!idUser) throw 'No sesion activa.';
 
     if (this.storage.buscarPlatoFavoritoPorId(plato.idMeal)) {

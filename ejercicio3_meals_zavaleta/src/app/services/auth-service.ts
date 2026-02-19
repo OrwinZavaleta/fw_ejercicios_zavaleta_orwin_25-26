@@ -16,9 +16,9 @@ recuperar la sesión almacenada
 export class AuthService {
   private storage = inject(StorageService);
 
-  private currentUser = signal<User | null>(this.storage.getUsuarioActual()); // TODO: hacerlo publico y que todos lo llamen a el
+  public currentUser = signal<User | null>(this.storage.getUsuarioActual());
 
-  public isAuthenticated = computed(() => !!this.currentUser()); //TODO: verificar si esto realmente funciona asi
+  public isAuthenticated = computed(() => !!this.currentUser());
 
   public register(user: User) {
     if (
@@ -49,7 +49,7 @@ export class AuthService {
   }
 
   public logout() {
-    if (!this.storage.getUsuarioActual()) {
+    if (!this.currentUser()) {
       // throw 'No existe usuario actual';
       return false;
     }

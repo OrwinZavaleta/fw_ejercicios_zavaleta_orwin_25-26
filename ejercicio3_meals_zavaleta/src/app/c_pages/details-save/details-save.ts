@@ -5,6 +5,7 @@ import { Estado } from '../../model/user-meal';
 import { StorageService } from '../../services/storage-service';
 import { Util } from '../../model/util';
 import { DatePipe } from '@angular/common';
+import { AuthService } from '../../services/auth-service';
 
 @Component({
   selector: 'app-details-save',
@@ -14,6 +15,7 @@ import { DatePipe } from '@angular/common';
 })
 export class DetailsSave { // TODO: indicarle al usuario que se ha guardado
   private storage = inject(StorageService);
+  private authService = inject(AuthService)
   id = input.required<number>();
   public saveDate = signal<Date | null>(null);
   public submited = signal<boolean>(false);
@@ -59,7 +61,7 @@ export class DetailsSave { // TODO: indicarle al usuario que se ha guardado
         this.opinion,
     );
 
-    const idUser = this.storage.getUsuarioActual()?.id;
+    const idUser = this.authService.currentUser()?.id;
     if (!idUser) throw 'No sesion activa.';
 
     const plato = Util.transformarMyMealAUserMeal(this.id(), idUser);

@@ -53,7 +53,7 @@ export class MealsCategory {
   }
 
   cargarCategoriaFavorita() {
-    const usuario = this.storage.getUsuarioActual();
+    const usuario = this.authService.currentUser();
     if (usuario && usuario?.favoriteCategory) {
       this.categoriaSeleccionada.set(usuario.favoriteCategory);
       this.categoriaSeleccionadaFavorita.set(true);
@@ -73,7 +73,7 @@ export class MealsCategory {
   onFavoriteClick(categoriaSelect: string) {
     console.log('se ha hecho click fav ' + categoriaSelect);
 
-    const usuarioActual = this.storage.getUsuarioActual();
+    const usuarioActual = this.authService.currentUser();
 
     if (this.isAuthorized() && categoriaSelect !== '') {
       console.log(usuarioActual);
@@ -94,9 +94,9 @@ export class MealsCategory {
     console.log('se ha seleccionado  ' + categoriaSelect);
     this.categoriaSeleccionada.set(categoriaSelect);
 
-    console.log(this.storage.getUsuarioActual()?.favoriteCategory);
+    console.log(this.authService.currentUser()?.favoriteCategory);
 
-    if (this.storage.getUsuarioActual()?.favoriteCategory === categoriaSelect) {
+    if (this.authService.currentUser()?.favoriteCategory === categoriaSelect) {
       this.categoriaSeleccionadaFavorita.set(true);
     } else {
       this.categoriaSeleccionadaFavorita.set(false);

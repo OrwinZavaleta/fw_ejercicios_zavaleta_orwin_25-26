@@ -20,7 +20,7 @@ export class CardMeal {
   public isAuthorized = computed(this.authService.isAuthenticated);
 
   handleGuardar() {
-    const user = this.storage.getUsuarioActual();
+    const user = this.authService.currentUser();
     if (!user) return;
 
     if (this.isPlatoFavorito()) {
