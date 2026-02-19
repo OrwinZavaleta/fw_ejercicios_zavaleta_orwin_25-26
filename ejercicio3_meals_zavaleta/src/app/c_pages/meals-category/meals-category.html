@@ -46,8 +46,8 @@
   <p>Error al cargar los platos.</p>
 } @else {
   <div class="row row-cols-1 row-cols-md-2 row-cols-lg-4 g-4 pb-3" id="aleatorioshome">
-    @for (plato of platosAleatorios.value(); track plato.idMeal) {
-      <app-card-meal [plato]="plato"></app-card-meal>
+    @for (plato of platosAleatorios.value(); track plato.idMeal; let i = $index) {
+      <app-card-meal [plato]="plato" [optimizar]="i < 4"></app-card-meal>
     }
   </div>
 }

@@ -4,7 +4,6 @@ import { FormsModule } from '@angular/forms';
 import { Estado } from '../../model/user-meal';
 import { StorageService } from '../../services/storage-service';
 import { Util } from '../../model/util';
-import { NodeWithI18n } from '@angular/compiler';
 import { DatePipe } from '@angular/common';
 
 @Component({

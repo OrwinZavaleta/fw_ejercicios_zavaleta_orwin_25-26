@@ -14,6 +14,7 @@ import { AuthService } from '../../services/auth-service';
 export class CardMeal {
   private storage = inject(StorageService);
   plato = input.required<MyMeal>();
+  optimizar = input<boolean>(true);
   protected authService = inject(AuthService);
 
   public isAuthorized = computed(this.authService.isAuthenticated);

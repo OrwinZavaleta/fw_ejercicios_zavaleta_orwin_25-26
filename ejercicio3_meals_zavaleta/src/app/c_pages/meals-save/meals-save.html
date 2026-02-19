@@ -8,7 +8,7 @@
     } @else {
       @for (plato of platosGuardados.value(); track plato.idMeal) {
         <app-card-meal [plato]="plato"></app-card-meal>
-      }@empty {
+      } @empty {
         <p>No hay ninguna receta guardada</p>
       }
     }
