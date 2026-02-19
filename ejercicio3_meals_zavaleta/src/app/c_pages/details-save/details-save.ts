@@ -13,7 +13,7 @@ import { DatePipe } from '@angular/common';
   templateUrl: './details-save.html',
   styleUrl: './details-save.css',
 })
-export class DetailsSave {
+export class DetailsSave { // TODO: indicarle al usuario que se ha guardado
   private storage = inject(StorageService);
   id = input.required<number>();
   public saveDate = signal<Date | null>(null);
