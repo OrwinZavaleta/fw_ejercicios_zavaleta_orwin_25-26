@@ -23,6 +23,7 @@ export class Login {
   protected registerForm: FormGroup;
 
   public registered = signal<boolean>(false);
+  public error = signal<string | null>(null);
 
   private authService = inject(AuthService);
   private storage = inject(StorageService);
@@ -63,21 +64,35 @@ export class Login {
   // Manejadores del envio de formulario
   // ======================================
   handleSubmitLogin() {
-    // TODO: notificar los errores en los que aparece un return;
-    if (!this.loginForm.valid) return;
+    if (!this.loginForm.valid) {
+      this.mostrarAlerta('Error, formulario no valido.');
+      return;
+    }
 
     console.log(this.authService.isAuthenticated());
-    if (this.authService.isAuthenticated()) return;
+    if (this.authService.isAuthenticated()) {
+      this.mostrarAlerta('El usuario ya esta autenticado.');
+      return;
+    }
 
     const user = this.storage.buscarUsuarioPorCorreo(this.loginInputs('email')?.value);
 
-    if (!user) return;
+    if (!user) {
+      this.mostrarAlerta('No existe un usuario con ese email.');
+      return;
+    }
 
-    if (user.password !== this.loginInputs('password')?.value) return;
+    if (user.password !== this.loginInputs('password')?.value) {
+      this.mostrarAlerta('Correo o contraseñas no validas.');
+      return;
+    }
 
     const logged = this.authService.login(user);
 
-    if (!logged) return;
+    if (!logged) {
+      this.mostrarAlerta('Error al logear al usuario.');
+      return;
+    }
 
     console.log('Se ha logeado');
 
@@ -85,13 +100,22 @@ export class Login {
   }
 
   handleSubmitRegister() {
-    if (!this.registerForm.valid) return;
+    if (!this.registerForm.valid) {
+      this.mostrarAlerta('Error, formulario no valido.');
+      return;
+    }
 
     console.log(this.authService.isAuthenticated());
-    if (this.authService.isAuthenticated()) return;
+    if (this.authService.isAuthenticated()) {
+      this.mostrarAlerta('El usuario ya esta autenticado.');
+      return;
+    }
 
     const user = this.storage.buscarUsuarioPorCorreo(this.loginInputs('email')?.value);
-    if (user) return;
+    if (user) {
+      this.mostrarAlerta('Ya existe un usuario con ese correo.');
+      return;
+    }
 
     const registeredS = this.authService.register({
       id: this.storage.obtenerProximoIdUser(),
@@ -100,7 +124,10 @@ export class Login {
       password: this.registerInputs('password')?.value,
     });
 
-    if (!registeredS) return;
+    if (!registeredS) {
+      this.mostrarAlerta('Hubo un error al registrar al usuario.');
+      return;
+    }
 
     console.log('Se ha registrado');
 
@@ -154,4 +181,15 @@ export class Login {
     }
     return { passwordMissmatch: true };
   };
+
+  // ======================================
+  // Validadores personalizados
+  // ======================================
+  private mostrarAlerta(mensaje: string) {
+    this.error.set('Ya existe un usuario con ese correo.');
+
+    setTimeout(() => {
+      this.error.set(null);
+    }, 7000);
+  }
 }
