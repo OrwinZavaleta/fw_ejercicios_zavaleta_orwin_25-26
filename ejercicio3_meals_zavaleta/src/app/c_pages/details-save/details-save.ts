@@ -14,7 +14,6 @@ import { AuthService } from '../../services/auth-service';
   styleUrl: './details-save.css',
 })
 export class DetailsSave {
-  // TODO: indicarle al usuario que se ha guardado
   private storage = inject(StorageService);
   private authService = inject(AuthService);
   id = input.required<number>();

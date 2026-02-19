@@ -21,13 +21,12 @@ export class MealsSave {
       const platosProcesados: MyMeal[] = [];
 
       for (let i = 0; i < guardados.length && i < 4; i++) {
-        platosProcesados.push(await this.api.pedirPlatoPorId(guardados[i].mealId));
+        const plato = await this.api.pedirPlatoPorId(guardados[i].mealId);
+        if (!plato) continue;
+        platosProcesados.push(plato);
         console.log(guardados);
         console.log(guardados[i]);
-
       }
-      // console.log(guardados);
-
       return platosProcesados;
     },
   });

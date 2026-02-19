@@ -35,14 +35,9 @@ export class MealsCategory {
           return await this.api.pedirNPlatosRamdon();
         }
 
-        const platosCompletos: MyMeal[] = [];
-
         const listaPlatos = await this.api.pedirNporCategoria(categoria);
 
-        for (let i = 0; i < listaPlatos.length; i++) {
-          platosCompletos.push(await this.api.pedirPlatoPorId(listaPlatos[i].idMeal));
-        }
-        return platosCompletos;
+        return listaPlatos;
       },
     });
   }
@@ -63,7 +58,11 @@ export class MealsCategory {
   private async cargarCategorias() {
     this.categoriasLoading.set(true);
     try {
-      this.categorias.set(await this.api.pedirTodasCategorias());
+      const categorias = await this.api.pedirTodasCategorias()
+
+      if (!categorias) return;
+
+      this.categorias.set(categorias);
     } catch (error) {
       console.error('Fallo al cargar las categorias.');
     } finally {

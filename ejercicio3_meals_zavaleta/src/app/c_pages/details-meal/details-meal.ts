@@ -56,7 +56,12 @@ export class DetailsMeal {
   }
 
   async cargarPlatoSeleccionado() {
-    this.platoSeleccionado.set(await this.api.pedirPlatoPorId(this.id()));
+    const plato = await this.api.pedirPlatoPorId(this.id());
+    if (!plato) {
+      this.mensajeEstadoApp('error', 'Fallo al cargar los datos de la api.');
+      return;
+    }
+    this.platoSeleccionado.set(plato);
   }
 
   handleFavClick(button: HTMLButtonElement) {
