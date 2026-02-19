@@ -1,18 +1,22 @@
 import { Component, inject, input, signal } from '@angular/core';
+
 import { FormsModule } from '@angular/forms';
 import { Estado } from '../../model/user-meal';
 import { StorageService } from '../../services/storage-service';
 import { Util } from '../../model/util';
+import { NodeWithI18n } from '@angular/compiler';
+import { DatePipe } from '@angular/common';
 
 @Component({
   selector: 'app-details-save',
-  imports: [FormsModule],
+  imports: [FormsModule, DatePipe],
   templateUrl: './details-save.html',
   styleUrl: './details-save.css',
 })
 export class DetailsSave {
   private storage = inject(StorageService);
   id = input.required<number>();
+  public saveDate = signal<Date | null>(null);
   public submited = signal<boolean>(false);
 
   public platoFavorito = signal(false);
@@ -28,6 +32,7 @@ export class DetailsSave {
     if (favorito.notes) this.opinion = favorito.notes;
     if (favorito.status) this.estado = favorito.status;
     if (favorito.rating) this.calificacion.set(favorito.rating);
+    this.saveDate.set(favorito.saveDate);
   }
 
   handleCalificacion(j: number) {

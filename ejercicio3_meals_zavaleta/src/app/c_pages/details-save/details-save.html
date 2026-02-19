@@ -69,6 +69,10 @@
         ></textarea>
       </div>
       <!-- TODO: Poner la fecha en la que esta guardada -->
+
+      <div class="col-md-6">
+        <p><strong>Fecha de guardado:</strong> {{ saveDate() | date: 'mediumDate' }}</p>
+      </div>
       <div class="col-md-6">
         <button type="submit" class="btn btn-primary">Guardar Cambios</button>
       </div>
