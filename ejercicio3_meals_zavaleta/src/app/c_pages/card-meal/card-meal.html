@@ -1,6 +1,6 @@
-<a [href]="`details/${plato().idMeal}`" class="text-decoration-none text-reset col">
+<div class="text-reset col">
   <div class="card h-100">
-    <div class="card-container">
+    <a [href]="`details/${plato().idMeal}`" class="text-decoration-none card-container">
       <!-- Contenedor para manejar el aspecto con NgOptimizedImage -->
       <img
         [ngSrc]="`${plato().strMealThumb}/small`"
@@ -9,14 +9,32 @@
         fill
         priority
       />
-    </div>
+    </a>
     <div class="card-body">
-      <h5 class="card-title">{{ plato().strMeal }}</h5>
+      <h5 class="card-title">
+        <a class="text-decoration-none text-black" [href]="`details/${plato().idMeal}`">{{
+          plato().strMeal
+        }}</a>
+      </h5>
       <p class="card-text">{{ plato().strCategory }}</p>
       <p class="card-text">{{ plato().strArea }}</p>
-      <p class="card-text">
+      <p class="card-text d-flex justify-content-between align-items-center">
         <span class="badge text-bg-secondary">{{ plato().ingredients.length }} ingredientes</span>
+        @if (isAuthorized()) {
+          <button
+            type="button"
+            class="btn btn-outline-warning"
+            (click)="handleGuardar()"
+            [class.active]="isPlatoFavorito()"
+          >
+            @if (isPlatoFavorito()) {
+              Des-guardar
+            } @else {
+              Guardar
+            }
+          </button>
+        }
       </p>
     </div>
   </div>
-</a>
+</div>

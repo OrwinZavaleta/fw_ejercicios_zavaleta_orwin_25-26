@@ -5,6 +5,7 @@ import { Details } from './c_pages/details/details';
 import { PlanWeek } from './c_pages/plan-week/plan-week';
 import { Login } from './c_pages/login/login';
 import { NotFound } from './c_pages/not-found/not-found';
+import { authGuard } from './guards/auth-guard';
 
 export const routes: Routes = [
   //Con layout
@@ -13,8 +14,8 @@ export const routes: Routes = [
     component: Layout,
     children: [
       { path: '', component: Home },
-      { path: 'details/:id', component: Details },
-      { path: 'plan-week', component: PlanWeek }, // TODO: esta es la que necesita guard
+      { path: 'details/:id', component: Details, canActivate: [authGuard] },
+      { path: 'plan-week', component: PlanWeek, canActivate: [authGuard] },
     ],
   },
   //Sin layot

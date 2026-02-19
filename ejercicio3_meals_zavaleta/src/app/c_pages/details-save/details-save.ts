@@ -10,7 +10,7 @@ import { Util } from '../../model/util';
   templateUrl: './details-save.html',
   styleUrl: './details-save.css',
 })
-export class DetailsSave {
+export class DetailsSave { // TODO: cargar la informacion al momento de entrar
   private storage = inject(StorageService);
   id = input.required<number>();
   public submited = signal<boolean>(false);
