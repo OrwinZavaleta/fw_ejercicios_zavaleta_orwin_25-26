@@ -12,7 +12,8 @@ import { AuthService } from '../../services/auth-service';
   templateUrl: './meals-category.html',
   styleUrl: './meals-category.css',
 })
-export class MealsCategory { //TODO: agregar el guardar a favoritos aqui
+export class MealsCategory {
+  //TODO: agregar el guardar a favoritos aqui
   protected api = inject(ApiService);
   protected storage = inject(StorageService);
   protected authService = inject(AuthService);
@@ -56,7 +57,7 @@ export class MealsCategory { //TODO: agregar el guardar a favoritos aqui
     const usuario = this.storage.getUsuarioActual();
     if (usuario && usuario?.favoriteCategory) {
       this.categoriaSeleccionada.set(usuario.favoriteCategory);
-
+      this.categoriaSeleccionadaFavorita.set(true);
     }
   }
 

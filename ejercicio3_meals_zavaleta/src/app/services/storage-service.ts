@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Injectable, signal } from '@angular/core';
 import { User } from '../model/user';
 import { AuthSession } from '../model/auth-session';
 import { MyMeal } from '../model/my-meal';
@@ -13,6 +13,8 @@ export class StorageService {
   private USER_MEAL_KEY_ITEM: string = 'userMeals_';
   private USER_WEEKLY_KEY_ITEM: string = 'weeklyPlans_';
   private USER_CACHE_KEY_ITEM: string = 'userMiniMeal_';
+
+  public cambios = signal<boolean>(false)
 
   public guardarAgregarUsuario(nuevoUsuario: User): boolean {
     try {
@@ -102,7 +104,7 @@ export class StorageService {
     return ultimoId + 1;
   }
 
-  public getPlatosFavoritos(): UserMeal[] {
+  public  getPlatosFavoritos(): UserMeal[] {
     const idUser = this.getUsuarioActual()?.id;
     if (!idUser) throw 'No hay sesión activa.';
 
@@ -111,7 +113,6 @@ export class StorageService {
 
     return favoritosUserProcesados;
   }
-
   public guardarPlatoFavorito(platoGuardar: UserMeal): void {
     const idUser = this.getUsuarioActual()?.id;
     if (!idUser) throw 'No hay sesión activa.';
@@ -121,6 +122,7 @@ export class StorageService {
     favoritosUserProcesados.push(platoGuardar);
 
     localStorage.setItem(this.USER_MEAL_KEY_ITEM + idUser, JSON.stringify(favoritosUserProcesados));
+    this.cambios.set(!this.cambios())
   }
   public buscarPlatoFavoritoPorId(platoId: MyMeal['idMeal']): UserMeal | undefined {
     const favoritosUserProcesados: UserMeal[] = this.getPlatosFavoritos();
@@ -138,6 +140,7 @@ export class StorageService {
     favoritosUserProcesados.splice(indexPlato, 1);
 
     localStorage.setItem(this.USER_MEAL_KEY_ITEM + idUser, JSON.stringify(favoritosUserProcesados));
+    this.cambios.set(!this.cambios())
   }
 
   public actualizarPlatoFavorito(platoActualizar: UserMeal) {
