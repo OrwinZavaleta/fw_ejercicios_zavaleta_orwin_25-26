@@ -1,1 +1,32 @@
-<p>plan-week-create works!</p>
+<form class="row g-3 needs-validation" novalidate>
+  <div class="col-md-4">
+    <label for="fecha" class="form-label">Ingrese un dia de la semana</label>
+    <input type="date" name="fecha" id="fecha" class="form-control" />
+  </div>
+  <div class="col-md-4 align-self-end">
+    <input type="submit" class="btn btn-primary" value="Enviar" />
+  </div>
+</form>
+<div class="table-responsive">
+  <table class="table">
+    <thead>
+      <tr class="text-center">
+        @for (dia of diasSemana; track dia) {
+          <th scope="col">{{ dia }}</th>
+        }
+      </tr>
+    </thead>
+    <tbody>
+      @for (hora of horasSemana; track $index; let i = $index) {
+        <tr>
+          @for (dia of diasSemana; track $index; let j = $index) {
+            <td class="text-center">
+                <!-- <button type="button" class="btn btn-outline-secondary">Agregar</button> -->
+                <button type="button" class="btn btn-outline-secondary">Agregar</button>
+            </td>
+          }
+        </tr>
+      }
+    </tbody>
+  </table>
+</div>

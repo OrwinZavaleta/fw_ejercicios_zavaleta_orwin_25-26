@@ -186,7 +186,7 @@ export class Login {
   // Validadores personalizados
   // ======================================
   private mostrarAlerta(mensaje: string) {
-    this.error.set('Ya existe un usuario con ese correo.');
+    this.error.set(mensaje);
 
     setTimeout(() => {
       this.error.set(null);
