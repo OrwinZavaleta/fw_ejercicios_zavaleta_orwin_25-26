@@ -161,7 +161,7 @@ export class StorageService {
     localStorage.setItem(this.USER_MEAL_KEY_ITEM + idUser, JSON.stringify(favoritosUserProcesados));
   }
 
-  public guardarPlanSemanar(planSemanal: WeeklyPlan) {
+  public guardarPlanSemanal(planSemanal: WeeklyPlan) {
     const idUser = this.getUsuarioActual()?.id;
     if (!idUser) throw 'No hay sesión activa.';
 
@@ -170,6 +170,8 @@ export class StorageService {
     );
 
     planesSemanales.push(planSemanal);
+
+    localStorage.setItem(this.USER_WEEKLY_KEY_ITEM + idUser, JSON.stringify(planesSemanales));
   }
 
   public existePlanSemanalPorId(id: WeeklyPlan['id']) {

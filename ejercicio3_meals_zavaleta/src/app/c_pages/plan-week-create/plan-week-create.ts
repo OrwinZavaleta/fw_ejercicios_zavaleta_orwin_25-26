@@ -19,7 +19,7 @@ export class PlanWeekCreate {
   private fb = inject(FormBuilder);
   private authService = inject(AuthService);
   private api = inject(ApiService);
-  private storage = inject(StorageService)
+  private storage = inject(StorageService);
 
   public formEnviadoFecha = signal<boolean>(false);
   public formEnviadoIngrediente = signal<boolean>(false);
@@ -77,7 +77,7 @@ export class PlanWeekCreate {
       id: Util.getISOWeek(this.fechaSeleccionada() ?? new Date()),
       userId: user,
       days: this.diasSemana.map((dia) => {
-        return { day: dia, [this.horasSemana[0]]: 0, [this.horasSemana[1]]: 0 };
+        return { day: dia };
       }),
     };
   }
@@ -125,7 +125,11 @@ export class PlanWeekCreate {
 
   handleGuardarPlanSemanal() {
     // TODO: al menos una receta en al menos unos de los dias
-    this.planSemanalGuardado
+
+    if (!this.planSemanalGuardado) {
+      return;
+    }
+    this.storage.guardarPlanSemanal(this.planSemanalGuardado);
   }
 
   handleCancelarPlanSemanal() {}
