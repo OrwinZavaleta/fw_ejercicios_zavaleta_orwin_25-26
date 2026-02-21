@@ -155,7 +155,20 @@
       </table>
 
       <button class="btn btn-primary my-3" (click)="handleGuardarPlanSemanal()">Guardar</button>
-      <button class="btn btn-danger my-3 ms-3" (click)="handleCancelarPlanSemanal()">Cancelar</button>
+      <button class="btn btn-danger my-3 ms-3" (click)="handleCancelarPlanSemanal()">
+        Cancelar
+      </button>
     </div>
   }
+}
+@if (estadoGuardado()) {
+  <div
+    class="alert alert-dismissible fade show"
+    role="alert"
+    [class.alert-success]="estadoGuardado()?.tipo == 'success'"
+    [class.alert-danger]="estadoGuardado()?.tipo == 'error'"
+  >
+    {{ estadoGuardado()?.mensaje }}
+    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+  </div>
 }

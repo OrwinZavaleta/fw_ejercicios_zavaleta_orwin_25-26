@@ -21,6 +21,8 @@ export class PlanWeekCreate {
   private api = inject(ApiService);
   private storage = inject(StorageService);
 
+  public estadoGuardado = signal<{ tipo: string; mensaje: string } | null>(null);
+
   public formEnviadoFecha = signal<boolean>(false);
   public formEnviadoIngrediente = signal<boolean>(false);
   public fechaSeleccionada = signal<Date | null>(null);
@@ -29,10 +31,13 @@ export class PlanWeekCreate {
   public platosEncontrados = signal<UserMiniMeal[] | null>(null);
 
   public planSemanalGuardado: WeeklyPlan | null = null;
-  public planSemanalBuffer = signal<(UserMiniMeal | null)[][]>([
+  private templatePlanSemanalBuffer: (UserMiniMeal | null)[][] = [
     [null, null, null, null, null, null, null],
     [null, null, null, null, null, null, null],
-  ]);
+  ];
+  public planSemanalBuffer = signal<(UserMiniMeal | null)[][]>(
+    structuredClone(this.templatePlanSemanalBuffer),
+  );
 
   public fechaForm = this.fb.group({
     fecha: ['', [Validators.required]],
@@ -58,16 +63,19 @@ export class PlanWeekCreate {
     this.formEnviadoFecha.set(true);
     if (this.fechaForm.invalid) {
       console.log('Form invalido');
+      this.mensajeEstadoGuardado('error', 'La seleccion de fecha es invalida.');
       return;
     }
 
     const user = this.authService.currentUser()?.id;
     if (!user) {
+      this.mensajeEstadoGuardado('error', 'No hay un usuario registrado.');
       return;
     }
 
     const fechaFormSeleccionada = this.fechaForm.get('fecha')?.value;
     if (!fechaFormSeleccionada) {
+      this.mensajeEstadoGuardado('error', 'No se ha seleccionado una fecha.');
       return;
     }
 
@@ -86,11 +94,13 @@ export class PlanWeekCreate {
     this.formEnviadoIngrediente.set(true);
     if (this.ingredienteForm.invalid) {
       console.log('Form de ingredientes invalido');
+      this.mensajeEstadoGuardado('error', 'La busqueda de ingredientes es invalida.');
       return;
     }
 
     const ingrediente = this.ingredienteForm.get('buscarIngrediente')?.value;
     if (!ingrediente) {
+      this.mensajeEstadoGuardado('error', 'No se ha seleccionado un ingrediente.');
       return;
     }
 
@@ -111,6 +121,7 @@ export class PlanWeekCreate {
       ];
 
     if (!diaSeleccionado) {
+      this.mensajeEstadoGuardado('error', 'No se ha seleccionado un dia.');
       return;
     }
     diaSeleccionado[this.horasSemana[i]] = this.platoSeleccionado()?.id;
@@ -130,7 +141,32 @@ export class PlanWeekCreate {
       return;
     }
     this.storage.guardarPlanSemanal(this.planSemanalGuardado);
+    this.mensajeEstadoGuardado('success', 'Se guardo correctamente el plan semanal');
+    this.handleCancelarPlanSemanal();
   }
 
-  handleCancelarPlanSemanal() {}
+  handleCancelarPlanSemanal() {
+    console.log(this.planSemanalBuffer());
+    console.log('=============');
+
+    this.planSemanalBuffer.set(structuredClone(this.templatePlanSemanalBuffer));
+    console.log(this.planSemanalBuffer());
+    this.formEnviadoFecha.set(false);
+    this.formEnviadoIngrediente.set(false);
+    this.fechaForm.reset();
+    this.ingredienteForm.reset();
+
+    this.fechaSeleccionada.set(null);
+    this.platoSeleccionado.set(null);
+    this.platosEncontrados.set(null);
+    this.planSemanalGuardado = null;
+  }
+
+  mensajeEstadoGuardado(tipo: string, mensaje: string) {
+    this.estadoGuardado.set({ tipo: tipo, mensaje: mensaje });
+
+    setTimeout(() => {
+      this.estadoGuardado.set(null);
+    }, 5000);
+  }
 }
