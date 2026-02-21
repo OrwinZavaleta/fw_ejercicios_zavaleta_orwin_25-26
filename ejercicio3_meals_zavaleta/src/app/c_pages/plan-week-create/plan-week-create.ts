@@ -58,8 +58,6 @@ export class PlanWeekCreate {
   public horasSemana: ('lunchMealId' | 'dinnerMealId')[] = ['lunchMealId', 'dinnerMealId'];
 
   handleFechaSeleccionada() {
-    // TODO: comprobar que no haya otra fecha con esa semana
-    // TODO: comprobar que la fecha sea superior a la actual
     this.formEnviadoFecha.set(true);
     if (this.fechaForm.invalid) {
       console.log('Form invalido');
@@ -81,8 +79,25 @@ export class PlanWeekCreate {
 
     this.fechaSeleccionada.set(new Date(fechaFormSeleccionada));
 
+    if ((this.fechaSeleccionada() as Date) < new Date()) {
+      this.mensajeEstadoGuardado('error', 'Debe seleccionar una fecha posterior a hoy.');
+      this.handleCancelarPlanSemanal();
+      return;
+    }
+
+    const isoWeek = Util.getISOWeek(this.fechaSeleccionada() as Date);
+
+    if (this.storage.existePlanSemanalPorId(isoWeek)) {
+      this.mensajeEstadoGuardado(
+        'error',
+        'Ya existe un plan semanal con esa fecha, por favor selecciona otra semana.',
+      );
+      this.handleCancelarPlanSemanal();
+      return;
+    }
+
     this.planSemanalGuardado = {
-      id: Util.getISOWeek(this.fechaSeleccionada() ?? new Date()),
+      id: isoWeek,
       userId: user,
       days: this.diasSemana.map((dia) => {
         return { day: dia };
@@ -138,8 +153,18 @@ export class PlanWeekCreate {
     // TODO: al menos una receta en al menos unos de los dias
 
     if (!this.planSemanalGuardado) {
+      this.mensajeEstadoGuardado('error', 'Hubo un error, por favor recargue pa pagina.');
       return;
     }
+
+    if (this.storage.existePlanSemanalPorId(this.planSemanalGuardado.id)) {
+      this.mensajeEstadoGuardado(
+        'error',
+        'Ya existe un plan semanal con esa fecha, por favor selecciona otra semana.',
+      );
+      return;
+    }
+
     this.storage.guardarPlanSemanal(this.planSemanalGuardado);
     this.mensajeEstadoGuardado('success', 'Se guardo correctamente el plan semanal');
     this.handleCancelarPlanSemanal();
