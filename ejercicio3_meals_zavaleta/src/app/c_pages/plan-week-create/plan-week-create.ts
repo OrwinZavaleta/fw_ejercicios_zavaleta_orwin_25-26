@@ -79,7 +79,9 @@ export class PlanWeekCreate {
 
     this.fechaSeleccionada.set(new Date(fechaFormSeleccionada));
 
-    if ((this.fechaSeleccionada() as Date) < new Date()) {
+    // Se hace de esta forma para considerar el dia actual como valido
+    // Obtengo la fecha en milisegundos, le aumento un dia y lo devuelvo a Date
+    if (new Date((this.fechaSeleccionada() as Date).getTime() + 1000 * 60 * 60 * 24) < new Date()) {
       this.mensajeEstadoGuardado('error', 'Debe seleccionar una fecha posterior a hoy.');
       this.handleCancelarPlanSemanal();
       return;

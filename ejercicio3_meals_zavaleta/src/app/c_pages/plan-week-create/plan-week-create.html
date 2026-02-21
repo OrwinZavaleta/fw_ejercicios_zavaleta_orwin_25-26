@@ -1,61 +1,64 @@
-<form
-  class="row g-3 needs-validation mb-3"
-  [formGroup]="fechaForm"
-  (ngSubmit)="handleFechaSeleccionada()"
-  novalidate
->
-  <div class="col-md-4">
-    <label for="fecha" class="form-label">Ingrese un dia de la semana</label>
-    <input
-      type="date"
-      name="fecha"
-      id="fecha"
-      class="form-control"
-      formControlName="fecha"
-      [class.is-invalid]="
-        (fechaForm.get('fecha')?.invalid &&
-          (fechaForm.get('fecha')?.touched || fechaForm.get('fecha')?.dirty)) ||
-        (fechaForm.invalid && formEnviadoFecha())
-      "
-      required
-    />
-    <div class="invalid-feedback">Por favor seleccione una fecha</div>
-  </div>
-  <div class="col-md-4 align-self-end">
-    <input type="submit" class="btn btn-primary" value="Enviar" />
-  </div>
-</form>
-@if (fechaSeleccionada()) {
+<div class="row">
   <form
-    class="row g-3 needs-validation mb-3"
-    [formGroup]="ingredienteForm"
-    (ngSubmit)="handleBusquedaIngrediente()"
+    class="row g-3 needs-validation mb-3 mt-0 col-md-6"
+    [formGroup]="fechaForm"
+    (ngSubmit)="handleFechaSeleccionada()"
     novalidate
   >
-    <div class="col-md-4">
-      <label for="ingredienteBuscar" class="form-label">Ingrediente</label>
+    <div class="col-md-8 mt-0">
+      <label for="fecha" class="form-label fs-4">Ingrese un dia de la semana</label>
       <input
-        type="text"
-        name="ingredienteBuscar"
-        id="ingredienteBuscar"
+        type="date"
+        name="fecha"
+        id="fecha"
         class="form-control"
-        formControlName="buscarIngrediente"
-        placeholder="Escriba el nombre del ingrediente"
+        formControlName="fecha"
         [class.is-invalid]="
-          (ingredienteForm.get('buscarIngrediente')?.invalid &&
-            (ingredienteForm.get('buscarIngrediente')?.touched ||
-              ingredienteForm.get('buscarIngrediente')?.dirty)) ||
-          (ingredienteForm.invalid && formEnviadoIngrediente())
+          (fechaForm.get('fecha')?.invalid &&
+            (fechaForm.get('fecha')?.touched || fechaForm.get('fecha')?.dirty)) ||
+          (fechaForm.invalid && formEnviadoFecha())
         "
         required
       />
-      <div class="invalid-feedback">Por favor, escriba un ingrediente valido</div>
+      <div class="invalid-feedback">Por favor seleccione una fecha</div>
     </div>
-    <div class="col-md-4 align-self-end">
-      <input type="submit" class="btn btn-primary" value="Buscar" />
+    <div class="col-md-4 mt-0 align-self-end">
+      <input type="submit" class="btn btn-primary" value="Enviar" />
     </div>
   </form>
-
+  @if (fechaSeleccionada()) {
+    <form
+      class="row g-3 needs-validation mb-3 mt-0 col-md-6"
+      [formGroup]="ingredienteForm"
+      (ngSubmit)="handleBusquedaIngrediente()"
+      novalidate
+    >
+      <div class="col-md-8 mt-0">
+        <label for="ingredienteBuscar" class="form-label fs-4">Ingrediente</label>
+        <input
+          type="text"
+          name="ingredienteBuscar"
+          id="ingredienteBuscar"
+          class="form-control"
+          formControlName="buscarIngrediente"
+          placeholder="Escriba el nombre del ingrediente"
+          [class.is-invalid]="
+            (ingredienteForm.get('buscarIngrediente')?.invalid &&
+              (ingredienteForm.get('buscarIngrediente')?.touched ||
+                ingredienteForm.get('buscarIngrediente')?.dirty)) ||
+            (ingredienteForm.invalid && formEnviadoIngrediente())
+          "
+          required
+        />
+        <div class="invalid-feedback">Por favor, escriba un ingrediente valido</div>
+      </div>
+      <div class="col-md-4 mt-0 align-self-end">
+        <input type="submit" class="btn btn-primary" value="Buscar" />
+      </div>
+    </form>
+  }
+</div>
+@if (fechaSeleccionada()) {
   @if (platosEncontrados()) {
     <div class="row row-cols-3 row-cols-md-6 g-3 overflow-y-auto my-3" style="max-height: 21rem">
       @for (plato of platosEncontrados(); track plato.id) {
@@ -90,11 +93,11 @@
           </div>
         </div>
       } @empty {
-        <div class="text-center my-3">No hay platos con esos ingredientes.</div>
+        <div class="text-center my-3 fs-5">No hay platos con esos ingredientes.</div>
       }
     </div>
   } @else {
-    <div class="text-center my-3">Por favor busque</div>
+    <div class="text-center my-3 fs-5">Por favor busque</div>
   }
 
   @if (platoSeleccionado()) {
