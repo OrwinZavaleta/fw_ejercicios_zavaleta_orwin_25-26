@@ -3,6 +3,7 @@ import { User } from '../model/user';
 import { AuthSession } from '../model/auth-session';
 import { MyMeal } from '../model/my-meal';
 import { UserMeal } from '../model/user-meal';
+import { WeeklyPlan } from '../model/weekly-plan';
 
 @Injectable({
   providedIn: 'root',
@@ -14,7 +15,7 @@ export class StorageService {
   private USER_WEEKLY_KEY_ITEM: string = 'weeklyPlans_';
   private USER_CACHE_KEY_ITEM: string = 'userMiniMeal_';
 
-  public cambios = signal<boolean>(false)
+  public cambios = signal<boolean>(false);
 
   public guardarAgregarUsuario(nuevoUsuario: User): boolean {
     try {
@@ -104,7 +105,7 @@ export class StorageService {
     return ultimoId + 1;
   }
 
-  public  getPlatosFavoritos(): UserMeal[] {
+  public getPlatosFavoritos(): UserMeal[] {
     const idUser = this.getUsuarioActual()?.id;
     if (!idUser) throw 'No hay sesión activa.';
 
@@ -122,7 +123,7 @@ export class StorageService {
     favoritosUserProcesados.push(platoGuardar);
 
     localStorage.setItem(this.USER_MEAL_KEY_ITEM + idUser, JSON.stringify(favoritosUserProcesados));
-    this.cambios.set(!this.cambios())
+    this.cambios.set(!this.cambios());
   }
   public buscarPlatoFavoritoPorId(platoId: MyMeal['idMeal']): UserMeal | undefined {
     const favoritosUserProcesados: UserMeal[] = this.getPlatosFavoritos();
@@ -140,7 +141,7 @@ export class StorageService {
     favoritosUserProcesados.splice(indexPlato, 1);
 
     localStorage.setItem(this.USER_MEAL_KEY_ITEM + idUser, JSON.stringify(favoritosUserProcesados));
-    this.cambios.set(!this.cambios())
+    this.cambios.set(!this.cambios());
   }
 
   public actualizarPlatoFavorito(platoActualizar: UserMeal) {
@@ -158,5 +159,27 @@ export class StorageService {
     favoritosUserProcesados[indexPlato].rating = platoActualizar.rating;
 
     localStorage.setItem(this.USER_MEAL_KEY_ITEM + idUser, JSON.stringify(favoritosUserProcesados));
+  }
+
+  public guardarPlanSemanar(planSemanal: WeeklyPlan) {
+    const idUser = this.getUsuarioActual()?.id;
+    if (!idUser) throw 'No hay sesión activa.';
+
+    const planesSemanales: WeeklyPlan[] = JSON.parse(
+      localStorage.getItem(this.USER_WEEKLY_KEY_ITEM + idUser) ?? '[]',
+    );
+
+    planesSemanales.push(planSemanal);
+  }
+
+  public existePlanSemanalPorId(id: WeeklyPlan['id']) {
+    const idUser = this.getUsuarioActual()?.id;
+    if (!idUser) throw 'No hay sesión activa.';
+
+    const planesSemanales: WeeklyPlan[] = JSON.parse(
+      localStorage.getItem(this.USER_WEEKLY_KEY_ITEM + idUser) ?? '[]',
+    );
+
+    return planesSemanales.some((e) => e.id === id);
   }
 }

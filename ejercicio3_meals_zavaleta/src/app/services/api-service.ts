@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { MyMeal } from '../model/my-meal';
 import { Category } from '../model/category';
 import { Util } from '../model/util';
+import { UserMiniMeal } from '../model/user-mini-meal';
 @Injectable({
   providedIn: 'root',
 })
@@ -121,6 +122,27 @@ export class ApiService {
       const data = await response.json();
 
       return this.convertirApiToInterface(data.meals[0]);
+    } catch (error) {
+      return null;
+    }
+  }
+
+  public async pedirPlatosPorIngrediente(ingrediente: string): Promise<UserMiniMeal[] | null> {
+    try {
+      const response = await fetch(this.API_URL + `/filter.php?i=${ingrediente}`);
+      const data = await response.json();
+
+      const platosEncontrados: UserMiniMeal[] = [];
+
+      data.meals.forEach((plato: any) => {
+        platosEncontrados.push({
+          id: plato.idMeal,
+          name: plato.strMeal,
+          image_small: plato.strMealThumb + '/medium',
+        });
+      });
+
+      return platosEncontrados;
     } catch (error) {
       return null;
     }

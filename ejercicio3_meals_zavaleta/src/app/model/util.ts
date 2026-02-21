@@ -1,31 +1,33 @@
 import { MyMeal } from './my-meal';
 import { User } from './user';
 import { UserMeal, Estado } from './user-meal';
+import { WeeklyPlan } from './weekly-plan';
 
 export class Util {
-  static getISOWeek(date: Date): string {
-    // Creamos una copia para no modificar la fecha original
-    const tempDate = new Date(date.valueOf());
+  static getISOWeek(date: Date): WeeklyPlan['id'] {
+    // 1. Clonar la fecha en UTC (sin modificar la original)
+    // Usamos UTC para evitar problemas de zona horaria y DST
+    const d = new Date(Date.UTC(date.getFullYear(), date.getMonth(), date.getDate()));
 
-    // El estándar ISO 8601 indica que las semanas empiezan en lunes.
-    // Ajustamos al jueves más cercano: fecha actual + 3 - (día de la semana actual)
-    // En JS, getDay() devuelve 0 para domingo, lo ajustamos para que lunes sea 0.
-    const dayNum = (date.getDay() + 6) % 7;
-    tempDate.setDate(tempDate.getDate() - dayNum + 3);
+    // 2. Alinear al jueves de la semana actual
+    // getUTCDay(): 0 (Dom) - 6 (Sáb)
+    // ISO 8601: 1 (Lun) - 7 (Dom), por eso usamos (day || 7)
+    // Jueves = día 4 en ISO
+    d.setUTCDate(d.getUTCDate() + 4 - (d.getUTCDay() || 7));
 
-    // La primera semana del año siempre contiene el 4 de enero
-    const firstThursday = tempDate.valueOf();
-    tempDate.setMonth(0, 4);
+    // 3. Obtener el año ISO (el año del jueves calculado)
+    const isoYear = d.getUTCFullYear();
 
-    // Ajustamos al jueves de esa primera semana
-    const firstThursdayOfYear = (tempDate.getDay() + 6) % 7;
-    tempDate.setDate(tempDate.getDate() - firstThursdayOfYear + 3);
+    // 4. Obtener el 1 de enero del año ISO
+    const yearStart = new Date(Date.UTC(isoYear, 0, 1));
 
-    // Diferencia en semanas entre el jueves actual y el primer jueves del año
-    const weekNumber = 1 + Math.round((firstThursday - tempDate.valueOf()) / 604800000);
+    // 5. Calcular el número de semana
+    // Diferencia en milisegundos convertida a días, +1 porque el día 1 cuenta
+    // Math.ceil para redondear hacia arriba a la semana completa
+    const weekNo = Math.ceil(((d.getTime() - yearStart.getTime()) / 86400000 + 1) / 7);
 
-    // Retornamos con relleno de cero si es necesario (ej. "01")
-    return weekNumber.toString().padStart(2, '0');
+    // 6. Formato de salida "YYYY-WXX"
+    return `${isoYear}-W${weekNo.toString().padStart(2, '0')}` as WeeklyPlan['id'];
   }
 
   static pedirNAleatorios(cant: number, tamArray: number): number[] {
