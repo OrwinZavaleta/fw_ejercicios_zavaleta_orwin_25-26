@@ -1,10 +1,44 @@
-<form class="row g-3 needs-validation" novalidate>
+<form
+  class="row g-3 needs-validation mb-3"
+  [formGroup]="fechaForm"
+  (ngSubmit)="handleFechaSeleccionada(inputDate.value)"
+  novalidate
+>
   <div class="col-md-4">
     <label for="fecha" class="form-label">Ingrese un dia de la semana</label>
-    <input type="date" name="fecha" id="fecha" class="form-control" />
+    <input
+      type="date"
+      name="fecha"
+      id="fecha"
+      class="form-control"
+      formControlName="fecha"
+      [class.is-invalid]="
+        fechaForm.get('fecha')?.invalid &&
+        (fechaForm.get('fecha')?.touched || fechaForm.get('fecha')?.dirty)
+      "
+      #inputDate
+    />
+    <div class="invalid-feedback">Por favor seleccione una fecha</div>
   </div>
   <div class="col-md-4 align-self-end">
     <input type="submit" class="btn btn-primary" value="Enviar" />
+  </div>
+</form>
+<!-- @if (fechaSeleccionada()) { -->
+<form class="row g-3 needs-validation mb-3" novalidate>
+  <div class="col-md-4">
+    <label for="ingredienteBuscar" class="form-label">Ingrediente</label>
+    <input
+      type="text"
+      name="ingredienteBuscar"
+      id="ingredienteBuscar"
+      class="form-control"
+      placeholder="Escriba el nombre del ingrediente"
+      required
+    />
+  </div>
+  <div class="col-md-4 align-self-end">
+    <input type="submit" class="btn btn-primary" value="Buscar" />
   </div>
 </form>
 <div class="table-responsive">
@@ -21,8 +55,8 @@
         <tr>
           @for (dia of diasSemana; track $index; let j = $index) {
             <td class="text-center">
-                <!-- <button type="button" class="btn btn-outline-secondary">Agregar</button> -->
-                <button type="button" class="btn btn-outline-secondary">Agregar</button>
+              <!-- <button type="button" class="btn btn-outline-secondary">Agregar</button> -->
+              <button type="button" class="btn btn-outline-secondary">Agregar</button>
             </td>
           }
         </tr>
@@ -30,3 +64,4 @@
     </tbody>
   </table>
 </div>
+<!-- } -->
