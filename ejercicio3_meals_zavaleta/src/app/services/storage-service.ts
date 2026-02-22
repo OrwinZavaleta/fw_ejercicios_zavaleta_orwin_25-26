@@ -17,6 +17,7 @@ export class StorageService {
   private USER_CACHE_KEY_ITEM: string = 'userMiniMeal_';
 
   public cambios = signal<boolean>(false);
+  public cambiosPlanSemanal = signal<boolean>(false);
 
   public guardarAgregarUsuario(nuevoUsuario: User): boolean {
     try {
@@ -173,6 +174,7 @@ export class StorageService {
     planesSemanales.push(planSemanal);
 
     localStorage.setItem(this.USER_WEEKLY_KEY_ITEM + idUser, JSON.stringify(planesSemanales));
+    this.cambiosPlanSemanal.set(!this.cambiosPlanSemanal())
   }
 
   public getPlanesSemanales() {
@@ -211,6 +213,7 @@ export class StorageService {
       1,
     );
     localStorage.setItem(this.USER_WEEKLY_KEY_ITEM + idUser, JSON.stringify(planesSemanales));
+    this.cambiosPlanSemanal.set(!this.cambiosPlanSemanal());
   }
 
   public existePlanSemanalPorId(id: WeeklyPlan['id']) {

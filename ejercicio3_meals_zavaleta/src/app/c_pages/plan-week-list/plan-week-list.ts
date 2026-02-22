@@ -1,4 +1,4 @@
-import { Component, inject, signal } from '@angular/core';
+import { Component, computed, effect, inject, signal } from '@angular/core';
 import { StorageService } from '../../services/storage-service';
 import { WeeklyPlan } from '../../model/weekly-plan';
 import { DayOfWeek } from '../../model/weekly-plan-day';
@@ -17,7 +17,7 @@ export class PlanWeekList {
   private storage = inject(StorageService);
   private api = inject(ApiService);
 
-  public planesSemanales: WeeklyPlan[];
+  public planesSemanales: WeeklyPlan[] = [];
   public planActual: WeeklyPlan | null = null;
 
   public loading = signal<boolean>(false);
@@ -43,11 +43,16 @@ export class PlanWeekList {
 
   constructor() {
     this.loading.set(true);
-    this.planesSemanales = this.storage
-      .getPlanesSemanales()
-      .sort((a, b) => b.id.localeCompare(a.id));
-    this.cargarPlanesSemanales();
-    this.cargarPlanActual();
+    effect(() => {
+      this.storage.cambiosPlanSemanal();
+      console.log('Actualizando y haciendo cambios................');
+
+      this.planesSemanales = this.storage
+        .getPlanesSemanales()
+        .sort((a, b) => b.id.localeCompare(a.id));
+      this.cargarPlanActual();
+      this.cargarPlanesSemanales();
+    });
   }
 
   async cargarPlanActual() {
@@ -69,6 +74,11 @@ export class PlanWeekList {
         }
       }
       this.planSemanalActual.set(temp2);
+      console.log('--------------------------------------==================');
+
+      console.log(temp2);
+    } else {
+      this.planSemanalActual.set([]);
     }
   }
 
@@ -124,8 +134,5 @@ export class PlanWeekList {
     console.log(aux1);
 
     this.todosPlanesSemanales.set(aux1);
-    this.planesSemanales = this.storage
-      .getPlanesSemanales()
-      .sort((a, b) => b.id.localeCompare(a.id));
   }
 }
