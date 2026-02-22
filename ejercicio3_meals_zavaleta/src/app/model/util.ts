@@ -1,6 +1,7 @@
 import { MyMeal } from './my-meal';
 import { User } from './user';
 import { UserMeal, Estado } from './user-meal';
+import { UserMiniMeal } from './user-mini-meal';
 import { WeeklyPlan } from './weekly-plan';
 
 export class Util {
@@ -48,6 +49,14 @@ export class Util {
       mealId: platoId,
       saveDate: new Date(),
       status: Estado.QUIERO_HACERLA,
+    };
+  }
+
+  static transformarMyMealAMiniMeal(plato: MyMeal): UserMiniMeal {
+    return {
+      id: plato.idMeal,
+      name: plato.strMeal,
+      image_small: plato.strMealThumb + "/small"
     };
   }
 }

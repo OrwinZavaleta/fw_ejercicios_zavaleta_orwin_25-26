@@ -6,6 +6,7 @@ import { UserMiniMeal } from '../../model/user-mini-meal';
 import { MyMeal } from '../../model/my-meal';
 import { ApiService } from '../../services/api-service';
 import { NgOptimizedImage } from '@angular/common';
+import { Util } from '../../model/util';
 
 @Component({
   selector: 'app-plan-week-list',
@@ -33,7 +34,7 @@ export class PlanWeekList {
   ];
   public horasSemana: ('lunchMealId' | 'dinnerMealId')[] = ['lunchMealId', 'dinnerMealId'];
 
-  private templatePlanSemanalBuffer: (MyMeal | null)[][] = [
+  private templatePlanSemanalBuffer: (UserMiniMeal | null)[][] = [
     [null, null, null, null, null, null, null],
     [null, null, null, null, null, null, null],
   ];
@@ -67,10 +68,10 @@ export class PlanWeekList {
         const dia = this.planActual.days[indexDia];
 
         if (dia.lunchMealId) {
-          temp2[0][indexDia] = await this.api.pedirPlatoPorId(dia.lunchMealId);
+          temp2[0][indexDia] = await this.pedirACacheOApi(dia.lunchMealId);
         }
         if (dia.dinnerMealId) {
-          temp2[1][indexDia] = await this.api.pedirPlatoPorId(dia.dinnerMealId);
+          temp2[1][indexDia] = await this.pedirACacheOApi(dia.dinnerMealId);
         }
       }
       this.planSemanalActual.set(temp2);
@@ -95,10 +96,10 @@ export class PlanWeekList {
         const dia = e.days[indexDia];
 
         if (dia.lunchMealId) {
-          temp2[0][indexDia] = await this.api.pedirPlatoPorId(dia.lunchMealId);
+          temp2[0][indexDia] = await this.pedirACacheOApi(dia.lunchMealId);
         }
         if (dia.dinnerMealId) {
-          temp2[1][indexDia] = await this.api.pedirPlatoPorId(dia.dinnerMealId);
+          temp2[1][indexDia] = await this.pedirACacheOApi(dia.dinnerMealId);
         }
         // const plato = await this.api.pedirPlatoPorId(dia.lunchMealId as number);
         // this.todosPlanesSemanales.update((original) => {
@@ -134,5 +135,15 @@ export class PlanWeekList {
     console.log(aux1);
 
     this.todosPlanesSemanales.set(aux1);
+  }
+
+  async pedirACacheOApi(id: UserMiniMeal['id']): Promise<UserMiniMeal> {
+    const cache = this.storage.getCachePorId(id);
+    if (cache) {
+      return cache;
+    } else {
+      const plato = await this.api.pedirPlatoPorId(id);
+      return Util.transformarMyMealAMiniMeal(plato as MyMeal);
+    }
   }
 }

@@ -5,6 +5,7 @@ import { MyMeal } from '../model/my-meal';
 import { UserMeal } from '../model/user-meal';
 import { WeeklyPlan } from '../model/weekly-plan';
 import { Util } from '../model/util';
+import { UserMiniMeal } from '../model/user-mini-meal';
 
 @Injectable({
   providedIn: 'root',
@@ -174,7 +175,7 @@ export class StorageService {
     planesSemanales.push(planSemanal);
 
     localStorage.setItem(this.USER_WEEKLY_KEY_ITEM + idUser, JSON.stringify(planesSemanales));
-    this.cambiosPlanSemanal.set(!this.cambiosPlanSemanal())
+    this.cambiosPlanSemanal.set(!this.cambiosPlanSemanal());
   }
 
   public getPlanesSemanales() {
@@ -225,5 +226,41 @@ export class StorageService {
     );
 
     return planesSemanales.some((e) => e.id === id);
+  }
+
+  public cachearMyMeal(meal: MyMeal) {
+    const idUser = this.getUsuarioActual()?.id;
+    if (!idUser) throw 'No hay sesión activa.';
+
+    const caches: UserMiniMeal[] = JSON.parse(
+      localStorage.getItem(this.USER_CACHE_KEY_ITEM + idUser) ?? '[]',
+    );
+
+    caches.push(Util.transformarMyMealAMiniMeal(meal));
+
+    localStorage.setItem(this.USER_CACHE_KEY_ITEM + idUser, JSON.stringify(caches));
+  }
+
+  public cachearMiniMeal(meal: UserMiniMeal) {
+    const idUser = this.getUsuarioActual()?.id;
+    if (!idUser) throw 'No hay sesión activa.';
+
+    const caches: UserMiniMeal[] = JSON.parse(
+      localStorage.getItem(this.USER_CACHE_KEY_ITEM + idUser) ?? '[]',
+    );
+
+    caches.push(meal);
+    localStorage.setItem(this.USER_CACHE_KEY_ITEM + idUser, JSON.stringify(caches));
+  }
+
+  public getCachePorId(id: UserMiniMeal['id']) {
+    const idUser = this.getUsuarioActual()?.id;
+    if (!idUser) throw 'No hay sesión activa.';
+
+    const caches: UserMiniMeal[] = JSON.parse(
+      localStorage.getItem(this.USER_CACHE_KEY_ITEM + idUser) ?? '[]',
+    );
+
+    return caches.find((e) => e.id === id);
   }
 }

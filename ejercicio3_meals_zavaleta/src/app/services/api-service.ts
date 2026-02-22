@@ -138,7 +138,7 @@ export class ApiService {
         platosEncontrados.push({
           id: plato.idMeal,
           name: plato.strMeal,
-          image_small: plato.strMealThumb + '/medium',
+          image_small: plato.strMealThumb + '/small',
         });
       });
 
