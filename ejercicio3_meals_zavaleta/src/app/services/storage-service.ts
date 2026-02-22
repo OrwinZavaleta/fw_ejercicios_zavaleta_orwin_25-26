@@ -4,6 +4,7 @@ import { AuthSession } from '../model/auth-session';
 import { MyMeal } from '../model/my-meal';
 import { UserMeal } from '../model/user-meal';
 import { WeeklyPlan } from '../model/weekly-plan';
+import { Util } from '../model/util';
 
 @Injectable({
   providedIn: 'root',
@@ -183,6 +184,18 @@ export class StorageService {
     );
 
     return planesSemanales;
+  }
+  public getPlanSemanalActual() {
+    const idUser = this.getUsuarioActual()?.id;
+    if (!idUser) throw 'No hay sesión activa.';
+
+    const planesSemanales: WeeklyPlan[] = JSON.parse(
+      localStorage.getItem(this.USER_WEEKLY_KEY_ITEM + idUser) ?? '[]',
+    );
+
+    const fechaActual = Util.getISOWeek(new Date());
+
+    return planesSemanales.find((e) => e.id === fechaActual);
   }
 
   public borrarPlanSemanalPorId(id: WeeklyPlan['id']) {

@@ -18,6 +18,7 @@ export class PlanWeekList {
   private api = inject(ApiService);
 
   public planesSemanales: WeeklyPlan[];
+  public planActual: WeeklyPlan | null = null;
 
   public loading = signal<boolean>(false);
 
@@ -38,6 +39,7 @@ export class PlanWeekList {
   ];
 
   public todosPlanesSemanales = signal<(typeof this.templatePlanSemanalBuffer)[]>([]);
+  public planSemanalActual = signal<typeof this.templatePlanSemanalBuffer>([]);
 
   constructor() {
     this.loading.set(true);
@@ -45,6 +47,29 @@ export class PlanWeekList {
       .getPlanesSemanales()
       .sort((a, b) => b.id.localeCompare(a.id));
     this.cargarPlanesSemanales();
+    this.cargarPlanActual();
+  }
+
+  async cargarPlanActual() {
+    this.planActual = this.storage.getPlanSemanalActual() || null;
+
+    const temp2: typeof this.templatePlanSemanalBuffer = structuredClone(
+      this.templatePlanSemanalBuffer,
+    );
+
+    if (this.planActual) {
+      for (let indexDia = 0; indexDia < this.planActual.days.length; indexDia++) {
+        const dia = this.planActual.days[indexDia];
+
+        if (dia.lunchMealId) {
+          temp2[0][indexDia] = await this.api.pedirPlatoPorId(dia.lunchMealId);
+        }
+        if (dia.dinnerMealId) {
+          temp2[1][indexDia] = await this.api.pedirPlatoPorId(dia.dinnerMealId);
+        }
+      }
+      this.planSemanalActual.set(temp2);
+    }
   }
 
   async cargarPlanesSemanales() {
