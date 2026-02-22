@@ -250,6 +250,10 @@ export class StorageService {
     );
 
     caches.push(meal);
+
+    console.log("================storage==========================================");
+    console.log(caches);
+
     localStorage.setItem(this.USER_CACHE_KEY_ITEM + idUser, JSON.stringify(caches));
   }
 

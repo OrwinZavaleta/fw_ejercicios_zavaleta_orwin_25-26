@@ -169,6 +169,17 @@ export class PlanWeekCreate {
 
     this.storage.guardarPlanSemanal(this.planSemanalGuardado);
     this.mensajeEstadoGuardado('success', 'Se guardo correctamente el plan semanal');
+
+    // Cacheando
+    console.log("==========================================================");
+    this.planSemanalBuffer().forEach((element) => {
+      for (let i = 0; i < element.length; i++) {
+        const meal = element[i];
+        if (!meal) continue;
+        this.storage.cachearMiniMeal(meal);
+      }
+    });
+    // Limpiando
     this.handleCancelarPlanSemanal();
   }
 
