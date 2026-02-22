@@ -152,8 +152,6 @@ export class PlanWeekCreate {
   }
 
   handleGuardarPlanSemanal() {
-    // TODO: al menos una receta en al menos unos de los dias
-
     if (!this.planSemanalGuardado) {
       this.mensajeEstadoGuardado('error', 'Hubo un error, por favor recargue pa pagina.');
       return;
@@ -167,11 +165,28 @@ export class PlanWeekCreate {
       return;
     }
 
+    let tienePlatos = false;
+
+    for (let i = 0; i < this.planSemanalBuffer().length; i++) {
+      const element = this.planSemanalBuffer()[i];
+      for (let j = 0; j < element.length; j++) {
+        const meal = element[j];
+        tienePlatos ||= !!meal;
+        if (tienePlatos) break;
+      }
+      if (tienePlatos) break;
+    }
+
+    if (!tienePlatos) {
+      this.mensajeEstadoGuardado('error', 'Debe agregar al menos un plato a la semana');
+      return;
+    }
+
     this.storage.guardarPlanSemanal(this.planSemanalGuardado);
     this.mensajeEstadoGuardado('success', 'Se guardo correctamente el plan semanal');
 
     // Cacheando
-    console.log("==========================================================");
+    console.log('==========================================================');
     this.planSemanalBuffer().forEach((element) => {
       for (let i = 0; i < element.length; i++) {
         const meal = element[i];
