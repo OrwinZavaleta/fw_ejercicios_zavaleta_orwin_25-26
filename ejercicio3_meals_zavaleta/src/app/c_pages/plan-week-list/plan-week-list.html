@@ -1,1 +1,85 @@
-<p>plan-week-list works!</p>
+<hr />
+<h3>Plan de la semana actual</h3>
+
+<hr />
+<h3>Historial de Planes Semanales</h3>
+
+<div class="accordion" id="planesSemanalesAcordion">
+  @for (plan of planesSemanales; track plan.id; let i = $index) {
+    <div class="accordion-item">
+      <h2 class="accordion-header">
+        <button
+          class="accordion-button"
+          [class.collapsed]="i !== 0"
+          type="button"
+          data-bs-toggle="collapse"
+          [attr.data-bs-target]="'#' + plan.id"
+          [aria-expanded]="i === 0"
+          [aria-controls]="plan.id"
+        >
+          Plan {{ plan.id }}
+        </button>
+      </h2>
+      <div
+        [id]="plan.id"
+        class="accordion-collapse collapse"
+        [class.show]="i === 0"
+        data-bs-parent="#planesSemanalesAcordion"
+      >
+        <div class="accordion-body">
+          <div class="table-responsive mb-3">
+            <table class="table">
+              <thead>
+                <tr>
+                  @for (dia of diasSemana; track dia) {
+                    <th scope="col">{{ dia }}</th>
+                  }
+                </tr>
+              </thead>
+              <tbody>
+                @for (hora of horasSemana; track $index; let j = $index) {
+                  <tr>
+                    @for (dia of diasSemana; track $index; let k = $index) {
+                      <td>
+                        @if (!loading()) {
+                          @let plato = todosPlanesSemanales()[i][j][k];
+                          @if (!plato) {
+                            ---
+                          } @else {
+                            <div class="card" style="max-height: 5rem; max-width: 10rem">
+                              <div class="row g-0 overflow-y-hidden">
+                                <div class="col-md-5">
+                                  <div class="card-container">
+                                    <img
+                                      [ngSrc]="plato.strMealThumb"
+                                      class="img-fluid rounded-start ratio-1x1"
+                                      [alt]="plato.strMeal"
+                                      fill
+                                    />
+                                  </div>
+                                </div>
+                                <div class="col-md-7">
+                                  <div class="card-body p-1">
+                                    <p class="card-title small">{{ plato.strMeal }}</p>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                          }
+                        } @else {
+                          Loading
+                        }
+                      </td>
+                    }
+                  </tr>
+                }
+              </tbody>
+            </table>
+          </div>
+          <button type="button" class="btn btn-danger" (click)="handleEliminarPlan(plan.id)">Eliminar</button>
+        </div>
+      </div>
+    </div>
+
+  }
+</div>

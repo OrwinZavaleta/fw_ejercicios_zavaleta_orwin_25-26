@@ -174,6 +174,32 @@ export class StorageService {
     localStorage.setItem(this.USER_WEEKLY_KEY_ITEM + idUser, JSON.stringify(planesSemanales));
   }
 
+  public getPlanesSemanales() {
+    const idUser = this.getUsuarioActual()?.id;
+    if (!idUser) throw 'No hay sesión activa.';
+
+    const planesSemanales: WeeklyPlan[] = JSON.parse(
+      localStorage.getItem(this.USER_WEEKLY_KEY_ITEM + idUser) ?? '[]',
+    );
+
+    return planesSemanales;
+  }
+
+  public borrarPlanSemanalPorId(id: WeeklyPlan['id']) {
+    const idUser = this.getUsuarioActual()?.id;
+    if (!idUser) throw 'No hay sesión activa.';
+
+    const planesSemanales: WeeklyPlan[] = JSON.parse(
+      localStorage.getItem(this.USER_WEEKLY_KEY_ITEM + idUser) ?? '[]',
+    );
+
+    planesSemanales.splice(
+      planesSemanales.findIndex((e) => e.id === id),
+      1,
+    );
+    localStorage.setItem(this.USER_WEEKLY_KEY_ITEM + idUser, JSON.stringify(planesSemanales));
+  }
+
   public existePlanSemanalPorId(id: WeeklyPlan['id']) {
     const idUser = this.getUsuarioActual()?.id;
     if (!idUser) throw 'No hay sesión activa.';
