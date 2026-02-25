@@ -30,7 +30,7 @@ export class AuthService {
     }
 
     this.storage.guardarAgregarUsuario(user);
-    this.currentUser.set(user);
+    // this.currentUser.set(user); // Correccion del error en la autenticacion
     return true;
   }
 

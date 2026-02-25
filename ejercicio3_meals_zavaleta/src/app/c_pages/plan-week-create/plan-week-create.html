@@ -15,8 +15,8 @@
         class="form-control"
         formControlName="fecha"
         [class.is-invalid]="
-          (fechaForm.get('fecha')?.invalid &&
-            (fechaForm.get('fecha')?.touched || fechaForm.get('fecha')?.dirty)) ||
+          (fechaForm.controls.fecha.invalid &&
+            (fechaForm.controls.fecha.touched || fechaForm.controls.fecha.dirty)) ||
           (fechaForm.invalid && formEnviadoFecha())
         "
         required
