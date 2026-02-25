@@ -2,7 +2,7 @@
 <h3>Plan de la semana actual</h3>
 <div class="table-responsive mb-3">
   @if (planSemanalActual() && planSemanalActual().length !== 0) {
-    <table class="table">
+    <table class="table custom-fixed-table">
       <thead>
         <tr>
           @for (dia of diasSemana; track dia) {
@@ -80,7 +80,7 @@
       >
         <div class="accordion-body">
           <div class="table-responsive mb-3">
-            <table class="table">
+            <table class="table custom-fixed-table">
               <thead>
                 <tr>
                   @for (dia of diasSemana; track dia) {

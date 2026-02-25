@@ -1,6 +1,6 @@
 import { Component, inject, input, signal } from '@angular/core';
 
-import { FormsModule } from '@angular/forms';
+import { FormsModule, NgForm } from '@angular/forms';
 import { Estado } from '../../model/user-meal';
 import { StorageService } from '../../services/storage-service';
 import { Util } from '../../model/util';
@@ -49,13 +49,15 @@ export class DetailsSave {
     this.submited.set(false);
   }
 
-  handleSubmit() {
+  handleSubmit(form: NgForm) {
     this.submited.set(true);
-    if (this.estado === Estado.LA_HE_HECHO && !this.calificacion()) {
-      this.mensajeEstadoGuardado(
-        'error',
-        'El formulario no es valido, por favor recargue la página.',
-      );
+
+    if (form.invalid) {
+      return;
+    }
+
+    if (form.valid && this.estado === Estado.LA_HE_HECHO && !this.calificacion()) {
+      this.mensajeEstadoGuardado('error', 'Por favor rellene la calificación.');
       return;
     }
     console.log(
