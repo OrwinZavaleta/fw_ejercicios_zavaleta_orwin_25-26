@@ -1,0 +1,14 @@
+services:
+  mongo:
+    image: mongo:8.0
+    container_name: fw_mongo_api
+    ports:
+      - "27017:27017"
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: toor
+    volumes:
+      - fw_mongo_data:/data/db
+
+volumes:
+  fw_mongo_data:

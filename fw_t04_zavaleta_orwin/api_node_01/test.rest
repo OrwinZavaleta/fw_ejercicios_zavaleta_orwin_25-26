@@ -1,0 +1,69 @@
+GET http://localhost:3000/api/places
+
+###
+
+POST http://localhost:3000/api/places
+Content-Type: application/json
+
+{
+  "name": "Madrid"
+}
+
+###
+
+PUT http://localhost:3000/api/places/1
+Content-Type: application/json
+
+{
+  "name": "Barcelona"
+}
+
+###
+
+DELETE http://localhost:3000/api/places/1
+
+###
+
+GET http://localhost:3000/api/products?sku=RAM-CRUCIAL-16GB
+
+###
+
+POST http://localhost:3000/api/products
+Content-Type: application/json
+
+{
+  "name": "Sensor de temperatura WiFi",
+  "description": "Sensor IoT compatible con MQTT para monitorización remota",
+  "price": 39.95,
+  "stock": 120,
+  "department": "iot",
+  "available": true
+}
+
+###
+
+PUT http://localhost:3000/api/products/69a00ffa7b15ab8294547c20
+Content-Type: application/json
+
+{
+  "price": 79.99,
+  "stock": 10
+}
+
+###
+
+DELETE http://localhost:3000/api/products/69a00ffa7b15ab8294547c20
+
+###
+
+GET http://localhost:3000/api/products/69a016499970eec37631483b
+
+###
+
+GET http://localhost:3000/api/products/search?department=iot&available=true
+
+###
+
+GET http://localhost:3000/api/products/search?department=teleco&available=true
+
+###
