@@ -67,3 +67,55 @@ GET http://localhost:3000/api/products/search?department=iot&available=true
 GET http://localhost:3000/api/products/search?department=teleco&available=true
 
 ###
+
+POST http://localhost:3000/api/users
+Content-Type: application/json
+
+{
+  "username": "alumno1",
+  "email": "alumno1@fwshop.com",
+  "password": "1234"
+}
+
+###
+
+POST http://localhost:3000/api/users
+Content-Type: application/json
+
+{
+  "username": "alumno2",
+  "email": "alumno1@fwshop.com",
+  "password": "1234"
+}
+
+###
+
+POST http://localhost:3000/api/users/69a18a574d9952576990b9fa/cart
+Content-Type: application/json
+
+{
+  "productId": "69a016499970eec37631483b"
+}
+
+###
+
+GET http://localhost:3000/api/users
+
+###
+
+GET http://localhost:3000/api/users/by-email/alumno1@fwshop.com
+
+###
+
+DELETE http://localhost:3000/api/users/69a18a574d9952576990b9fa/cart
+Content-Type: application/json
+
+{
+  "productId": "69a016499970eec37631483b"
+}
+
+###
+
+DELETE http://localhost:3000/api/users/69a18a574d9952576990b9fa/cart/all
+
+###
