@@ -6,6 +6,7 @@ const episodeSchema = new Schema(
             type: String,
             required: true,
             trim: true,
+            unique: true,
             match: /^S\d{2}E\d{2}$/,
         },
         title: {

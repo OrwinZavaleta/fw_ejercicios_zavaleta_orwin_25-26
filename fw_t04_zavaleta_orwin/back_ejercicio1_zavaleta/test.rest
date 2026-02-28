@@ -1,0 +1,39 @@
+GET http://localhost:3000/api/characters/
+
+###
+
+GET http://localhost:3000/api/characters/69a2fb94004478c92d8fc6ba
+
+###
+
+POST http://localhost:3000/api/characters/
+Content-Type: application/json
+
+{
+    "name": "nombre de prueba",
+    "img": "hola.png",
+    "species": "demonio",
+    "age": 999999,
+    "specialTraits": [],
+    "role" : "Desconocido",
+    "firstAppearance": "S99E99"
+}
+
+###
+
+PUT http://localhost:3000/api/characters/69a2fb94004478c92d8fc6ba
+Content-Type: application/json
+
+{
+    "name": "Unknown",
+    "img": "hola.png",
+    "species": "demonio",
+    "age": -100,
+    "specialTraits": ["No existir"],
+    "role" : "Desconocido",
+    "firstAppearance": "S99E99"
+}
+
+###
+
+DELETE http://localhost:3000/api/characters/69a2fb94004478c92d8fc6ba
