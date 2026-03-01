@@ -37,3 +37,52 @@ Content-Type: application/json
 ###
 
 DELETE http://localhost:3000/api/characters/69a2fb94004478c92d8fc6ba
+
+###
+
+GET http://localhost:3000/api/characters/search?name=Tanjiro Kamado
+
+###
+###
+###
+###
+###
+
+GET http://localhost:3000/api/episodes/
+
+###
+
+GET http://localhost:3000/api/episodes/69a02f79b780a89df6a2eafb
+
+###
+
+POST http://localhost:3000/api/episodes/
+Content-Type: application/json
+
+{
+    "code": "S99E98",
+    "title": "La aparicion del desconocido",
+    "summary": "Lorem impum.........",
+    "year": 9999
+}
+
+###
+
+PUT http://localhost:3000/api/episodes/69a48595e41c70f541bd1029
+Content-Type: application/json
+
+{
+    "code": "S99E98",
+    "title": "La aparicion del desconocido",
+    "summary": "Lorem impum.........",
+    "year": 1111
+}
+
+###
+
+DELETE http://localhost:3000/api/episodes/69a48595e41c70f541bd1023
+
+###
+
+
+GET http://localhost:3000/api/episodes/search?code=S01E01

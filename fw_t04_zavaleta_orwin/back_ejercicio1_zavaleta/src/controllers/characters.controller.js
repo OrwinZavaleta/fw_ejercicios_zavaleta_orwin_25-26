@@ -37,8 +37,6 @@ const getCharacter = async (req, res) => {
 
 const createCharacter = async (req, res) => {
     try {
-        console.log(req.body);
-        
         const newCharacter = await Character.create(req.body); //TODO: validar la entrada
         res.status(201).json(newCharacter);
     } catch (error) {
