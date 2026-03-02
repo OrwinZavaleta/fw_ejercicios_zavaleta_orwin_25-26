@@ -1,10 +1,41 @@
 const Character = require("../models/character.model");
 const mongoose = require("mongoose");
 
-const getCharacters = async (req, res) => {
+const getCharacters = async (req, res) => { // TODO: paginarlo
     try {
-        const characters = await Character.find();
-        res.status(200).json(characters);
+
+        const { page, limit } = req.query;
+
+        let characters;
+        let total = await Character.countDocuments();
+
+        if (limit) {
+            const pageNumber = parseInt(page) || 1;
+            const limitNumber = parseInt(limit);
+            const skip = (pageNumber - 1) * limitNumber;
+
+            characters = await Character.find()
+                .skip(skip)
+                .limit(limitNumber);
+
+            return res.status(200).json({
+                data: characters,
+                pagination: {
+                    total,
+                    page: pageNumber,
+                    limit: limitNumber,
+                    totalPages: Math.ceil(total / limitNumber)
+                }
+            });
+        }
+
+
+        characters = await Character.find();
+        res.status(200).json({
+            data: characters,
+            total
+        });
+
     } catch (error) {
         res.status(500).json({
             error: "Error al obtener los Personajes",
@@ -96,24 +127,24 @@ const deleteCharacter = async (req, res) => {
     }
 };
 
-const searchCharacter = async (req, res) => {
-    try {
-        const { name, age, species, role } = req.query;
+// const searchCharacter = async (req, res) => {
+//     try {
+//         const { name, age, species, role } = req.query;
 
-        const filter = {};
+//         const filter = {};
 
-        if (name) filter.name = name;
-        if (age) filter.age = age;
-        if (species) filter.species = species;
-        if (role) filter.role = role; // TODO: hacer una mejor validacion
+//         if (name) filter.name = name;
+//         if (age) filter.age = age;
+//         if (species) filter.species = species;
+//         if (role) filter.role = role; // TODO: hacer una mejor validacion
 
-        const results = await Character.find(filter);
+//         const results = await Character.find(filter);
 
-        res.status(200).json(results);
-    } catch (error) {
-        res.status(500).json({ error: "Error al buscar el personaje." });
-    }
+//         res.status(200).json(results);
+//     } catch (error) {
+//         res.status(500).json({ error: "Error al buscar el personaje." });
+//     }
 
-}
+// }
 
-module.exports = { getCharacters, getCharacter, createCharacter, updateCharacter, deleteCharacter, searchCharacter }
+module.exports = { getCharacters, getCharacter, createCharacter, updateCharacter, deleteCharacter }

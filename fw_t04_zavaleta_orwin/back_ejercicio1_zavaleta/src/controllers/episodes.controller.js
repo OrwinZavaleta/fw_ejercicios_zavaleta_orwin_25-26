@@ -3,8 +3,42 @@ const mongoose = require("mongoose");
 
 const getEpisodes = async (req, res) => {
     try {
-        const characters = await Episode.find();
-        res.status(200).json(characters);
+
+
+        const { page, limit } = req.query;
+
+        let episodes;
+        let total = await Episode.countDocuments();
+
+        if (limit) {
+            const pageNumber = parseInt(page) || 1;
+            const limitNumber = parseInt(limit);
+            const skip = (pageNumber - 1) * limitNumber;
+
+            episodes = await Episode.find()
+                .skip(skip)
+                .limit(limitNumber);
+
+            return res.status(200).json({
+                data: episodes,
+                pagination: {
+                    total,
+                    page: pageNumber,
+                    limit: limitNumber,
+                    totalPages: Math.ceil(total / limitNumber)
+                }
+            });
+        }
+
+
+
+
+        episodes = await Episode.find();
+        res.status(200).json({
+            data: episodes,
+            total
+        });
+
     } catch (error) {
         res.status(500).json({
             error: "Error al obtener los Episodios",
@@ -96,22 +130,22 @@ const deleteEpisode = async (req, res) => {
     }
 };
 
-const searchEpisodes = async (req, res) => {
-    try {
-        const { code, title, year } = req.query;
+// const searchEpisodes = async (req, res) => {
+//     try {
+//         const { code, title, year } = req.query;
 
-        const filter = {};
+//         const filter = {};
 
-        if (code) filter.code = code;
-        if (title) filter.title = title;
-        if (year) filter.year = year; // TODO: hacer una mejor validacion
+//         if (code) filter.code = code;
+//         if (title) filter.title = title;
+//         if (year) filter.year = year; // too: hacer una mejor validacion
 
-        const results = await Episode.find(filter);
+//         const results = await Episode.find(filter);
 
-        res.status(200).json(results);
-    } catch (error) {
-        res.status(500).json({ error: "Error al buscar el episodio." });
-    }
-};
+//         res.status(200).json(results);
+//     } catch (error) {
+//         res.status(500).json({ error: "Error al buscar el episodio." });
+//     }
+// };
 
-module.exports = { getEpisodes, getEpisode, createEpisode, updateEpisode, deleteEpisode, searchEpisodes }
+module.exports = { getEpisodes, getEpisode, createEpisode, updateEpisode, deleteEpisode }

@@ -2,7 +2,7 @@ require("dotenv").config();
 
 const app = require("./src/app");
 const connectDB = require("./src/config/db");
-require("node:dns/promises").setServers(["1.1.1.1", "8.8.8.8"]); // Linea necesaria ya que parece que algo de windows entra en conflicto con +srv de la uri de mongo
+require("node:dns/promises").setServers(["192.168.1.1", "1.1.1.1"]); // Linea necesaria ya que parece que algo de windows entra en conflicto con +srv de la uri de mongo
 
 const PORT = process.env.PORT || 3000;
 

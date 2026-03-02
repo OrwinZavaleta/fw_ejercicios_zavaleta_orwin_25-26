@@ -4,7 +4,7 @@ const episodesController = require('../../controllers/episodes.controller');
 router.get('/', episodesController.getEpisodes);
 router.post('/', episodesController.createEpisode);
 
-router.get("/search", episodesController.searchEpisodes);
+// router.get("/search", episodesController.searchEpisodes);
 
 router.get('/:id', episodesController.getEpisode);
 router.put('/:id', episodesController.updateEpisode);

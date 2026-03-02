@@ -2,6 +2,10 @@ GET http://localhost:3000/api/characters/
 
 ###
 
+GET http://localhost:3000/api/characters?page=3&limit=4
+
+###
+
 GET http://localhost:3000/api/characters/69a2fb94004478c92d8fc6ba
 
 ###
@@ -48,7 +52,11 @@ GET http://localhost:3000/api/characters/search?name=Tanjiro Kamado
 ###
 ###
 
-GET http://localhost:3000/api/episodes/
+GET http://localhost:3000/api/episodes
+
+###
+
+GET http://localhost:3000/api/episodes?page=3&limit=4
 
 ###
 
