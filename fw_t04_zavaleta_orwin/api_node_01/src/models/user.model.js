@@ -10,7 +10,10 @@ const userSchema = new Schema(
             trim: true,
             lowercase: true
         },
-        password: String,
+        password: {
+            type: String,
+            required: true
+        },
         cart: [{ type: Schema.Types.ObjectId, ref: "Product" }],
     },
     { timestamps: true, versionKey: false }

@@ -1,3 +1,5 @@
+@token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoiNjlhNTRiNGY1NGVhNzc4M2FhYzBiN2Q3IiwiaWF0IjoxNzcyNDQwNjA3LCJleHAiOjE3NzI0NDQyMDd9.m2G-nmCzh_EmCwrevnarRFv9VkK-dPDjmPp5ElQ74Fg
+
 GET http://localhost:3000/api/places
 
 ###
@@ -117,5 +119,60 @@ Content-Type: application/json
 ###
 
 DELETE http://localhost:3000/api/users/69a18a574d9952576990b9fa/cart/all
+
+###
+
+POST http://localhost:3000/api/auth/register
+Content-Type: application/json
+
+{
+  "username": "alumno3",
+  "email": "alumno3@fwshop.com",
+  "password": "1234"
+}
+
+###
+
+POST http://localhost:3000/api/auth/login
+Content-Type: application/json
+
+{
+  "username": "alumno2",
+  "email": "alumno2@fwshop.com",
+  "password": "123456"
+}
+
+###
+
+POST http://localhost:3000/api/auth/login
+Content-Type: application/json
+
+{
+  "username": "alumno2",
+  "email": "alumno2@fwshop.com",
+  "password": "1234"
+}
+
+###
+
+GET http://localhost:3000/api/auth/me
+Authorization: Bearer {{token}}
+
+### Obtener todos los productos (PÚBLICA)
+GET http://localhost:3000/api/products
+
+###
+
+### Crear producto (PRIVADA - requiere JWT)
+POST http://localhost:3000/api/products
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{
+  "name": "Teclado Mecánico",
+  "price": 59.99,
+  "stock": 10,
+  "department": "informatica"
+}
 
 ###
