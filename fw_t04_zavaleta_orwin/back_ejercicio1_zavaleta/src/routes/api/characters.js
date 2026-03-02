@@ -1,13 +1,15 @@
 const router = require('express').Router();
 const charactersController = require('../../controllers/characters.controller');
 
+const { createCharacterRules, validate } = require("../../validators/character.validator");
+
 router.get('/', charactersController.getCharacters);
-router.post('/', charactersController.createCharacter);
+router.post('/', createCharacterRules, validate, charactersController.createCharacter);
 
 // router.get("/search", charactersController.searchCharacter);
 
 router.get('/:id', charactersController.getCharacter);
-router.put('/:id', charactersController.updateCharacter);
+router.put('/:id', createCharacterRules, validate, charactersController.updateCharacter);
 router.delete('/:id', charactersController.deleteCharacter);
 
 module.exports = router;

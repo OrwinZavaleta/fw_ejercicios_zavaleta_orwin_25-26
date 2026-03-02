@@ -41,7 +41,7 @@ const characterSchema = new Schema(
             type: String,
             required: true,
             trim: true,
-            match: /^S\d{2}E\d{2}$/, // TODO: tiene que ser un object id? puede aparecer en una temprada que no tengo como cap
+            match: /^S\d{2}E\d{2}$/,
         },
     },
     {
