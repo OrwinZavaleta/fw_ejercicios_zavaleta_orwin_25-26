@@ -1,20 +1,49 @@
+@token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoiNjlhNzUxMGZhYTZlOWIxNGRmY2Q5MWFjIiwiaWF0IjoxNzcyNTcyOTU4LCJleHAiOjE3NzI1NzY1NTh9.5F-t7xGUJCNYZoKKAeCn_r9dVHf92yI91ffyHLqc_Pw
+
+###
+
+POST http://localhost:3000/api/auth/register
+Content-Type: application/json
+
+{
+  "username": "user1",
+  "email": "user1@mail.com",
+  "password": "1234"
+}
+
+###
+ 
+ POST http://localhost:3000/api/auth/login
+Content-Type: application/json
+
+{
+  "email": "user1@mail.com",
+  "password": "1234"
+}
+
+###
+
 GET http://localhost:3000/api/characters/
+Authorization: Bearer {{token}}
 
 ###
 
 GET http://localhost:3000/api/characters?page=3&limit=4
+Authorization: Bearer {{token}}
 
 ###
 
 GET http://localhost:3000/api/characters/69a2fb94004478c92d8fc6ba
+Authorization: Bearer {{token}}
 
 ###
 
 POST http://localhost:3000/api/characters/
 Content-Type: application/json
+Authorization: Bearer {{token}}
 
 {
-    "name": "nombre de prueba",
+    "name": 12,
     "img": "hola.png",
     "species": "demonio",
     "age": 999999,
@@ -25,14 +54,15 @@ Content-Type: application/json
 
 ###
 
-PUT http://localhost:3000/api/characters/69a2fb94004478c92d8fc6ba
+PUT http://localhost:3000/api/characters/69a7522aaa6e9b14dfcd91b7
 Content-Type: application/json
+Authorization: Bearer {{token}}
 
 {
     "name": "Unknown",
     "img": "hola.png",
-    "species": "demonio",
-    "age": -100,
+    "species": "humano",
+    "age": 100,
     "specialTraits": ["No existir"],
     "role" : "Desconocido",
     "firstAppearance": "S99E99"
@@ -40,12 +70,10 @@ Content-Type: application/json
 
 ###
 
-DELETE http://localhost:3000/api/characters/69a2fb94004478c92d8fc6ba
+DELETE http://localhost:3000/api/characters/69a7522aaa6e9b14dfcd91b7
+Authorization: Bearer {{token}}
 
 ###
-
-GET http://localhost:3000/api/characters/search?name=Tanjiro Kamado
-
 ###
 ###
 ###
@@ -53,19 +81,23 @@ GET http://localhost:3000/api/characters/search?name=Tanjiro Kamado
 ###
 
 GET http://localhost:3000/api/episodes
+Authorization: Bearer {{token}}
 
 ###
 
 GET http://localhost:3000/api/episodes?page=3&limit=4
+Authorization: Bearer {{token}}
 
 ###
 
 GET http://localhost:3000/api/episodes/69a02f79b780a89df6a2eafb
+Authorization: Bearer {{token}}
 
 ###
 
 POST http://localhost:3000/api/episodes/
 Content-Type: application/json
+Authorization: Bearer {{token}}
 
 {
     "code": "S99E98",
@@ -76,21 +108,19 @@ Content-Type: application/json
 
 ###
 
-PUT http://localhost:3000/api/episodes/69a48595e41c70f541bd1029
+PUT http://localhost:3000/api/episodes/69a757df3e79e55ee28938f1
 Content-Type: application/json
+Authorization: Bearer {{token}}
 
 {
     "code": "S99E98",
     "title": "La aparicion del desconocido",
     "summary": "Lorem impum.........",
-    "year": 1111
+    "year": 2222,
+    "characters":[]
 }
 
 ###
 
 DELETE http://localhost:3000/api/episodes/69a48595e41c70f541bd1023
-
-###
-
-
-GET http://localhost:3000/api/episodes/search?code=S01E01
+Authorization: Bearer {{token}}

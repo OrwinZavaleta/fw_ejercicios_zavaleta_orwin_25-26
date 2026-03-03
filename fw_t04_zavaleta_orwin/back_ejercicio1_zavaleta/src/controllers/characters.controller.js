@@ -1,7 +1,7 @@
 const Character = require("../models/character.model");
 const mongoose = require("mongoose");
 
-const getCharacters = async (req, res) => { // TODO: paginarlo
+const getCharacters = async (req, res) => { 
     try {
 
         const { page, limit } = req.query;
@@ -68,7 +68,7 @@ const getCharacter = async (req, res) => {
 
 const createCharacter = async (req, res) => {
     try {
-        const newCharacter = await Character.create(req.body); //TODO: validar la entrada
+        const newCharacter = await Character.create(req.body); 
         res.status(201).json(newCharacter);
     } catch (error) {
         if (error.code === 11000) {
@@ -89,7 +89,7 @@ const updateCharacter = async (req, res) => {
             return res.status(400).json({ error: "ID inválido" });
         }
 
-        const updated = await Character.findByIdAndUpdate(id, req.body, { returnDocument: 'after' });//TODO: validar la entrada
+        const updated = await Character.findByIdAndUpdate(id, req.body, { returnDocument: 'after' });
 
         if (!updated) {
             return res.status(404).json({ error: "Personaje no encontrado" });
@@ -136,7 +136,7 @@ const deleteCharacter = async (req, res) => {
 //         if (name) filter.name = name;
 //         if (age) filter.age = age;
 //         if (species) filter.species = species;
-//         if (role) filter.role = role; // TODO: hacer una mejor validacion
+//         if (role) filter.role = role; 
 
 //         const results = await Character.find(filter);
 

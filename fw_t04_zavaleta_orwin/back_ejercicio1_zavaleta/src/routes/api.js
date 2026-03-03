@@ -1,8 +1,9 @@
 const router = require('express').Router();
+const { checkToken } = require("../middlewares/auth.middleware");
 
-// Delegamos en places.js
-router.use('/characters', require('./api/characters'));
-router.use('/episodes', require('./api/episodes'));
+router.use("/auth", require("./api/auth"));
 
-// Exportamos el router para poder usarlo en otros archivos
+router.use('/characters', checkToken, require('./api/characters'));
+router.use('/episodes', checkToken, require('./api/episodes'));
+
 module.exports = router;

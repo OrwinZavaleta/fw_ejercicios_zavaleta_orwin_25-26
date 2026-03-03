@@ -71,7 +71,7 @@ const createEpisode = async (req, res) => {
     try {
         console.log(req.body);// TODO: corregir los errores que hace que rompa cuando se le envia un characters
 
-        const newEpisode = await Episode.create(req.body); //TODO: validar la entrada
+        const newEpisode = await Episode.create(req.body);
         res.status(201).json(newEpisode);
     } catch (error) {
         if (error.code === 11000) {
@@ -92,7 +92,7 @@ const updateEpisode = async (req, res) => {
             return res.status(400).json({ error: "ID inválido" });
         }
 
-        const updated = await Episode.findByIdAndUpdate(id, req.body, { returnDocument: 'after' });//TODO: validar la entrada
+        const updated = await Episode.findByIdAndUpdate(id, req.body, { returnDocument: 'after' });
 
         if (!updated) {
             return res.status(404).json({ error: "Episodio no encontrado" });
