@@ -8,5 +8,5 @@ import { RouterOutlet } from '@angular/router';
   styleUrl: './app.css'
 })
 export class App {
-  protected readonly title = signal('front_ejercicio1_zavaleta');
+  protected readonly title = signal('FW Series');
 }
