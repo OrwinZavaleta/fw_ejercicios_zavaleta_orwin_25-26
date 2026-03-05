@@ -164,6 +164,9 @@ export class StorageService {
     localStorage.setItem(this.USER_MEAL_KEY_ITEM + idUser, JSON.stringify(favoritosUserProcesados));
   }
 
+// =======================================================
+// =======================================================
+
   public guardarPlanSemanal(planSemanal: WeeklyPlan) {
     const idUser = this.getUsuarioActual()?.id;
     if (!idUser) throw 'No hay sesión activa.';
@@ -227,6 +230,11 @@ export class StorageService {
 
     return planesSemanales.some((e) => e.id === id);
   }
+
+// =======================================================
+// =======================================================
+
+
 
   public cachearMyMeal(meal: MyMeal) {
     const idUser = this.getUsuarioActual()?.id;
