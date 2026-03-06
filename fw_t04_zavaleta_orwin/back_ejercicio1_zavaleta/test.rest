@@ -1,4 +1,4 @@
-@token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoiNjlhNzUxMGZhYTZlOWIxNGRmY2Q5MWFjIiwiaWF0IjoxNzcyNTcyOTU4LCJleHAiOjE3NzI1NzY1NTh9.5F-t7xGUJCNYZoKKAeCn_r9dVHf92yI91ffyHLqc_Pw
+@token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoiNjlhNzUxMGZhYTZlOWIxNGRmY2Q5MWFjIiwiaWF0IjoxNzcyNzk5MzU5LCJleHAiOjE3NzM0MDQxNTl9.FpZ1nf2vZRi4UC5Mi19qS0fzFgYSmgiPr8oksO9sDAs
 
 ###
 
@@ -28,7 +28,7 @@ Authorization: Bearer {{token}}
 
 ###
 
-GET http://localhost:3000/api/characters?page=3&limit=4
+GET http://localhost:3000/api/characters?page=5&limit=4
 Authorization: Bearer {{token}}
 
 ###

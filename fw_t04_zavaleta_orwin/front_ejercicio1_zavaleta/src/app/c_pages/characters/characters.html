@@ -1,3 +1,58 @@
 <div class="my-6">
   <h1 class="text-4xl font-bold">Personajes</h1>
 </div>
+
+<div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4 pb-6 w-full">
+  @if (charactersData.isLoading()) {
+    <div class="border border-gray-600/50 rounded-3xl shadow-md overflow-hidden">
+      <div class="aspect-square object-cover w-full"></div>
+      <div class="p-6 pt-4">
+        <h1 class="text-2xl">Loading...</h1>
+        <p>Loading...</p>
+      </div>
+    </div>
+  } @else if (charactersData.error()) {
+    error
+  } @else {
+    @for (char of charactersData.value()?.data; track char.name) {
+      <div class="border border-gray-600/50 rounded-3xl shadow-md overflow-hidden">
+        <img [src]="char.img" [alt]="char.name" class="aspect-square object-cover w-full" />
+        <div class="p-6 pt-4">
+          <h1 class="text-2xl">{{ char.name }}</h1>
+          <p>{{ char.role }}</p>
+        </div>
+      </div>
+    }
+  }
+</div>
+
+<div class="flex justify-center py-2">
+  <button
+    (click)="handleDecreasePage()"
+    [disabled]="charactersData.value()?.pagination?.page === 1"
+    type="button"
+    class="px-4 py-2 border border-gray-500/50 rounded-l-2xl hover:bg-[#a34b19]/30 active:bg-[#a34b19]/60 transition"
+  >
+    <
+  </button>
+  @for (i of [].constructor(charactersData.value()?.pagination?.totalPages); track $index) {
+    <button
+      (click)="handleSetPage($index + 1)"
+      type="button"
+      [class]="charactersData.value()?.pagination?.page === $index + 1 ? 'bg-[#a34b19]/20' : ''"
+      class="px-4 py-2 border border-gray-500/50 hover:bg-[#a34b19]/30 active:bg-[#a34b19]/60 transition"
+    >
+      {{ $index + 1 }}
+    </button>
+  }
+  <button
+    (click)="handleIncreasePage()"
+    [disabled]="
+      charactersData.value()?.pagination?.page === charactersData.value()?.pagination?.totalPages
+    "
+    type="button"
+    class="px-4 py-2 border border-gray-500/50 rounded-r-2xl hover:bg-[#a34b19]/30 active:bg-[#a34b19]/60 transition"
+  >
+    >
+  </button>
+</div>
