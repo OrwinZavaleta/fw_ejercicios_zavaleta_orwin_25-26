@@ -8,12 +8,13 @@ import { Episode } from '../model/episode';
 export class ApiService {
   // TODO: hacer el metodo con populate
   private API_URL = 'http://localhost:3000/api';
+  private JWT_TOKEN =
+    'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoiNjlhNzUxMGZhYTZlOWIxNGRmY2Q5MWFjIiwiaWF0IjoxNzcyNzk5MzU5LCJleHAiOjE3NzM0MDQxNTl9.FpZ1nf2vZRi4UC5Mi19qS0fzFgYSmgiPr8oksO9sDAs';
 
   public async getCharacters() {
     const data = await fetch(this.API_URL + '/characters', {
       headers: {
-        Authorization:
-          'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoiNjlhNzUxMGZhYTZlOWIxNGRmY2Q5MWFjIiwiaWF0IjoxNzcyNzk5MzU5LCJleHAiOjE3NzM0MDQxNTl9.FpZ1nf2vZRi4UC5Mi19qS0fzFgYSmgiPr8oksO9sDAs',
+        Authorization: 'Bearer ' + this.JWT_TOKEN,
       },
     });
 
@@ -24,8 +25,7 @@ export class ApiService {
   public async getCharactersPaginated(page: number) {
     const data = await fetch(this.API_URL + `/characters?page=${page}&limit=4`, {
       headers: {
-        Authorization:
-          'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoiNjlhNzUxMGZhYTZlOWIxNGRmY2Q5MWFjIiwiaWF0IjoxNzcyNzk5MzU5LCJleHAiOjE3NzM0MDQxNTl9.FpZ1nf2vZRi4UC5Mi19qS0fzFgYSmgiPr8oksO9sDAs',
+        Authorization: 'Bearer ' + this.JWT_TOKEN,
       },
     });
 
@@ -36,15 +36,14 @@ export class ApiService {
 
     return characters;
   }
-  public async getEpisodes(): Promise<Episode[]> {
+  public async getEpisodes() {
     const data = await fetch(this.API_URL + '/episodes', {
       headers: {
-        Authorization:
-          'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoiNjlhNzUxMGZhYTZlOWIxNGRmY2Q5MWFjIiwiaWF0IjoxNzcyNzk5MzU5LCJleHAiOjE3NzM0MDQxNTl9.FpZ1nf2vZRi4UC5Mi19qS0fzFgYSmgiPr8oksO9sDAs',
+        Authorization: 'Bearer ' + this.JWT_TOKEN,
       },
     });
 
-    const episodes: Episode[] = await data.json();
+    const episodes: { data: Episode[]; total: string } = await data.json();
 
     return episodes;
   }

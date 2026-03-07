@@ -8,7 +8,9 @@
       <div class="aspect-square object-cover w-full"></div>
       <div class="p-6 pt-4">
         <h1 class="text-2xl">Loading...</h1>
-        <p>Loading...</p>
+        <p><span class="font-bold">Edad:</span> Loading...</p>
+        <p><span class="font-bold">Especie:</span> Loading...</p>
+        <p><span class="font-bold">Rasgo:</span> Loading...</p>
       </div>
     </div>
   } @else if (charactersData.error()) {
@@ -19,14 +21,16 @@
         <img [src]="char.img" [alt]="char.name" class="aspect-square object-cover w-full" />
         <div class="p-6 pt-4">
           <h1 class="text-2xl">{{ char.name }}</h1>
-          <p>{{ char.role }}</p>
+          <p><span class="font-bold">Edad:</span> {{ char.age }}</p>
+          <p><span class="font-bold">Especie:</span> {{ char.species }}</p>
+          <p><span class="font-bold">Rasgo:</span> {{ char.specialTraits }}</p>
         </div>
       </div>
     }
   }
 </div>
 
-<div class="flex justify-center py-2">
+<div class="flex justify-center pb-6">
   <button
     (click)="handleDecreasePage()"
     [disabled]="charactersData.value()?.pagination?.page === 1"

@@ -1,3 +1,67 @@
 <div class="my-6">
   <h1 class="text-4xl font-bold">Episodios</h1>
 </div>
+<div class="border border-gray-500 rounded-2xl overflow-hidden mb-6 overflow-x-auto">
+  <table class="table-auto border-collapse w-full rounded-3xl">
+    <thead>
+      <tr class="border-y border-gray-500">
+        <th class="text-2xl font-semibold py-2 px-4">Código</th>
+        <th class="text-2xl font-semibold py-2 px-4">Título</th>
+        <th class="text-2xl font-semibold py-2 px-4">Año</th>
+        <th class="text-2xl font-semibold py-2 px-4">Detalles</th>
+      </tr>
+    </thead>
+    <tbody>
+      @if (episodes.isLoading()) {
+        <tr class="text-center border-y border-gray-500">
+          <td colspan="5">Cargando ...</td>
+        </tr>
+      } @else if (episodes.error()) {
+        <tr class="text-center border-y border-gray-500">
+          <td colspan="5">Error al cargar los datos</td>
+        </tr>
+      } @else {
+        @for (episodio of episodes.value()?.data; track episodio.code) {
+          <tr class="border-y border-gray-500">
+            <td class="py-2 px-4 text-center">
+              {{ episodio.code }}
+            </td>
+            <td class="py-2 px-4">{{ episodio.title }}</td>
+            <td class="py-2 px-4 text-center">
+              {{ episodio.year }}
+            </td>
+            <td class="py-2 px-4 text-center">
+              <button
+                type="button"
+                (click)="handleClickDetalle(episodio.code)"
+                class="py-2 px-4 bg-amber-400 active:bg-amber-700 hover:bg-amber-500 rounded-lg shadow-sm transition"
+              >
+                Detalles
+              </button>
+            </td>
+          </tr>
+        }
+      }
+    </tbody>
+  </table>
+</div>
+
+<!-- Modal -->
+@if (showModal()) {
+  <div class="fixed inset-0 z-50 flex items-center justify-center bg-black/50">
+    <div class="bg-white p-8 rounded-3xl max-w-lg mx-4">
+      <h1 class="text-3xl font-bold pb-4">
+        {{ episodioElegido()?.title }} <span class="text-xl">({{ episodioElegido()?.code }})</span>
+      </h1>
+      <p class="pb-4">{{ episodioElegido()?.summary }}</p>
+      <div class="text-end">
+        <button
+          (click)="handleCloseModal()"
+          class="bg-red-400 active:bg-red-700 hover:bg-red-500 py-2 px-4 rounded-lg shadow-sm transition"
+        >
+          Cerrar
+        </button>
+      </div>
+    </div>
+  </div>
+}
