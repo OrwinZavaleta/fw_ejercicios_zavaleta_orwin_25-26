@@ -4,17 +4,25 @@
 
 <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4 pb-6 w-full">
   @if (charactersData.isLoading()) {
-    <div class="border border-gray-600/50 rounded-3xl shadow-md overflow-hidden">
-      <div class="bg-[#ede5ce] skeleton aspect-square object-cover w-full"></div>
-      <div class="p-6 pt-4">
-        <h1 class="bg-[#ede5ce] text-2xl skeleton skeleton-text w-full">Cargando...</h1>
-        <p class="bg-[#ede5ce] skeleton skeleton-text"><span class="font-bold">Edad:</span> Cargando...</p>
-        <p class="bg-[#ede5ce] skeleton skeleton-text"><span class="font-bold">Especie:</span> Cargando...</p>
-        <p class="bg-[#ede5ce] skeleton skeleton-text"><span class="font-bold">Rasgo:</span> Cargando...</p>
+    @for (i of [].constructor(4); track $index) {
+      <div class="border border-gray-600/50 rounded-3xl shadow-md overflow-hidden">
+        <div class="bg-[#ede5ce] skeleton aspect-square object-cover w-full"></div>
+        <div class="p-6 pt-4">
+          <h1 class="bg-[#ede5ce] text-2xl skeleton skeleton-text w-full">Cargando...</h1>
+          <p class="bg-[#ede5ce] skeleton skeleton-text">
+            <span class="font-bold">Edad:</span> Cargando...
+          </p>
+          <p class="bg-[#ede5ce] skeleton skeleton-text">
+            <span class="font-bold">Especie:</span> Cargando...
+          </p>
+          <p class="bg-[#ede5ce] skeleton skeleton-text">
+            <span class="font-bold">Rasgo:</span> Cargando...
+          </p>
+        </div>
       </div>
-    </div>
+    }
   } @else if (charactersData.error()) {
-    error
+    Hubo un error al cargar los personajes.
   } @else {
     @for (char of charactersData.value()?.data; track char.name) {
       <div class="border border-gray-600/50 rounded-3xl shadow-md overflow-hidden">
