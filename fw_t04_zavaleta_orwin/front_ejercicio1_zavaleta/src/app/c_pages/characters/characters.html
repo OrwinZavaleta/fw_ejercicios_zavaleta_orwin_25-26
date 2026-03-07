@@ -39,7 +39,7 @@
   >
     <
   </button>
-  @for (i of [].constructor(charactersData.value()?.pagination?.totalPages); track $index) {
+  @for (i of [].constructor(npages()); track $index) {
     <button
       (click)="handleSetPage($index + 1)"
       type="button"

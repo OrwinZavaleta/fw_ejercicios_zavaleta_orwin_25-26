@@ -11,13 +11,15 @@ export class Characters {
   private api = inject(ApiService);
   public charactersData;
   public page = signal(1);
+  public npages = signal<number | null>(null);
 
   constructor() {
     this.charactersData = resource({
-      // TODO: que cargue las paginas solo al inicio
       params: () => this.page(),
       loader: async () => {
-        return this.api.getCharactersPaginated(this.page());
+        const respuesta = await this.api.getCharactersPaginated(this.page());
+        if (!this.npages()) this.npages.set(respuesta.pagination.totalPages);
+        return respuesta;
       },
     });
   }

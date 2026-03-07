@@ -54,6 +54,12 @@
         {{ episodioElegido()?.title }} <span class="text-xl">({{ episodioElegido()?.code }})</span>
       </h1>
       <p class="pb-4">{{ episodioElegido()?.summary }}</p>
+      <p class="font-bold">Personajes: </p>
+      <ol>
+        @for (per of episodioElegido()?.characters; track per.name; let i = $index) {
+          <li><span class="font-semibold">{{ i + 1 }}.</span> {{ per.name }}</li>
+        }
+      </ol>
       <div class="text-end">
         <button
           (click)="handleCloseModal()"
