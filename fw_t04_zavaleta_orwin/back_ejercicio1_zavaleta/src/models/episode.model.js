@@ -26,9 +26,9 @@ const episodeSchema = new Schema(
             trim: true,
             min: 2000,
         },
-        characters: {
+        characters: [{
             type: Schema.Types.ObjectId, ref: "Character"
-        }
+        }]
     },
     {
         timestamps: true,

@@ -4,36 +4,32 @@ const mongoose = require("mongoose");
 const getEpisodes = async (req, res) => {
     try {
 
-
-        const { page, limit } = req.query;
+        const { season } = req.query;
 
         let episodes;
         let total = await Episode.countDocuments();
 
-        if (limit) {
-            const pageNumber = parseInt(page) || 1;
-            const limitNumber = parseInt(limit);
-            const skip = (pageNumber - 1) * limitNumber;
+        if (!isNaN(Number(season))) {
+            const seasonInt = season.padStart(2, "0")
 
-            episodes = await Episode.find()
-                .skip(skip)
-                .limit(limitNumber);
+            const filter = {}
+
+            filter.code = {
+                $regex: new RegExp(`^S${seasonInt}E`)
+            }
+
+            episodes = await Episode.find(filter)
+                .populate('characters');
 
             return res.status(200).json({
                 data: episodes,
-                pagination: {
-                    total,
-                    page: pageNumber,
-                    limit: limitNumber,
-                    totalPages: Math.ceil(total / limitNumber)
-                }
+                season: seasonInt,
+                total,
             });
         }
 
 
-
-
-        episodes = await Episode.find();
+        episodes = await Episode.find().populate('characters');
         res.status(200).json({
             data: episodes,
             total
@@ -53,7 +49,7 @@ const getEpisode = async (req, res) => {
             return res.status(400).json({ error: "ID inválido" });
         }
 
-        const episode = await Episode.findById(id);
+        const episode = await Episode.findById(id).populate('characters');;
 
         if (!episode) {
             return res.status(404).json({ error: "Episodio no encontrado" });
@@ -69,7 +65,7 @@ const getEpisode = async (req, res) => {
 
 const createEpisode = async (req, res) => {
     try {
-        console.log(req.body);// TODO: corregir los errores que hace que rompa cuando se le envia un characters
+        console.log(req.body);
 
         const newEpisode = await Episode.create(req.body);
         res.status(201).json(newEpisode);

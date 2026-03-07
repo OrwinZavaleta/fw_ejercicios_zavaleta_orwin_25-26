@@ -28,12 +28,12 @@ Authorization: Bearer {{token}}
 
 ###
 
-GET http://localhost:3000/api/characters?page=5&limit=4
+GET http://localhost:3000/api/characters?page=3&limit=4
 Authorization: Bearer {{token}}
 
 ###
 
-GET http://localhost:3000/api/characters/69a2fb94004478c92d8fc6ba
+GET http://localhost:3000/api/characters/69a753be24df829b4e63cceb
 Authorization: Bearer {{token}}
 
 ###
@@ -54,23 +54,19 @@ Authorization: Bearer {{token}}
 
 ###
 
-PUT http://localhost:3000/api/characters/69a7522aaa6e9b14dfcd91b7
+PUT http://localhost:3000/api/characters/69a753be24df829b4e63cceb
 Content-Type: application/json
 Authorization: Bearer {{token}}
 
 {
     "name": "Unknown",
-    "img": "hola.png",
-    "species": "humano",
-    "age": 100,
-    "specialTraits": ["No existir"],
-    "role" : "Desconocido",
-    "firstAppearance": "S99E99"
+    "species": "demonio",
+    "age": 9999
 }
 
 ###
 
-DELETE http://localhost:3000/api/characters/69a7522aaa6e9b14dfcd91b7
+DELETE http://localhost:3000/api/characters/69a753be24df829b4e63cceb
 Authorization: Bearer {{token}}
 
 ###
@@ -85,12 +81,17 @@ Authorization: Bearer {{token}}
 
 ###
 
-GET http://localhost:3000/api/episodes?page=3&limit=4
+GET http://localhost:3000/api/episodes
 Authorization: Bearer {{token}}
 
 ###
 
-GET http://localhost:3000/api/episodes/69a02f79b780a89df6a2eafb
+GET http://localhost:3000/api/episodes?season=3
+Authorization: Bearer {{token}}
+
+###
+
+GET http://localhost:3000/api/episodes/69a757df3e79e55ee28938f1
 Authorization: Bearer {{token}}
 
 ###
@@ -100,10 +101,14 @@ Content-Type: application/json
 Authorization: Bearer {{token}}
 
 {
-    "code": "S99E98",
+    "code": "S99E96",
     "title": "La aparicion del desconocido",
     "summary": "Lorem impum.........",
-    "year": 9999
+    "year": 9999,
+    "characters":[
+        "69a02f79b780a89df6a2eafb",
+        "69a02f79b780a89df6a2eafe"
+    ]
 }
 
 ###
@@ -113,11 +118,11 @@ Content-Type: application/json
 Authorization: Bearer {{token}}
 
 {
-    "code": "S99E98",
-    "title": "La aparicion del desconocido",
-    "summary": "Lorem impum.........",
-    "year": 2222,
-    "characters":[]
+    "year": 3333,
+    "characters":[
+        "69a02ccb7b15ab8294547c30",
+        "69a757df3e79e55ee28938f1"
+    ]
 }
 
 ###
