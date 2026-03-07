@@ -18,7 +18,7 @@
       </tr>
       } @else if (episodes.error()) {
       <tr class="text-center ">
-        <td colspan="5">Error al cargar los datos</td>
+        <td colspan="5">Error al cargar los datos </td>
       </tr>
       } @else {
       @for (episodio of episodes.value()?.data; track episodio.code) {
