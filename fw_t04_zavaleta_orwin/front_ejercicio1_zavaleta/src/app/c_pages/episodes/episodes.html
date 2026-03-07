@@ -2,45 +2,47 @@
   <h1 class="text-4xl font-bold">Episodios</h1>
 </div>
 <div class="border border-gray-500 rounded-2xl overflow-hidden mb-6 overflow-x-auto">
-  <table class="table-auto border-collapse w-full rounded-3xl">
+  <table class="table">
     <thead>
-      <tr class="border-y border-gray-500">
-        <th class="text-2xl font-semibold py-2 px-4">Código</th>
-        <th class="text-2xl font-semibold py-2 px-4">Título</th>
-        <th class="text-2xl font-semibold py-2 px-4">Año</th>
-        <th class="text-2xl font-semibold py-2 px-4">Detalles</th>
+      <tr class="">
+        <th>Código</th>
+        <th>Título</th>
+        <th>Año</th>
+        <th>Detalles</th>
       </tr>
     </thead>
     <tbody>
       @if (episodes.isLoading()) {
-        <tr class="text-center border-y border-gray-500">
-          <td colspan="5">Cargando ...</td>
-        </tr>
+      <tr class="text-center ">
+        <td colspan="5">Cargando ...</td>
+      </tr>
       } @else if (episodes.error()) {
-        <tr class="text-center border-y border-gray-500">
-          <td colspan="5">Error al cargar los datos</td>
-        </tr>
+      <tr class="text-center ">
+        <td colspan="5">Error al cargar los datos</td>
+      </tr>
       } @else {
-        @for (episodio of episodes.value()?.data; track episodio.code) {
-          <tr class="border-y border-gray-500">
-            <td class="py-2 px-4 text-center">
-              {{ episodio.code }}
-            </td>
-            <td class="py-2 px-4">{{ episodio.title }}</td>
-            <td class="py-2 px-4 text-center">
-              {{ episodio.year }}
-            </td>
-            <td class="py-2 px-4 text-center">
-              <button
+      @for (episodio of episodes.value()?.data; track episodio.code) {
+      <tr class="hover:bg-gray-400/20 transition">
+        <td class=" text-center">
+          {{ episodio.code }}
+        </td>
+        <td>{{ episodio.title }}</td>
+        <td class="text-center">
+          {{ episodio.year }}
+        </td>
+        <!-- Este es un elemento de DaisyUI -->
+        <td class="text-center">
+          <!-- <button
                 type="button"
                 (click)="handleClickDetalle(episodio.code)"
                 class="py-2 px-4 bg-amber-400 active:bg-amber-700 hover:bg-amber-500 rounded-lg shadow-sm transition"
-              >
-                Detalles
-              </button>
-            </td>
-          </tr>
-        }
+              > -->
+          <button type="button" (click)="handleClickDetalle(episodio.code)" class="btn btn-warning">
+            Detalles
+          </button>
+        </td>
+      </tr>
+      }
       }
     </tbody>
   </table>
@@ -48,26 +50,29 @@
 
 <!-- Modal -->
 @if (showModal()) {
-  <div class="fixed inset-0 z-50 flex items-center justify-center bg-black/50">
-    <div class="bg-white p-8 rounded-3xl max-w-lg mx-4">
-      <h1 class="text-3xl font-bold pb-4">
-        {{ episodioElegido()?.title }} <span class="text-xl">({{ episodioElegido()?.code }})</span>
-      </h1>
-      <p class="pb-4">{{ episodioElegido()?.summary }}</p>
-      <p class="font-bold">Personajes: </p>
-      <ol>
-        @for (per of episodioElegido()?.characters; track per.name; let i = $index) {
-          <li><span class="font-semibold">{{ i + 1 }}.</span> {{ per.name }}</li>
-        }
-      </ol>
-      <div class="text-end">
-        <button
+<div class="fixed inset-0 z-50 flex items-center justify-center bg-black/50">
+  <div class="bg-white p-8 rounded-3xl max-w-lg mx-4">
+    <h1 class="text-3xl font-bold pb-4">
+      {{ episodioElegido()?.title }} <span class="text-xl">({{ episodioElegido()?.code }})</span>
+    </h1>
+    <p class="pb-4">{{ episodioElegido()?.summary }}</p>
+    <p class="font-bold">Personajes:</p>
+    <ol>
+      @for (per of episodioElegido()?.characters; track per.name; let i = $index) {
+      <li>
+        <span class="font-semibold">{{ i + 1 }}.</span> {{ per.name }}
+      </li>
+      }
+    </ol>
+    <div class="text-end">
+      <!-- <button
           (click)="handleCloseModal()"
           class="bg-red-400 active:bg-red-700 hover:bg-red-500 py-2 px-4 rounded-lg shadow-sm transition"
-        >
-          Cerrar
-        </button>
-      </div>
+        > -->
+      <button (click)="handleCloseModal()" class="btn btn-error">
+        Cerrar
+      </button>
     </div>
   </div>
+</div>
 }
